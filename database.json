@@ -218,6 +218,22 @@
   "adCampaigns": [],
   "systemLogs": [
     {
+      "id": "log-1783167633579",
+      "service": "Authorization Gate",
+      "event": "Secure session generated for Enterprise Administrator",
+      "status": "success",
+      "timestamp": "04/07/2026, 17:20:33",
+      "payloadSize": "512 B"
+    },
+    {
+      "id": "log-1783167604658",
+      "service": "Core System Kernel",
+      "event": "Abdelghanem CRM server boot initialized successfully on port 3000",
+      "status": "success",
+      "timestamp": "04/07/2026, 17:20:04",
+      "payloadSize": "1.0 KB"
+    },
+    {
       "id": "log-1783167263458",
       "service": "Sales CRM Core",
       "event": "Removed client database record ID: c3",
@@ -440,22 +456,6 @@
       "status": "success",
       "timestamp": "03/07/2026, 22:05:20",
       "payloadSize": "332 B"
-    },
-    {
-      "id": "log-1783098240299",
-      "service": "n8n Callback Webhook",
-      "event": "Incoming callback parsed for \"Hello\". System state updated to processed. Google Sheets: Updated.",
-      "status": "success",
-      "timestamp": "03/07/2026, 22:04:00",
-      "payloadSize": "173 B"
-    },
-    {
-      "id": "log-1783098235021",
-      "service": "n8n Pipeline Dispatcher",
-      "event": "Triggered n8n flow [facebook] for campaign: Hello. Status: Processing...",
-      "status": "success",
-      "timestamp": "03/07/2026, 22:03:55",
-      "payloadSize": "333 B"
     }
   ]
 }
