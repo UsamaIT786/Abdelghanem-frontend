@@ -42,16 +42,6 @@
       "tenant": "heating"
     },
     {
-      "id": "c3",
-      "name": "John Smith",
-      "company": "Direct Current Ltd",
-      "email": "j.smith@directcurrent.co.uk",
-      "phone": "+44 7911 987654",
-      "status": "Contacted",
-      "revenue": 1600,
-      "tenant": "electrical"
-    },
-    {
       "id": "c4",
       "name": "Sophia Parker",
       "company": "Elite Screeding Solutions",
@@ -227,6 +217,46 @@
   "pdfAttachments": [],
   "adCampaigns": [],
   "systemLogs": [
+    {
+      "id": "log-1783167263458",
+      "service": "Sales CRM Core",
+      "event": "Removed client database record ID: c3",
+      "status": "warning",
+      "timestamp": "04/07/2026, 17:14:23",
+      "payloadSize": "320 B"
+    },
+    {
+      "id": "log-1783167223471",
+      "service": "Authorization Gate",
+      "event": "Secure session generated for Enterprise Administrator",
+      "status": "success",
+      "timestamp": "04/07/2026, 17:13:43",
+      "payloadSize": "512 B"
+    },
+    {
+      "id": "log-1783167196242",
+      "service": "Core System Kernel",
+      "event": "Abdelghanem CRM server boot initialized successfully on port 3000",
+      "status": "success",
+      "timestamp": "04/07/2026, 17:13:16",
+      "payloadSize": "1.0 KB"
+    },
+    {
+      "id": "log-1783166768715",
+      "service": "Core System Kernel",
+      "event": "Abdelghanem CRM server boot initialized successfully on port 3000",
+      "status": "success",
+      "timestamp": "04/07/2026, 17:06:08",
+      "payloadSize": "1.0 KB"
+    },
+    {
+      "id": "log-1783160247569",
+      "service": "Core System Kernel",
+      "event": "Abdelghanem CRM server boot initialized successfully on port 3000",
+      "status": "success",
+      "timestamp": "04/07/2026, 15:17:27",
+      "payloadSize": "1.0 KB"
+    },
     {
       "id": "log-1783159357595",
       "service": "Core System Kernel",
@@ -426,46 +456,6 @@
       "status": "success",
       "timestamp": "03/07/2026, 22:03:55",
       "payloadSize": "333 B"
-    },
-    {
-      "id": "log-1783098209290",
-      "service": "n8n Callback Webhook",
-      "event": "Incoming callback parsed for \"Hello\". System state updated to processed. Google Sheets: Updated.",
-      "status": "success",
-      "timestamp": "03/07/2026, 22:03:29",
-      "payloadSize": "173 B"
-    },
-    {
-      "id": "log-1783098204026",
-      "service": "n8n Pipeline Dispatcher",
-      "event": "Triggered n8n flow [facebook] for campaign: Hello. Status: Processing...",
-      "status": "success",
-      "timestamp": "03/07/2026, 22:03:24",
-      "payloadSize": "333 B"
-    },
-    {
-      "id": "log-1783098142034",
-      "service": "n8n Callback Webhook",
-      "event": "Incoming callback parsed for \"Hello\". System state updated to processed. Google Sheets: Updated.",
-      "status": "success",
-      "timestamp": "03/07/2026, 22:02:22",
-      "payloadSize": "173 B"
-    },
-    {
-      "id": "log-1783098136664",
-      "service": "n8n Pipeline Dispatcher",
-      "event": "Triggered n8n flow [facebook] for campaign: Hello. Status: Processing...",
-      "status": "success",
-      "timestamp": "03/07/2026, 22:02:16",
-      "payloadSize": "333 B"
-    },
-    {
-      "id": "log-1783097865780",
-      "service": "Dispatching Engine",
-      "event": "Recalled workforce dispatch card ID: t1",
-      "status": "error",
-      "timestamp": "03/07/2026, 21:57:45",
-      "payloadSize": "400 B"
     }
   ]
 }
