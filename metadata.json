@@ -1,0 +1,6 @@
+{
+  "name": "Multi-Tenant CRM ERP & AI Marketing",
+  "description": "Premium Multi-Tenant CRM/ERP with Intelligent Dispatch, PDF Intake, and AI Marketing Engine",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
