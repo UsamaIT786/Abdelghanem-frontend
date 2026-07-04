@@ -1,13 +1,13 @@
 // Centralized Integration Engine Client for Abdelghanem CRM/ERP
 import { TenantType } from "../types";
 
-const LIVE_BACKEND_URL = "https://abdelghanem-project-yd6z.vercel.app";
+const LIVE_BACKEND_URL = "";
 const LOCAL_BACKEND_URL = "http://localhost:3000";
 // Use Vite environment variable if available, otherwise fallback intelligently
 const RAW_API_BASE = import.meta.env.VITE_API_BASE_URL || (import.meta.env.DEV ? LOCAL_BACKEND_URL : LIVE_BACKEND_URL);
 // Strip trailing and leading slashes cleanly using robust string formatting
 const CLEAN_BASE = RAW_API_BASE.replace(/^\/+|\/+$/g, '');
-export const API_BASE = CLEAN_BASE.endsWith('/api') ? CLEAN_BASE : `${CLEAN_BASE}/api`;
+export const API_BASE = CLEAN_BASE === "" ? "/api" : (CLEAN_BASE.endsWith('/api') ? CLEAN_BASE : `${CLEAN_BASE}/api`);
 
 // Retrieve tokens/active tenant from localStorage
 export function getSavedToken(): string | null {
