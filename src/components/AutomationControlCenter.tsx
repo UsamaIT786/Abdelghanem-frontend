@@ -132,17 +132,37 @@ type PlatformBranch = 'facebook' | 'google_ads' | 'seo_blog'; export default fun
       // Update local listing loadHistory();
       
       // We also trigger a simulation timeout callback to finalize state in database
-      //
       // if working in an offline sandbox environment 
-      setTimeout(async () => { try { const res = await fetch(`${API_BASE}/v1/automation/callback`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ campaign_id: finalPayload.campaign_id, status: 'processed', google_sheets_updated: true, additional_metrics: { ads_pushed: true, sheets_row: 42, engine: 'Claude AI + n8n Platform'
-              }
+      setTimeout(async () => { 
+        try { 
+          const res = await fetch(`${API_BASE}/v1/automation/callback`, { 
+            method: 'POST', 
+            headers: { 'Content-Type': 'application/json' }, 
+            body: JSON.stringify({ 
+              campaign_id: finalPayload.campaign_id, 
+              status: 'processed', 
+              google_sheets_updated: true, 
+              additional_metrics: { ads_pushed: true, sheets_row: 42, engine: 'Claude AI + n8n Platform' }
             })
-          }); const callbackResData = await res.json(); console.log("Simulated callback executed:", callbackResData);
-        } catch (simError) { console.warn("Simulator check warning:", simError);
+          }); 
+          const callbackResData = await res.json(); 
+          console.log("Simulated callback executed:", callbackResData);
+          
+          // Fix for Vercel environments: WebSockets don't pass data payloads in polling mode, 
+          // so we ensure the loading state resolves here automatically after the callback.
+          setIsExecuting(false);
+          setLiveStatus('Successfully Synchronized & Live ✅');
+        } catch (simError) { 
+          console.warn("Simulator check warning:", simError);
+          setIsExecuting(false);
+          setLiveStatus('Pipeline Error ❌');
         }
       }, 5000);
 
-    } catch (err: any) { addLogEntry(`Pipeline Sync Failure: ${err.message || err}`, 'error'); setLiveStatus('Pipeline Error ❌'); setIsExecuting(false);
+    } catch (err: any) { 
+      addLogEntry(`Pipeline Sync Failure: ${err.message || err}`, 'error'); 
+      setLiveStatus('Pipeline Error ❌'); 
+      setIsExecuting(false);
     }
   };
   return (

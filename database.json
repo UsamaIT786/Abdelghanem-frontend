@@ -218,6 +218,30 @@
   "adCampaigns": [],
   "systemLogs": [
     {
+      "id": "log-1783168623905",
+      "service": "Marketing Gateway",
+      "event": "Aborted campaign configuration record ID: camp_fa_8738",
+      "status": "warning",
+      "timestamp": "04/07/2026, 17:37:03",
+      "payloadSize": "240 B"
+    },
+    {
+      "id": "log-1783168508446",
+      "service": "n8n Callback Webhook",
+      "event": "Incoming callback parsed for \"hi\". System state updated to processed. Google Sheets: Updated.",
+      "status": "success",
+      "timestamp": "04/07/2026, 17:35:08",
+      "payloadSize": "173 B"
+    },
+    {
+      "id": "log-1783168499077",
+      "service": "n8n Pipeline Dispatcher",
+      "event": "Triggered n8n flow [facebook] for campaign: hi. Status: Processing...",
+      "status": "success",
+      "timestamp": "04/07/2026, 17:34:59",
+      "payloadSize": "391 B"
+    },
+    {
       "id": "log-1783167633579",
       "service": "Authorization Gate",
       "event": "Secure session generated for Enterprise Administrator",
@@ -432,30 +456,6 @@
       "status": "success",
       "timestamp": "03/07/2026, 22:06:46",
       "payloadSize": "173 B"
-    },
-    {
-      "id": "log-1783098401509",
-      "service": "n8n Pipeline Dispatcher",
-      "event": "Triggered n8n flow [facebook] for campaign: Hello. Status: Processing...",
-      "status": "success",
-      "timestamp": "03/07/2026, 22:06:41",
-      "payloadSize": "332 B"
-    },
-    {
-      "id": "log-1783098325211",
-      "service": "n8n Callback Webhook",
-      "event": "Incoming callback parsed for \"Hello\". System state updated to processed. Google Sheets: Updated.",
-      "status": "success",
-      "timestamp": "03/07/2026, 22:05:25",
-      "payloadSize": "173 B"
-    },
-    {
-      "id": "log-1783098320119",
-      "service": "n8n Pipeline Dispatcher",
-      "event": "Triggered n8n flow [facebook] for campaign: Hello. Status: Processing...",
-      "status": "success",
-      "timestamp": "03/07/2026, 22:05:20",
-      "payloadSize": "332 B"
     }
   ]
 }
