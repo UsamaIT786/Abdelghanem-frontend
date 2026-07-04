@@ -4,8 +4,8 @@ import { TenantType } from "../types";
 const LIVE_BACKEND_URL = "https://abdelghanem-project-yd6z.vercel.app";
 // Use Vite environment variable if available, otherwise default to the live backend URL
 const RAW_API_BASE = import.meta.env.VITE_API_BASE_URL || LIVE_BACKEND_URL;
-// Strip trailing slash, then ensure it ends with '/api' to eliminate relative path routing errors
-const CLEAN_BASE = RAW_API_BASE.replace(/\/+$/, '');
+// Strip trailing and leading slashes cleanly using robust string formatting
+const CLEAN_BASE = RAW_API_BASE.replace(/^\/+|\/+$/g, '');
 export const API_BASE = CLEAN_BASE.endsWith('/api') ? CLEAN_BASE : `${CLEAN_BASE}/api`;
 
 // Retrieve tokens/active tenant from localStorage
@@ -378,8 +378,8 @@ export function initLiveWebSocket(onMessage: (msg: any) => void): any {
     
     // Prevent WebSocket connection errors in Vercel serverless environment
     if (apiOrigin.host.includes('vercel.app')) {
-      // Disable fallback polling to prevent UI flickering from serverless instance state mismatches
-      // triggerPollingFallback();
+      // Switch to high-frequency HTTP polling interval loops (every 5-7 seconds)
+      triggerPollingFallback();
       return fallbackSocket;
     }
 

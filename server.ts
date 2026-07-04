@@ -1091,7 +1091,17 @@ app.post("/api/campaigns/:id/approve", async (req, res) => {
     workspace_id: "work_luxe_01",
     platform_target: platformTarget,
     campaign_name: campaign.title,
-    content: contentObj
+    content: {
+      message: contentObj.message || contentObj.ad_description || contentObj.excerpt || "",
+      ad_description: contentObj.ad_description || "",
+      excerpt: contentObj.excerpt || "",
+      media_url: contentObj.media_url || campaign.mediaUrl || "",
+      link: contentObj.link || contentObj.target_domain || campaign.destinationLink || "",
+      meta_tags: contentObj.meta_tags || contentObj.seo_keywords || campaign.blogTags || [],
+      budget: contentObj.budget || campaign.budget || 50,
+      target_country: contentObj.target_country || campaign.targetCountry || "AU",
+      ...contentObj
+    }
   };
 
 
@@ -1164,7 +1174,17 @@ app.post("/api/v1/automation/sync", async (req, res) => {
     workspace_id,
     platform_target,
     campaign_name,
-    content: content || {}
+    content: {
+      message: (content || {}).message || "",
+      ad_description: (content || {}).ad_description || "",
+      excerpt: (content || {}).excerpt || "",
+      media_url: (content || {}).media_url || "",
+      link: (content || {}).link || (content || {}).target_domain || "",
+      meta_tags: (content || {}).meta_tags || (content || {}).seo_keywords || [],
+      budget: (content || {}).budget || 50,
+      target_country: (content || {}).target_country || "AU",
+      ...(content || {})
+    }
   };
 
   const webhookUrl = process.env.N8N_WEBHOOK_URL || process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL || "https://akigh90.app.n8n.cloud/webhook/crm-campaign-trigger";

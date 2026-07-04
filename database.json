@@ -228,6 +228,14 @@
   "adCampaigns": [],
   "systemLogs": [
     {
+      "id": "log-1783159357595",
+      "service": "Core System Kernel",
+      "event": "Abdelghanem CRM server boot initialized successfully on port 3000",
+      "status": "success",
+      "timestamp": "04/07/2026, 15:02:37",
+      "payloadSize": "1.0 KB"
+    },
+    {
       "id": "log-1783099584945",
       "service": "Marketing Gateway",
       "event": "Aborted campaign configuration record ID: campaign-2",
@@ -458,14 +466,6 @@
       "status": "error",
       "timestamp": "03/07/2026, 21:57:45",
       "payloadSize": "400 B"
-    },
-    {
-      "id": "log-1783097857627",
-      "service": "Dispatching Engine",
-      "event": "Updated dispatch card for Dave Miller (Heating lead) status: In Progress",
-      "status": "success",
-      "timestamp": "03/07/2026, 21:57:37",
-      "payloadSize": "800 B"
     }
   ]
 }

@@ -78,16 +78,34 @@ const FacebookIcon = () => (
       }));
     } finally { setIsPushing(false); }
   };
-  const executeDeleteConfirm = async () => { if (!deleteConfirm) return; const deletedName = deleteConfirm.name; try { await deleteLiveCampaign(deleteConfirm.id); const updated = campaigns.filter(c => c.id !== deleteConfirm.id); setCampaigns(updated); if (selectedCampaign?.id === deleteConfirm.id) setSelectedCampaign(updated[0] || null); setDeleteConfirm(null); window.dispatchEvent(new CustomEvent('crm_show_toast', { detail: { message: `Ad Campaign "${deletedName}" removed! 🗑️`, type: 'warning' } 
-      }));
-    } catch (err: any) { window.dispatchEvent(new CustomEvent('crm_show_toast', { detail: { message: 'Deletion failed: ' + (err.message || err), type: 'error' } 
-      }));
+  const executeDeleteConfirm = async () => { 
+    if (!deleteConfirm) return; 
+    const deletedName = deleteConfirm.name; 
+    const targetId = deleteConfirm.id;
+    // Optimistic Update
+    const updated = campaigns.filter(c => c.id !== targetId); 
+    setCampaigns(updated); 
+    if (selectedCampaign?.id === targetId) setSelectedCampaign(updated[0] || null); 
+    setDeleteConfirm(null); 
+    try { 
+      await deleteLiveCampaign(targetId); 
+      window.dispatchEvent(new CustomEvent('crm_show_toast', { detail: { message: `Ad Campaign "${deletedName}" removed! 🗑️`, type: 'warning' } }));
+    } catch (err: any) { 
+      window.dispatchEvent(new CustomEvent('crm_show_toast', { detail: { message: 'Deletion failed: ' + (err.message || err), type: 'error' } }));
     }
   };
-  const handleSaveEdit = async (e: React.FormEvent) => { e.preventDefault(); if (!editingCampaign) return; try { await updateLiveCampaign(editingCampaign.id, { title: editTitle, generatedCopy: editCopy }); setEditingCampaign(null); await loadData(); window.dispatchEvent(new CustomEvent('crm_show_toast', { detail: { message: `Campaign details updated! ✏️`, type: 'success' } 
-      }));
-    } catch (err: any) { window.dispatchEvent(new CustomEvent('crm_show_toast', { detail: { message: 'Edit update failed: ' + (err.message || err), type: 'error' } 
-      }));
+  const handleSaveEdit = async (e: React.FormEvent) => { 
+    e.preventDefault(); 
+    if (!editingCampaign) return; 
+    const targetId = editingCampaign.id;
+    // Optimistic Update
+    setCampaigns(prev => prev.map(c => c.id === targetId ? { ...c, title: editTitle, generatedCopy: editCopy } : c));
+    setEditingCampaign(null); 
+    try { 
+      await updateLiveCampaign(targetId, { title: editTitle, generatedCopy: editCopy }); 
+      window.dispatchEvent(new CustomEvent('crm_show_toast', { detail: { message: `Campaign details updated! ✏️`, type: 'success' } }));
+    } catch (err: any) { 
+      window.dispatchEvent(new CustomEvent('crm_show_toast', { detail: { message: 'Edit update failed: ' + (err.message || err), type: 'error' } }));
     }
   };
   const handleApplyToLanding = () => { if (!selectedCampaign) return; setLandingTitle(selectedCampaign.title); setLandingSub((selectedCampaign.generatedCopy || '').slice(0, 110) + '...'); if (selectedCampaign.tenant === 'heating') setSelectedTemplateColor('rose'); if (selectedCampaign.tenant === 'screed') setSelectedTemplateColor('teal'); if (selectedCampaign.tenant === 'electrical') setSelectedTemplateColor('amber'); window.dispatchEvent(new CustomEvent('crm_show_toast', { detail: { message: 'Applied campaign copy to the landing page template! 🎨', type: 'success' } 
