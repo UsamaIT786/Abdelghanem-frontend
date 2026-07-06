@@ -1,4 +1,4 @@
-export type TenantType = 'heating' | 'screed' | 'electrical' | 'all';
+export type TenantType = 'full_home_renovation' | 'kitchen_renovation' | 'bathroom_renovation' | 'granny_flat' | 'extension' | 'multi_unit' | 'new_luxe_homes' | 'all';
 
 export type UserRole = 'Admin' | 'Operator' | 'Technician' | 'Marketer';
 
@@ -7,7 +7,7 @@ export interface User {
   name: string;
   email: string;
   role: UserRole;
-  department: 'Heating' | 'Screed' | 'Electrical' | 'Administration';
+  department: 'Full Home Renovation' | 'Kitchen Renovation' | 'Bathroom Renovation' | 'Granny Flat' | 'Extension' | 'Multi Unit' | 'New Luxe Homes' | 'Administration';
   avatar: string;
   status: 'Active' | 'Inactive';
 }
@@ -41,7 +41,7 @@ export interface TechnicianTask {
   type: 'Installation' | 'Maintenance' | 'Inspection' | 'Repair';
   status: 'Scheduled' | 'In Progress' | 'Completed' | 'Pending';
   time: string; // "09:00 - 11:00" etc
-  tenant: 'heating' | 'screed' | 'electrical';
+  tenant: 'full_home_renovation' | 'kitchen_renovation' | 'bathroom_renovation' | 'granny_flat' | 'extension' | 'multi_unit' | 'new_luxe_homes';
 }
 
 export interface SmartPDFAttachment {
@@ -70,7 +70,7 @@ export interface AdCampaign {
   hashtags: string[];
   status: 'Draft' | 'Pending Approval' | 'Approved' | 'Published' | 'Live';
   createdAt: string;
-  tenant: 'heating' | 'screed' | 'electrical';
+  tenant: 'full_home_renovation' | 'kitchen_renovation' | 'bathroom_renovation' | 'granny_flat' | 'extension' | 'multi_unit' | 'new_luxe_homes';
   // Scenario A: Meta/Social fields
   mediaUrl?: string;
   destinationLink?: string;

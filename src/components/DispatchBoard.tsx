@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { TechnicianTask } from '../types';
 import { Clock, Calendar, Phone, CheckCircle, Zap, ShieldAlert, ArrowRight, UserPlus, Pencil, Trash2, X, AlertTriangle } from 'lucide-react';
 import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSavedTenant, initLiveWebSocket 
-} from '../lib/api'; export default function DispatchBoard() { const [tasks, setTasks] = useState<TechnicianTask[]>([]); const [selectedTask, setSelectedTask] = useState<TechnicianTask | null>(null); const [activeUnit, setActiveUnit] = useState<'all' | 'heating' | 'screed' | 'electrical'>('all'); const [loading, setLoading] = useState(true);
+} from '../lib/api'; export default function DispatchBoard() { const [tasks, setTasks] = useState<TechnicianTask[]>([]); const [selectedTask, setSelectedTask] = useState<TechnicianTask | null>(null); const [activeUnit, setActiveUnit] = useState<'all' | 'full_home_renovation' | 'kitchen_renovation' | 'bathroom_renovation' | 'granny_flat' | 'extension' | 'multi_unit' | 'new_luxe_homes'>('all'); const [loading, setLoading] = useState(true);
 
   // Add Task Dispatch modal simulation values
-  const [showDispatchForm, setShowDispatchForm] = useState(false); const [technician, setTechnician] = useState(''); const [client, setClient] = useState(''); const [phone, setPhone] = useState(''); const [type, setType] = useState<string>('Installation'); const [time, setTime] = useState('09:00 - 11:00'); const [taskTenant, setTaskTenant] = useState<'heating' | 'screed' | 'electrical'>('heating');
+  const [showDispatchForm, setShowDispatchForm] = useState(false); const [technician, setTechnician] = useState(''); const [client, setClient] = useState(''); const [phone, setPhone] = useState(''); const [type, setType] = useState<string>('Installation'); const [time, setTime] = useState('09:00 - 11:00'); const [taskTenant, setTaskTenant] = useState<'full_home_renovation' | 'kitchen_renovation' | 'bathroom_renovation' | 'granny_flat' | 'extension' | 'multi_unit' | 'new_luxe_homes'>('full_home_renovation');
 
   // Edit task state
-  const [editingTask, setEditingTask] = useState<TechnicianTask | null>(null); const [editTechnician, setEditTechnician] = useState(''); const [editClient, setEditClient] = useState(''); const [editPhone, setEditPhone] = useState(''); const [editType, setEditType] = useState(''); const [editTime, setEditTime] = useState(''); const [editStatus, setEditStatus] = useState(''); const [editTenant, setEditTenant] = useState<'heating' | 'screed' | 'electrical'>('heating');
+  const [editingTask, setEditingTask] = useState<TechnicianTask | null>(null); const [editTechnician, setEditTechnician] = useState(''); const [editClient, setEditClient] = useState(''); const [editPhone, setEditPhone] = useState(''); const [editType, setEditType] = useState(''); const [editTime, setEditTime] = useState(''); const [editStatus, setEditStatus] = useState(''); const [editTenant, setEditTenant] = useState<'full_home_renovation' | 'kitchen_renovation' | 'bathroom_renovation' | 'granny_flat' | 'extension' | 'multi_unit' | 'new_luxe_homes'>('full_home_renovation');
 
   // Delete confirmation state
   const [deleteConfirm, setDeleteConfirm] = useState<{ id: string; name: string } | null>(null); const loadData = async () => { try { const activeTenant = getSavedTenant(); const loaded = await fetchLiveTasks(); setTasks(loaded); if (loaded.length > 0) { if (!selectedTask) { setSelectedTask(loaded[0]);
@@ -123,22 +123,38 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
         </div>
 
         {/* Dispatch Filter Controls */}
-        <div className="flex p-1 rounded-xl text-xs gap-1 border" style={{ backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--border-color)' }}>
+        <div className="flex flex-wrap p-1 rounded-xl text-xs gap-1 border" style={{ backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--border-color)' }}>
           <button onClick={() => setActiveUnit('all')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'all' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white '
             }`}
           > All Workforces
           </button>
-          <button onClick={() => setActiveUnit('heating')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'heating' ? 'bg-rose-500 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white '
+          <button onClick={() => setActiveUnit('full_home_renovation')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'full_home_renovation' ? 'bg-indigo-500 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white '
             }`}
-          > Heating
+          > Full Home
           </button>
-          <button onClick={() => setActiveUnit('screed')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'screed' ? 'bg-teal-500 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white '
+          <button onClick={() => setActiveUnit('kitchen_renovation')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'kitchen_renovation' ? 'bg-amber-500 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white '
             }`}
-          > Screed
+          > Kitchen
           </button>
-          <button onClick={() => setActiveUnit('electrical')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'electrical' ? 'bg-yellow-500 text-slate-900 dark:text-white shadow-sm font-semibold' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white '
+          <button onClick={() => setActiveUnit('bathroom_renovation')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'bathroom_renovation' ? 'bg-cyan-500 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white '
             }`}
-          > Electric
+          > Bathroom
+          </button>
+          <button onClick={() => setActiveUnit('granny_flat')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'granny_flat' ? 'bg-violet-500 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white '
+            }`}
+          > Granny Flat
+          </button>
+          <button onClick={() => setActiveUnit('extension')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'extension' ? 'bg-emerald-500 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white '
+            }`}
+          > Extension
+          </button>
+          <button onClick={() => setActiveUnit('multi_unit')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'multi_unit' ? 'bg-blue-500 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white '
+            }`}
+          > Multi Unit
+          </button>
+          <button onClick={() => setActiveUnit('new_luxe_homes')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'new_luxe_homes' ? 'bg-slate-500 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white '
+            }`}
+          > Luxe Homes
           </button>
         </div>
       </div>
@@ -171,9 +187,13 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
               <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Workforce Tenant</label>
               <select className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2 text-xs focus:outline-none" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={taskTenant} onChange={(e) => setTaskTenant(e.target.value as any)}
               >
-                <option value="heating">Heating Division</option>
-                <option value="screed">Screed Foundations</option>
-                <option value="electrical">Electrical Smart Control</option>
+                <option value="full_home_renovation">Full Home Renovation</option>
+                <option value="kitchen_renovation">Kitchen Renovation</option>
+                <option value="bathroom_renovation">Bathroom Renovation</option>
+                <option value="granny_flat">Granny Flat</option>
+                <option value="extension">Extension</option>
+                <option value="multi_unit">Multi Unit</option>
+                <option value="new_luxe_homes">New Luxe Homes</option>
               </select>
             </div>
             <div>
@@ -285,9 +305,13 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
               <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Tenant</label>
               <select className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={editTenant} onChange={(e) => setEditTenant(e.target.value as any)}
               >
-                <option value="heating">Heating</option>
-                <option value="screed">Screed</option>
-                <option value="electrical">Electrical</option>
+                <option value="full_home_renovation">Full Home Renovation</option>
+                <option value="kitchen_renovation">Kitchen Renovation</option>
+                <option value="bathroom_renovation">Bathroom Renovation</option>
+                <option value="granny_flat">Granny Flat</option>
+                <option value="extension">Extension</option>
+                <option value="multi_unit">Multi Unit</option>
+                <option value="new_luxe_homes">New Luxe Homes</option>
               </select>
             </div>
           </div>
@@ -343,8 +367,8 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
 
                       <div className="col-span-5 grid grid-cols-5 h-16 relative">
                         {techTasks.map(task => { let gridColStart = 'col-start-1'; let gridColSpan = 'col-span-2'; if (task.time.includes('10:0')) gridColStart = 'col-start-2'; else if (task.time.includes('11:0')) gridColStart = 'col-start-3'; else if (task.time.includes('14:0')) { gridColStart = 'col-start-4'; gridColSpan = 'col-span-1'; } else if (task.time.includes('15:0')) { gridColStart = 'col-start-4 col-span-2'; gridColSpan = 'col-span-2'; }
-  let activeStyles = 'border-rose-200 bg-rose-50/90 text-rose-950 font-medium'; if (task.tenant === 'screed') activeStyles = 'border-teal-200 bg-teal-50/90 text-teal-950 font-medium'; if (task.tenant === 'electrical') activeStyles = 'border-yellow-200 bg-amber-50/90 text-amber-950 font-medium'; return (
-                            <div key={task.id} onClick={() => setSelectedTask(task)} className={`absolute inset-y-1 mx-1.5 p-2 rounded-xl border text-left flex flex-col justify-between cursor-pointer transition shadow-xs z-10 select-none ${gridColStart} ${gridColSpan} ${ selectedTask?.id === task.id ? 'ring-2 ring-indigo-600 scale-102 font-bold shadow-md' : 'hover:scale-101'
+  let activeStyles = 'border-indigo-200 bg-indigo-50/90 text-indigo-950 font-medium'; if (task.tenant === 'kitchen_renovation') activeStyles = 'border-amber-200 bg-amber-50/90 text-amber-950 font-medium'; if (task.tenant === 'bathroom_renovation') activeStyles = 'border-cyan-200 bg-cyan-50/90 text-cyan-950 font-medium'; return (
+                            <div key={task.id} onClick={() => setSelectedTask(task)} className={`absolute inset-y-1 mx-1.5 p-2 rounded-xl border text-left flex flex-col justify-between cursor-pointer transition shadow-xs z-10 select-none ${gridColStart} ${gridColSpan} ${ activeStyles } ${ selectedTask?.id === task.id ? 'ring-2 ring-indigo-600 scale-102 font-bold shadow-md' : 'hover:scale-101'
                               }`}
                             >
                               <span className="text-[10px] block truncate font-bold">{task.client}</span>
@@ -380,9 +404,8 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
                   <span className="text-[9px] uppercase tracking-wider text-slate-600 dark:text-slate-300 block">Dispatch ID</span>
                   <span className="text-xs font-mono font-bold text-amber-500">{selectedTask.id}</span>
                 </div>
-                <span className={`px-2 py-0.5 rounded text-[8px] uppercase tracking-wider font-extrabold ${ selectedTask.tenant === 'heating' ? 'bg-rose-950 text-rose-300' : selectedTask.tenant === 'screed' ? 'bg-teal-950 text-teal-300' : 'bg-amber-950 text-amber-300'
-                }`}>
-                  {selectedTask.tenant} Division
+                <span className={`px-2 py-0.5 rounded text-[8px] uppercase tracking-wider font-extrabold bg-slate-800 text-slate-200`}>
+                  {selectedTask.tenant.replace(/_/g, ' ')} Division
                 </span>
               </div>
 

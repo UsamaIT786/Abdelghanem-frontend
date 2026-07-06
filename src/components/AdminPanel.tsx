@@ -1,8 +1,8 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SystemLog } from '../types';
 import { Shield, Activity, RefreshCw, Database, Radio, Clock, AlertTriangle, Check, Zap, BarChart3, Globe, LayoutDashboard, X, TrendingUp, ShieldCheck, Wifi, Cpu
 } from 'lucide-react';
-import { fetchLiveLogs, initLiveWebSocket } from '../lib/api'; interface AdminPanelProps { currentTenant: string; onTenantChange: (tenant: 'heating' | 'screed' | 'electrical' | 'all') => void;
+import { fetchLiveLogs, initLiveWebSocket } from '../lib/api'; interface AdminPanelProps { currentTenant: string; onTenantChange: (tenant: 'full_home_renovation' | 'kitchen_renovation' | 'bathroom_renovation' | 'granny_flat' | 'extension' | 'multi_unit' | 'new_luxe_homes' | 'all') => void;
 } export default function AdminPanel({ currentTenant, onTenantChange }: AdminPanelProps) { const [logs, setLogs] = useState<SystemLog[]>([]); const [loading, setLoading] = useState(true); const [activeTab, setActiveTab] = useState<'n8n' | 'system'>('n8n'); const [isRefreshing, setIsRefreshing] = useState(false); const loadData = async () => { try { const loadedLogs = await fetchLiveLogs(); setLogs(loadedLogs);
     } catch (err) { console.error("Failed to load system logs:", err);
     } finally { setLoading(false);
@@ -12,8 +12,7 @@ import { fetchLiveLogs, initLiveWebSocket } from '../lib/api'; interface AdminPa
     }); return () => ws.close();
   }, []); const triggerLogsRefresh = () => { setIsRefreshing(true); loadData().finally(() => setTimeout(() => setIsRefreshing(false), 500));
   };
-  const successCount = logs.filter(l => l.status === 'success').length; const warningCount = logs.filter(l => l.status === 'warning').length; const errorCount = logs.filter(l => l.status === 'error').length; const activeStyles = { all: 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/30', heating: 'bg-gradient-to-r from-rose-500 to-pink-600 text-white shadow-lg shadow-rose-500/30', screed: 'bg-gradient-to-r from-teal-500 to-emerald-600 text-white shadow-lg shadow-teal-500/30', electrical: 'bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/30',
-  };
+  const successCount = logs.filter(l => l.status === 'success').length; const warningCount = logs.filter(l => l.status === 'warning').length; const errorCount = logs.filter(l => l.status === 'error').length; const activeStyles: Record<string, string> = { all: 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/30', full_home_renovation: 'bg-gradient-to-r from-rose-500 to-pink-600 text-white shadow-lg shadow-rose-500/30', kitchen_renovation: 'bg-gradient-to-r from-teal-500 to-emerald-600 text-white shadow-lg shadow-teal-500/30', bathroom_renovation: 'bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/30', granny_flat: 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/30', extension: 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/30', multi_unit: 'bg-gradient-to-r from-purple-500 to-fuchsia-600 text-white shadow-lg shadow-purple-500/30', new_luxe_homes: 'bg-gradient-to-r from-slate-700 to-slate-900 text-white shadow-lg shadow-slate-700/30' };
   const activeStyle = activeStyles[currentTenant as keyof typeof activeStyles] || activeStyles.all; return (
     <div className="space-y-6 max-w-7xl mx-auto">
       
@@ -36,9 +35,13 @@ import { fetchLiveLogs, initLiveWebSocket } from '../lib/api'; interface AdminPa
           <div className="flex items-center gap-2 p-1.5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 /50 rounded-2xl backdrop-blur-sm">
             {[
               { value: 'all', label: 'Central', icon: '🏢' },
-              { value: 'heating', label: 'Heating', icon: '🔥' },
-              { value: 'screed', label: 'Screed', icon: '🌍' },
-              { value: 'electrical', label: 'Electrical', icon: '⚡' },
+              { value: 'full_home_renovation', label: 'Full Home', icon: '🏠' },
+              { value: 'kitchen_renovation', label: 'Kitchen', icon: '🍳' },
+              { value: 'bathroom_renovation', label: 'Bathroom', icon: '🚿' },
+              { value: 'granny_flat', label: 'Granny Flat', icon: '🏡' },
+              { value: 'extension', label: 'Extension', icon: '🏗️' },
+              { value: 'multi_unit', label: 'Multi Unit', icon: '🏢' },
+              { value: 'new_luxe_homes', label: 'Luxe Homes', icon: '✨' },
             ].map(opt => (
               <button key={opt.value} onClick={() => onTenantChange(opt.value as any)} className={`px-4 py-2 rounded-xl text-xs font-bold tracking-wide transition-all duration-300 ${ currentTenant === opt.value ? activeStyle : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-700 '
                 }`}>

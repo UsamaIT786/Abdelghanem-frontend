@@ -55,7 +55,7 @@ export default function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
 
             <h2 className="text-2xl font-semibold leading-tight text-slate-900 dark:text-white /95 mb-4"> AI-Powered <br />CRM & Dispatch Control
             </h2>
-            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-6"> Connect Heating, Screed, and Electrical business units into one multi-tenant automation ecosystem with integrated dispatch routing and programmatic marketing templates.
+            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-6"> Connect Full Home Renovation, Kitchen, Bathroom, Granny Flat, Extension, Multi Unit, and New Luxe Homes into one multi-tenant automation ecosystem.
             </p>
           </div>
 
@@ -70,20 +70,40 @@ export default function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
                   <span className="font-medium">Super Admin Panel</span>
                   <span className="text-[10px] text-amber-200 select-all">admin@crms.com</span>
                 </button>
-                <button onClick={() => handlePresetSelect('heating', 'heat@crms.com', 'Heating Manager')} className="w-full flex justify-between items-center py-1.5 px-2 bg-white dark:bg-slate-900/5 hover:bg-white/10 rounded transition border border-white/5 text-left"
+                <button onClick={() => handlePresetSelect('full_home_renovation', 'full_home@crms.com', 'Full Home Manager')} className="w-full flex justify-between items-center py-1.5 px-2 bg-white dark:bg-slate-900/5 hover:bg-white/10 rounded transition border border-white/5 text-left"
                 >
-                  <span className="font-medium">Heating Works</span>
-                  <span className="text-[10px] text-rose-300">heat@crms.com</span>
+                  <span className="font-medium">Full Home Renovation</span>
+                  <span className="text-[10px] text-indigo-300">full_home@crms.com</span>
                 </button>
-                <button onClick={() => handlePresetSelect('screed', 'screed@crms.com', 'Screed Marketer')} className="w-full flex justify-between items-center py-1.5 px-2 bg-white dark:bg-slate-900/5 hover:bg-white/10 rounded transition border border-white/5 text-left"
+                <button onClick={() => handlePresetSelect('kitchen_renovation', 'kitchen@crms.com', 'Kitchen Manager')} className="w-full flex justify-between items-center py-1.5 px-2 bg-white dark:bg-slate-900/5 hover:bg-white/10 rounded transition border border-white/5 text-left"
                 >
-                  <span className="font-medium">Screed Works</span>
-                  <span className="text-[10px] text-teal-300">screed@crms.com</span>
+                  <span className="font-medium">Kitchen Renovation</span>
+                  <span className="text-[10px] text-amber-300">kitchen@crms.com</span>
                 </button>
-                <button onClick={() => handlePresetSelect('electrical', 'elec@crms.com', 'Electrical Tech')} className="w-full flex justify-between items-center py-1.5 px-2 bg-white dark:bg-slate-900/5 hover:bg-white/10 rounded transition border border-white/5 text-left"
+                <button onClick={() => handlePresetSelect('bathroom_renovation', 'bathroom@crms.com', 'Bathroom Manager')} className="w-full flex justify-between items-center py-1.5 px-2 bg-white dark:bg-slate-900/5 hover:bg-white/10 rounded transition border border-white/5 text-left"
                 >
-                  <span className="font-medium">Electrical Works</span>
-                  <span className="text-[10px] text-yellow-300">elec@crms.com</span>
+                  <span className="font-medium">Bathroom Renovation</span>
+                  <span className="text-[10px] text-cyan-300">bathroom@crms.com</span>
+                </button>
+                <button onClick={() => handlePresetSelect('granny_flat', 'granny_flat@crms.com', 'Granny Flat Manager')} className="w-full flex justify-between items-center py-1.5 px-2 bg-white dark:bg-slate-900/5 hover:bg-white/10 rounded transition border border-white/5 text-left"
+                >
+                  <span className="font-medium">Granny Flat</span>
+                  <span className="text-[10px] text-violet-300">granny_flat@crms.com</span>
+                </button>
+                <button onClick={() => handlePresetSelect('extension', 'extension@crms.com', 'Extension Manager')} className="w-full flex justify-between items-center py-1.5 px-2 bg-white dark:bg-slate-900/5 hover:bg-white/10 rounded transition border border-white/5 text-left"
+                >
+                  <span className="font-medium">Extension</span>
+                  <span className="text-[10px] text-emerald-300">extension@crms.com</span>
+                </button>
+                <button onClick={() => handlePresetSelect('multi_unit', 'multi_unit@crms.com', 'Multi Unit Manager')} className="w-full flex justify-between items-center py-1.5 px-2 bg-white dark:bg-slate-900/5 hover:bg-white/10 rounded transition border border-white/5 text-left"
+                >
+                  <span className="font-medium">Multi Unit</span>
+                  <span className="text-[10px] text-blue-300">multi_unit@crms.com</span>
+                </button>
+                <button onClick={() => handlePresetSelect('new_luxe_homes', 'new_luxe@crms.com', 'Luxe Homes Manager')} className="w-full flex justify-between items-center py-1.5 px-2 bg-white dark:bg-slate-900/5 hover:bg-white/10 rounded transition border border-white/5 text-left"
+                >
+                  <span className="font-medium">New Luxe Homes</span>
+                  <span className="text-[10px] text-slate-400">new_luxe@crms.com</span>
                 </button>
               </div>
             </div>
@@ -125,39 +145,87 @@ export default function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
                     </div>
                   </button>
 
-                  <button type="button" onClick={() => setSelectedTenant('heating')} className={`flex items-center gap-2 p-2.5 rounded-xl border text-left transition ${ selectedTenant === 'heating'
+                  <button type="button" onClick={() => setSelectedTenant('full_home_renovation')} className={`flex items-center gap-2 p-2.5 rounded-xl border text-left transition ${ selectedTenant === 'full_home_renovation'
                         ? 'border-[#4F46E5] bg-[#4F46E5]/5 text-slate-900 dark:text-white font-semibold ring-1 ring-[#4F46E5]'
                         : 'border-slate-200 dark:border-slate-700 hover:border-neutral-300 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300'
                     }`}
                   >
                     <Flame className="w-4 h-4 text-[#4F46E5] flex-shrink-0" />
                     <div>
-                      <div className="text-xs">Heating Works</div>
-                      <div className="text-[10px] text-slate-500 dark:text-slate-400">Boilers & Heat</div>
+                      <div className="text-xs">Full Home</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400">Renovation</div>
                     </div>
                   </button>
 
-                  <button type="button" onClick={() => setSelectedTenant('screed')} className={`flex items-center gap-2 p-2.5 rounded-xl border text-left transition ${ selectedTenant === 'screed'
+                  <button type="button" onClick={() => setSelectedTenant('kitchen_renovation')} className={`flex items-center gap-2 p-2.5 rounded-xl border text-left transition ${ selectedTenant === 'kitchen_renovation'
                         ? 'border-[#06B6D4] bg-[#06B6D4]/5 text-slate-900 dark:text-white font-semibold ring-1 ring-[#06B6D4]'
                         : 'border-slate-200 dark:border-slate-700 hover:border-neutral-300 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300'
                     }`}
                   >
                     <Layers className="w-4 h-4 text-[#06B6D4] flex-shrink-0" />
                     <div>
-                      <div className="text-xs">Screed Works</div>
-                      <div className="text-[10px] text-slate-500 dark:text-slate-400">Flow & Foundation</div>
+                      <div className="text-xs">Kitchen</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400">Renovation</div>
                     </div>
                   </button>
 
-                  <button type="button" onClick={() => setSelectedTenant('electrical')} className={`flex items-center gap-2 p-2.5 rounded-xl border text-left transition ${ selectedTenant === 'electrical'
+                  <button type="button" onClick={() => setSelectedTenant('bathroom_renovation')} className={`flex items-center gap-2 p-2.5 rounded-xl border text-left transition ${ selectedTenant === 'bathroom_renovation'
                         ? 'border-[#06B6D4] bg-[#06B6D4]/5 text-slate-900 dark:text-white font-semibold ring-1 ring-[#06B6D4]'
                         : 'border-slate-200 dark:border-slate-700 hover:border-neutral-300 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300'
                     }`}
                   >
                     <Zap className="w-4 h-4 text-amber-500 flex-shrink-0" />
                     <div>
-                      <div className="text-xs">Electrical Works</div>
-                      <div className="text-[10px] text-slate-500 dark:text-slate-400">Grid & EV Smart</div>
+                      <div className="text-xs">Bathroom</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400">Renovation</div>
+                    </div>
+                  </button>
+                  
+                  <button type="button" onClick={() => setSelectedTenant('granny_flat')} className={`flex items-center gap-2 p-2.5 rounded-xl border text-left transition ${ selectedTenant === 'granny_flat'
+                        ? 'border-[#4F46E5] bg-[#4F46E5]/5 text-slate-900 dark:text-white font-semibold ring-1 ring-[#4F46E5]'
+                        : 'border-slate-200 dark:border-slate-700 hover:border-neutral-300 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300'
+                    }`}
+                  >
+                    <Shield className="w-4 h-4 text-[#4F46E5] flex-shrink-0" />
+                    <div>
+                      <div className="text-xs">Granny Flat</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400">Construction</div>
+                    </div>
+                  </button>
+
+                  <button type="button" onClick={() => setSelectedTenant('extension')} className={`flex items-center gap-2 p-2.5 rounded-xl border text-left transition ${ selectedTenant === 'extension'
+                        ? 'border-[#4F46E5] bg-[#4F46E5]/5 text-slate-900 dark:text-white font-semibold ring-1 ring-[#4F46E5]'
+                        : 'border-slate-200 dark:border-slate-700 hover:border-neutral-300 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300'
+                    }`}
+                  >
+                    <Shield className="w-4 h-4 text-[#4F46E5] flex-shrink-0" />
+                    <div>
+                      <div className="text-xs">Extension</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400">Building</div>
+                    </div>
+                  </button>
+
+                  <button type="button" onClick={() => setSelectedTenant('multi_unit')} className={`flex items-center gap-2 p-2.5 rounded-xl border text-left transition ${ selectedTenant === 'multi_unit'
+                        ? 'border-[#4F46E5] bg-[#4F46E5]/5 text-slate-900 dark:text-white font-semibold ring-1 ring-[#4F46E5]'
+                        : 'border-slate-200 dark:border-slate-700 hover:border-neutral-300 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300'
+                    }`}
+                  >
+                    <Shield className="w-4 h-4 text-[#4F46E5] flex-shrink-0" />
+                    <div>
+                      <div className="text-xs">Multi Unit</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400">Development</div>
+                    </div>
+                  </button>
+
+                  <button type="button" onClick={() => setSelectedTenant('new_luxe_homes')} className={`flex items-center gap-2 p-2.5 rounded-xl border text-left transition ${ selectedTenant === 'new_luxe_homes'
+                        ? 'border-[#4F46E5] bg-[#4F46E5]/5 text-slate-900 dark:text-white font-semibold ring-1 ring-[#4F46E5]'
+                        : 'border-slate-200 dark:border-slate-700 hover:border-neutral-300 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300'
+                    }`}
+                  >
+                    <Shield className="w-4 h-4 text-[#4F46E5] flex-shrink-0" />
+                    <div>
+                      <div className="text-xs">New Luxe Homes</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400">Premium Builds</div>
                     </div>
                   </button>
                 </div>
@@ -257,7 +325,7 @@ export default function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
                 <div>
                   <label className="text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-widest text-center block mb-2"> Enter Verification Code
                   </label>
-                  <input type="text" maxLength={6} value={twoFactorCode} onChange={(e) => setTwoFactorCode(e.target.value.replace(/\D/g, ''))} className="w-full text-center tracking-[12px] text-2xl font-bold py-3 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition" placeholder="1234" required
+                  <input type="text" maxLength={6} value={twoFactorCode} onChange={(e) => setTwoFactorCode(e.target.value.replace(/\D/g, ''))} className="w-full text-center tracking-[12px] text-2xl font-bold py-3 text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100 focus:border-transparent transition" placeholder="1234" required
                   />
                   <span className="text-[10px] text-center text-slate-500 dark:text-slate-400 block mt-2"> Tip: Enter any 4 numbers (e.g. <strong className="text-slate-600 dark:text-slate-300">1234</strong>) to simulate success
                   </span>

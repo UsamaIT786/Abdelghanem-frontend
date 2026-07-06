@@ -286,6 +286,13 @@ export async function uploadLiveDocument(file: File): Promise<any> {
   });
 }
 
+export async function analyzeImageTags(base64Image: string) {
+  return apiFetch("/analyze-image", {
+    method: "POST",
+    body: JSON.stringify({ image: base64Image }),
+  });
+}
+
 export async function updateLiveDocument(id: string, payload: any) {
   return apiFetch(`/documents/${id}`, {
     method: "PUT",
@@ -348,12 +355,13 @@ export async function deleteLiveCampaign(id: string) {
 export async function triggerAutomationSync(payload: {
   campaign_id?: string;
   workspace_id: string;
-  platform_target: 'facebook' | 'google_ads' | 'seo_blog';
+  platform_target: 'facebook' | 'google_ads' | 'seo_blog' | 'meta_social' | 'wordpress_seo' | string;
   campaign_name: string;
   content: any;
 }) {
   return apiFetch("/v1/automation/sync", {
     method: "POST",
+    headers: { "content-type": "application/json" },
     body: JSON.stringify(payload)
   });
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, Globe, Terminal, Database, CheckCircle2, AlertCircle, AlertTriangle, Loader2, Plus, Trash2, Play, Calendar, Clock, ArrowRight, FileText, Check, X, Tag, DollarSign, Layers, Eye, BookOpen, Facebook, Compass
+import { Sparkles, Globe, Terminal, Database, CheckCircle2, AlertCircle, AlertTriangle, Loader2, Plus, Trash2, Play, Calendar, Clock, ArrowRight, FileText, Check, X, Tag, DollarSign, Layers, Eye, BookOpen, Facebook, Compass, Image as ImageIcon
 } from 'lucide-react';
-import { triggerAutomationSync, fetchLiveCampaigns, deleteLiveCampaign, API_BASE } from '../lib/api';
+import { triggerAutomationSync, fetchLiveCampaigns, deleteLiveCampaign, analyzeImageTags, API_BASE } from '../lib/api';
 
 // Inline Facebook Icon SVG
 const FacebookIcon = () => (
@@ -18,7 +18,7 @@ const GoogleIcon = () => (
 );
 
 // Types for components
-type PlatformBranch = 'facebook' | 'google_ads' | 'seo_blog'; export default function AutomationControlCenter() { const [activeTab, setActiveTab] = useState<PlatformBranch>('facebook'); const [workspaceId, setWorkspaceId] = useState('work_luxe_01'); const [campaignName, setCampaignName] = useState(''); const [tenant, setTenant] = useState<'heating' | 'screed' | 'electrical'>('heating');
+type PlatformBranch = 'facebook' | 'google_ads' | 'seo_blog'; export default function AutomationControlCenter() { const [activeTab, setActiveTab] = useState<PlatformBranch>('facebook'); const [workspaceId, setWorkspaceId] = useState('work_luxe_01'); const [campaignName, setCampaignName] = useState(''); const [tenant, setTenant] = useState<'full_home_renovation' | 'kitchen_renovation' | 'bathroom_renovation' | 'granny_flat' | 'extension' | 'multi_unit' | 'new_luxe_homes'>('full_home_renovation');
 
   // Execution states
   const [isExecuting, setIsExecuting] = useState(false); const [executionLog, setExecutionLog] = useState<Array<{ time: string; msg: string; type: 'info' | 'success' | 'error' | 'warning' }>>([]); const [liveStatus, setLiveStatus] = useState<'Idle' | 'n8n Processing Deep Chains...' | 'Successfully Synchronized & Live ✅' | 'Pipeline Error ❌'>('Idle');
@@ -45,7 +45,7 @@ type PlatformBranch = 'facebook' | 'google_ads' | 'seo_blog'; export default fun
   };
 
   // 1. Meta/Facebook Branch States
-  const [metaAdCopy, setMetaAdCopy] = useState(''); const [metaMediaUrl, setMetaMediaUrl] = useState('https://images.unsplash.com/photo-1584622650111-993a426fbf0a'); const [metaTargetLink, setMetaTargetLink] = useState('https://heatingworks.co.uk'); const [metaDirectSchedule, setMetaDirectSchedule] = useState(false); const [metaCopyFormatter, setMetaCopyFormatter] = useState<'normal' | 'uppercase' | 'hashtags'>('normal');
+  const [metaAdCopy, setMetaAdCopy] = useState(''); const [metaMediaUrl, setMetaMediaUrl] = useState(''); const [metaTargetLink, setMetaTargetLink] = useState('https://heatingworks.co.uk'); const [metaDirectSchedule, setMetaDirectSchedule] = useState(false); const [metaCopyFormatter, setMetaCopyFormatter] = useState<'normal' | 'uppercase' | 'hashtags'>('normal');
 
   // 2. Google Ads Branch States
   const [googleBudget, setGoogleBudget] = useState(75); const [googleCountry, setGoogleCountry] = useState('AU'); const [googleHeadline, setGoogleHeadline] = useState(''); const [googleDescription, setGoogleDescription] = useState(''); const [googleKeywordInput, setGoogleKeywordInput] = useState(''); const [googleKeywords, setGoogleKeywords] = useState<string[]>(['smart boiler', 'hvac installation', 'home heating repair']);
@@ -54,8 +54,13 @@ type PlatformBranch = 'facebook' | 'google_ads' | 'seo_blog'; export default fun
   const [seoTitle, setSeoTitle] = useState(''); const [seoSubtitle, setSeoSubtitle] = useState(''); const [seoExcerpt, setSeoExcerpt] = useState(''); const [seoBodyText, setSeoBodyText] = useState(''); const [seoMetaTags, setSeoMetaTags] = useState<string[]>(['SEO', 'Organic', 'Boiler Upgrades']); const [seoCadence, setSeoCadence] = useState('Immediate Firing'); const [seoPreviewMode, setSeoPreviewMode] = useState<'edit' | 'preview'>('edit'); const availableMetaTags = ['HVAC', 'Underfloor Screed', 'Electrical Safety', 'EV Charging', 'Clean Energy', 'Home Renovation', 'Expert Services', 'Commercial Development'];
 
   // Load initial ad campaigns
-  const loadHistory = async () => { try { const data = await fetchLiveCampaigns();
-      // Sort to show newest first setCampaignHistory(data || []);
+  const loadHistory = async () => { try { 
+      const cached = localStorage.getItem('crm_campaigns');
+      if (cached && !campaignHistory.length) setCampaignHistory(JSON.parse(cached));
+      const data = await fetchLiveCampaigns();
+      // Sort to show newest first 
+      setCampaignHistory(data || []);
+      if (data) localStorage.setItem('crm_campaigns', JSON.stringify(data));
     } catch (err) { console.error('Failed to load campaign records:', err);
     }
   };
@@ -102,32 +107,123 @@ type PlatformBranch = 'facebook' | 'google_ads' | 'seo_blog'; export default fun
   };
 
   // Payload compiler & validation dispatcher
-  const handleExecutePipeline = async (e: React.FormEvent) => { e.preventDefault();
+  const handleExecutePipeline = async (e: React.FormEvent) => { 
+    e.preventDefault();
     
     // Validations
-  if (!campaignName.trim()) { addLogEntry('Validation Error: Campaign Name is required.', 'error'); alert('Please enter a Campaign Name'); return;
+    if (!campaignName.trim()) { 
+      addLogEntry('Validation Error: Campaign Name is required.', 'error'); 
+      alert('Please enter a Campaign Name'); 
+      return;
     }
-  let payloadContent: any = {};
-  if (activeTab === 'facebook') { if (!metaAdCopy.trim()) { addLogEntry('Validation Error: Facebook Ad Copy message is empty.', 'error'); alert('Please fill in the Facebook Ad Copy'); return;
-      } payloadContent = { message: metaAdCopy, media_url: metaMediaUrl, link: metaTargetLink, platforms: ['facebook', 'instagram'], direct_schedule: metaDirectSchedule
+
+    // --- HELPER: DYNAMIC AUTO-TAGS GENERATOR ---
+    const generateAutoTags = (text: string) => {
+      const lower = text.toLowerCase();
+      if (lower.match(/\b(boiler|heating|hvac|gas|warmth)\b/)) {
+        return ["#HVAC", "#BoilerInstallation", "#HeatingWorks", "#HomeComfort"];
+      }
+      if (lower.match(/\b(renovation|luxury|home|interiors|design)\b/)) {
+        return ["#LuxuryHomes", "#SydneyRenovations", "#InteriorDesign", "#PremiumLiving"];
+      }
+      return ["#PremiumService", "#Excellence", "#QualityWork"];
+    };
+
+    let payloadContent: any = {};
+    let targetPlatform = '';
+
+    if (activeTab === 'facebook') { 
+      if (!metaAdCopy.trim()) { 
+        addLogEntry('Validation Error: Facebook Ad Copy message is empty.', 'error'); 
+        alert('Please fill in the Facebook Ad Copy'); 
+        return;
+      } 
+      
+      // Auto-tagging injection for Meta
+      const generatedTags = generateAutoTags(metaAdCopy);
+      const finalMessage = `${metaAdCopy}\n\n${generatedTags.join(' ')}`;
+
+      payloadContent = { 
+        message: finalMessage, 
+        media_url: metaMediaUrl || "", 
+        link: metaTargetLink || "https://luxehr.com.au"
       };
-    } else if (activeTab === 'google_ads') { if (!googleHeadline.trim()) { addLogEntry('Validation Error: Google Ad Headline is required.', 'error'); alert('Headline is required for Google Search Ad'); return;
+      targetPlatform = 'meta_social';
+
+    } else if (activeTab === 'google_ads') { 
+      if (!googleHeadline.trim()) { 
+        addLogEntry('Validation Error: Google Ad Headline is required.', 'error'); 
+        alert('Headline is required for Google Search Ad'); 
+        return;
       }
-  if (googleHeadline.length > 30) { addLogEntry('Validation Error: Headline exceeds 30 characters limit.', 'error'); alert('Google Ads headline must be 30 characters or less'); return;
+      if (googleHeadline.length > 30) { 
+        addLogEntry('Validation Error: Headline exceeds 30 characters limit.', 'error'); 
+        alert('Google Ads headline must be 30 characters or less'); 
+        return;
       }
-  if (!googleDescription.trim()) { addLogEntry('Validation Error: Google Ad Description is required.', 'error'); alert('Long description is required'); return;
+      if (!googleDescription.trim()) { 
+        addLogEntry('Validation Error: Google Ad Description is required.', 'error'); 
+        alert('Long description is required'); 
+        return;
       }
-  if (googleDescription.length > 90) { addLogEntry('Validation Error: Description exceeds 90 characters limit.', 'error'); alert('Google Ads description must be 90 characters or less'); return;
-      } payloadContent = { budget: Number(googleBudget), target_country: googleCountry, ad_headline: googleHeadline, ad_description: googleDescription, keywords: googleKeywords
+      if (googleDescription.length > 90) { 
+        addLogEntry('Validation Error: Description exceeds 90 characters limit.', 'error'); 
+        alert('Google Ads description must be 90 characters or less'); 
+        return;
+      } 
+      payloadContent = { 
+        budget: Number(googleBudget), 
+        target_country: googleCountry, 
+        ad_headline: googleHeadline, 
+        ad_description: googleDescription
       };
-    } else if (activeTab === 'seo_blog') { if (!seoTitle.trim()) { addLogEntry('Validation Error: Editorial SEO Title is required.', 'error'); alert('Title is required'); return;
+      targetPlatform = 'google_ads';
+
+    } else if (activeTab === 'seo_blog') { 
+      if (!seoTitle.trim()) { 
+        addLogEntry('Validation Error: Editorial SEO Title is required.', 'error'); 
+        alert('Title is required'); 
+        return;
       }
-  if (!seoBodyText.trim()) { addLogEntry('Validation Error: Editorial Excerpt and Body text are required.', 'error'); alert('Body text is required'); return;
-      } payloadContent = { page_title: seoTitle, subtitle: seoSubtitle, excerpt: seoExcerpt || seoBodyText.substring(0, 150) + '...', body_markdown: seoBodyText, seo_keywords: seoMetaTags, dataforseo_enabled: true, firing_cadence: seoCadence, target_domain: tenant === 'heating' ? 'heatingworks.co.uk' : tenant === 'screed' ? 'screedworks.co.uk' : 'electricalworks.co.uk'
+      if (!seoBodyText.trim()) { 
+        addLogEntry('Validation Error: Editorial Excerpt and Body text are required.', 'error'); 
+        alert('Body text is required'); 
+        return;
+      } 
+      
+      const generatedTags = generateAutoTags(seoBodyText);
+      const cleanTags = generatedTags.map(t => t.replace('#', ''));
+      
+      payloadContent = { 
+        title: seoTitle, 
+        excerpt: seoExcerpt || seoBodyText.substring(0, 150) + '...', 
+        body_markdown: seoBodyText, 
+        tags: seoMetaTags && seoMetaTags.length > 0 ? seoMetaTags : cleanTags
       };
-    } setIsExecuting(true); setLiveStatus('n8n Processing Deep Chains...'); addLogEntry(`Compiling payload for ${activeTab.toUpperCase()} deployment...`, 'info'); window.dispatchEvent(new CustomEvent('crm_show_toast', { detail: { message: `n8n campaign workflow sync dispatched! 📡`, type: 'info' } 
-    })); const finalPayload = { campaign_id: `camp_${activeTab.slice(0, 2)}_${Date.now().toString().slice(-4)}`, workspace_id: workspaceId, platform_target: activeTab, campaign_name: campaignName, content: payloadContent
-    }; addLogEntry(`Payload structural validation complete. Dispatching to Next/Express gateway sync router.`, 'info'); addLogEntry(`Routing key (platform_target): "${activeTab}"`, 'info'); try { const response = await triggerAutomationSync(finalPayload); addLogEntry(`Gateway synchronization acknowledged! StatusCode: 200 OK.`, 'success'); addLogEntry(`n8n webhook initiated. Deep processing chains active...`, 'warning');
+      targetPlatform = 'wordpress_seo';
+    } 
+
+    setIsExecuting(true); 
+    setLiveStatus('n8n Processing Deep Chains...'); 
+    addLogEntry(`Compiling payload for ${targetPlatform.toUpperCase()} deployment...`, 'info'); 
+    window.dispatchEvent(new CustomEvent('crm_show_toast', { detail: { message: `n8n campaign workflow sync dispatched! 📡`, type: 'info' } })); 
+    
+    // Automated Target Correlation
+    const finalPayload = { 
+      campaign_id: `camp_${targetPlatform.slice(0, 2)}_${Date.now().toString().slice(-4)}`, 
+      workspace_id: targetPlatform === 'meta_social' ? "work_luxe_01" : workspaceId, 
+      platform_target: targetPlatform, 
+      campaign_name: campaignName, 
+      content: payloadContent
+    }; 
+    
+    addLogEntry(`Payload structural validation complete. Dispatching to Next/Express gateway sync router.`, 'info'); 
+    addLogEntry(`Routing key (platform_target): "${targetPlatform}"`, 'info'); 
+    
+    try { 
+      const response = await triggerAutomationSync(finalPayload); 
+      addLogEntry(`Gateway synchronization acknowledged! StatusCode: 200 OK.`, 'success'); 
+      addLogEntry(`n8n webhook initiated. Deep processing chains active...`, 'warning');
       
       // Update local listing loadHistory();
       
@@ -194,8 +290,8 @@ type PlatformBranch = 'facebook' | 'google_ads' | 'seo_blog'; export default fun
 
       {/* Top Header Card */}
       <div className="relative overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700/80 shadow-sm bg-white dark:bg-slate-900 p-6 backdrop-blur-md shadow-indigo-950/10">
-        <div className="absolute top-0 right-0 h-40 w-40 bg-gradient-to-br from-indigo-500/10 to-transparent blur-3xl" />
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div className="absolute top-0 right-0 h-40 w-40 bg-gradient-to-br from-indigo-500/10 to-transparent blur-3xl pointer-events-none" />
+        <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="p-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400">
@@ -221,9 +317,13 @@ type PlatformBranch = 'facebook' | 'google_ads' | 'seo_blog'; export default fun
               <span className="text-[10px] text-slate-600 dark:text-slate-300 uppercase tracking-widest block font-mono">Business Division</span>
               <select value={tenant} onChange={(e: any) => setTenant(e.target.value)} className="bg-slate-100 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:bg-white dark:focus:bg-slate-800 dark:placeholder-slate-500 text-xs rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500"
               >
-                <option value="heating">Heating Works</option>
-                <option value="screed">Screed Works</option>
-                <option value="electrical">Electrical Works</option>
+                <option value="full_home_renovation">Full Home Renovation</option>
+                <option value="kitchen_renovation">Kitchen Renovation</option>
+                <option value="bathroom_renovation">Bathroom Renovation</option>
+                <option value="granny_flat">Granny Flat</option>
+                <option value="extension">Extension</option>
+                <option value="multi_unit">Multi Unit</option>
+                <option value="new_luxe_homes">New Luxe Homes</option>
               </select>
             </div>
           </div>
@@ -330,10 +430,17 @@ type PlatformBranch = 'facebook' | 'google_ads' | 'seo_blog'; export default fun
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5"> Image / Media URL Manager
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5"> IMAGE / MEDIA URL INPUT
                     </label>
-                    <input type="text" value={metaMediaUrl} onChange={(e) => setMetaMediaUrl(e.target.value)} placeholder="https://images.unsplash.com/..." className="w-full bg-slate-100 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:bg-white dark:focus:bg-slate-800 dark:placeholder-slate-500 text-xs rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-mono"
-                    />
+                    <div className="flex items-center gap-2">
+                      <input 
+                        type="text" 
+                        value={metaMediaUrl} 
+                        onChange={(e) => setMetaMediaUrl(e.target.value)}
+                        placeholder="Paste a direct image web link (e.g., https://example.com/image.jpg)"
+                        className="w-full bg-slate-100 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:bg-white dark:focus:bg-slate-800 dark:placeholder-slate-500 text-xs rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                      />
+                    </div>
                   </div>
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5"> Targeted Link Input
@@ -350,9 +457,9 @@ type PlatformBranch = 'facebook' | 'google_ads' | 'seo_blog'; export default fun
                         (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1600585154340-be6161a56a0c";
                       }}
                     />
-                    <div className="text-[10px] text-slate-600 dark:text-slate-300 truncate leading-tight">
-                      <span className="font-semibold block text-slate-600 dark:text-slate-300 ">Live Media Attachment Preview</span>
-                      <span className="font-mono">{metaMediaUrl}</span>
+                    <div className="text-[10px] text-slate-600 dark:text-slate-300 truncate leading-tight w-full">
+                      <span className="font-semibold block text-slate-600 dark:text-slate-300 mb-1">Live Media Attachment Preview</span>
+                      <span className="font-mono text-[9px] break-all whitespace-normal line-clamp-2 w-full">{metaMediaUrl.startsWith('data:image') ? metaMediaUrl.substring(0, 80) + '...' : metaMediaUrl}</span>
                     </div>
                   </div>
                 )}

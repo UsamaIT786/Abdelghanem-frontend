@@ -28,8 +28,18 @@ import { PremiumAreaChart, PremiumBarChart, PremiumDonutChart, PremiumGaugeChart
     : []; const leadsChartData = monthlyData.length > 0
     ? monthlyData.map((d: any) => ({ label: d.month, value: d.Leads || 0 }))
     : []; const donutData = divisionData.length > 0
-    ? divisionData.map((d: any) => ({ name: d.name, value: d.value, color: d.name.toLowerCase().includes('heat') ? '#f43f5e' : d.name.toLowerCase().includes('screed') ? '#06b6d4' : d.name.toLowerCase().includes('elect') ? '#f59e0b' : '#8b5cf6',
-      }))
+    ? divisionData.map((d: any) => {
+        let c = '#8b5cf6';
+        const n = d.name.toLowerCase();
+        if (n.includes('full home')) c = '#f43f5e';
+        else if (n.includes('kitchen')) c = '#06b6d4';
+        else if (n.includes('bathroom')) c = '#f59e0b';
+        else if (n.includes('granny')) c = '#10b981';
+        else if (n.includes('extension')) c = '#3b82f6';
+        else if (n.includes('multi')) c = '#a855f7';
+        else if (n.includes('luxe')) c = '#eab308';
+        return { name: d.name, value: d.value, color: c };
+      })
     : []; const sparkRevenue = revenueChartData.map(d => d.value); const revenueGrowth = monthlyData.length >= 2
     ? ((monthlyData[monthlyData.length - 1]?.Revenue || 0) -
        (monthlyData[0]?.Revenue || 0)) / Math.max(monthlyData[0]?.Revenue || 1, 1) * 100

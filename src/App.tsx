@@ -105,9 +105,9 @@ import { getSavedToken, getSavedTenant, getSavedUser, clearSession, saveSession,
   const handleLoginSuccess = (tenant: TenantType | 'all', role: UserRole, name: string, avatar: string, email: string) => { setCurrentTenant(tenant); setUserRole(role); setUserName(name); setUserAvatar(avatar); setUserEmail(email); setIsLoggedIn(true);
 
     // Auto-route based on login category
-  if (tenant === 'heating') { setActiveTab('Growth Dashboard');
-    } else if (tenant === 'screed') { setActiveTab('Campaigns');
-    } else if (tenant === 'electrical') { setActiveTab('Timesheets');
+  if (tenant === 'full_home_renovation') { setActiveTab('Growth Dashboard');
+    } else if (tenant === 'kitchen_renovation') { setActiveTab('Campaigns');
+    } else if (tenant === 'bathroom_renovation') { setActiveTab('Timesheets');
     } else { setActiveTab('Growth Dashboard');
     }
   };

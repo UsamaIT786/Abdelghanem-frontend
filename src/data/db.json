@@ -1,0 +1,84 @@
+{
+  "leads": [],
+  "campaigns": [],
+  "tasks": [],
+  "deals": [
+    {
+      "id": "d-1783379028419",
+      "title": "BATHROOM_RENOVATION Work Bundle - IT Solution Studio",
+      "company": "IT Solution Studio",
+      "value": 5000,
+      "stage": "Lead",
+      "tenant": "bathroom_renovation",
+      "date": "7 Jul 2026"
+    }
+  ],
+  "documents": [],
+  "users": [],
+  "logs": [
+    {
+      "id": "log-1783379581670",
+      "service": "Marketing Gateway",
+      "event": "Aborted campaign configuration record ID: camp_me_8573",
+      "status": "warning",
+      "timestamp": "07/07/2026, 04:13:01",
+      "payloadSize": "240 B"
+    },
+    {
+      "id": "log-1783379556603",
+      "service": "Sales CRM Core",
+      "event": "Removed client database record ID: c-1783379028302",
+      "status": "warning",
+      "timestamp": "07/07/2026, 04:12:36",
+      "payloadSize": "320 B"
+    },
+    {
+      "id": "log-1783379438604",
+      "service": "n8n Pipeline Dispatcher",
+      "event": "Triggered n8n flow [meta_social] for campaign: New Post. Status: Processing...",
+      "status": "success",
+      "timestamp": "07/07/2026, 04:10:38",
+      "payloadSize": "385 B"
+    },
+    {
+      "id": "log-1783379344865",
+      "service": "Authorization Gate",
+      "event": "Secure session generated for Enterprise Administrator",
+      "status": "success",
+      "timestamp": "07/07/2026, 04:09:04",
+      "payloadSize": "512 B"
+    },
+    {
+      "id": "log-1783379087691",
+      "service": "Authorization Gate",
+      "event": "Secure session generated for Enterprise Administrator",
+      "status": "success",
+      "timestamp": "07/07/2026, 04:04:47",
+      "payloadSize": "512 B"
+    },
+    {
+      "id": "log-1783379028421",
+      "service": "Pipeline Engine",
+      "event": "Deal pipeline created: BATHROOM_RENOVATION Work Bundle - IT Solution Studio",
+      "status": "success",
+      "timestamp": "07/07/2026, 04:03:48",
+      "payloadSize": "1.2 KB"
+    },
+    {
+      "id": "log-1783379028304",
+      "service": "Sales CRM Core",
+      "event": "Contact card created for usama",
+      "status": "success",
+      "timestamp": "07/07/2026, 04:03:48",
+      "payloadSize": "1.0 KB"
+    },
+    {
+      "id": "log-1783378958170",
+      "service": "Core System Kernel",
+      "event": "Abdelghanem CRM server boot initialized successfully on port 3000",
+      "status": "success",
+      "timestamp": "07/07/2026, 04:02:38",
+      "payloadSize": "1.0 KB"
+    }
+  ]
+}

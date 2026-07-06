@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { AdCampaign } from '../types';
-import { Sparkles, Trash2, ShieldCheck, Globe, AlertTriangle, Pencil, X, Rocket, Loader2, Check, Search, FileText, Tag, DollarSign, ChevronRight, Send, Zap, Activity, Image as ImageIcon, Instagram, LayoutTemplate
+import { Sparkles, Trash2, ShieldCheck, Globe, AlertTriangle, Pencil, X, Rocket, Loader2, Check, Search, FileText, Tag, DollarSign, ChevronRight, Send, Zap, Activity, Image as ImageIcon, Instagram, LayoutTemplate, Upload
 } from 'lucide-react';
-import { fetchLiveCampaigns, generateLiveCampaign, updateLiveCampaign, approveLiveCampaign, deleteLiveCampaign, initLiveWebSocket
+import { fetchLiveCampaigns, generateLiveCampaign, updateLiveCampaign, approveLiveCampaign, deleteLiveCampaign, initLiveWebSocket, analyzeImageTags
 } from '../lib/api'; type ScenarioId = 'A' | 'B' | 'C';
 
 // Facebook icon (not in lucide, so inline SVG)
@@ -15,9 +15,13 @@ const FacebookIcon = () => (
   }, C: { id: 'C' as ScenarioId, label: 'Google Ads Campaign', sub: 'Search & Display', bgClass: 'from-rose-600 to-orange-600', badgeBg: 'bg-rose-100 text-rose-700', borderActive: 'border-rose-500 bg-rose-50', n8nTarget: 'google_ads', platform: 'Google', description: 'Triggers a Google Ads Search campaign. Headline is auto-constrained to <=30 chars, description to <=90 chars per Google Ads policy.', placeholder: 'Drive leads for certified EV charger installation. Target homeowners and commercial properties.',
   },
 } as const; const TENANTS = [
-  { value: 'heating', label: 'Heating Works — Boilers & HVAC' },
-  { value: 'screed', label: 'Screed Works — Liquid Flooring' },
-  { value: 'electrical', label: 'Electrical Works — Smart EV' },
+  { value: 'full_home_renovation', label: 'Full Home Renovation' },
+  { value: 'kitchen_renovation', label: 'Kitchen Renovation' },
+  { value: 'bathroom_renovation', label: 'Bathroom Renovation' },
+  { value: 'granny_flat', label: 'Granny Flat' },
+  { value: 'extension', label: 'Extension' },
+  { value: 'multi_unit', label: 'Multi Unit' },
+  { value: 'new_luxe_homes', label: 'New Luxe Homes' },
 ] as const; function StatusBadge({ status }: { status: string }) { const cfg: Record<string, string> = { Live: 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-400', Approved: 'bg-teal-100 text-teal-700',
     'Pending Approval': 'bg-amber-100 text-amber-700', Draft: 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 ', Published: 'bg-sky-100 text-sky-700',
   };
@@ -29,24 +33,78 @@ const FacebookIcon = () => (
 }
   function ScenarioPill({ platform }: { platform: string }) { if (platform === 'Meta' || platform === 'Facebook' || platform === 'Instagram') return <span className="text-[8px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-bold uppercase">A · Meta</span>; if (platform === 'WordPress' || platform === 'SEO Blog') return <span className="text-[8px] bg-violet-100 text-violet-700 px-1.5 py-0.5 rounded font-bold uppercase">B · WP</span>; if (platform === 'Google') return <span className="text-[8px] bg-rose-100 text-rose-700 px-1.5 py-0.5 rounded font-bold uppercase">C · Ads</span>; return <span className="text-[8px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-1.5 py-0.5 rounded font-bold uppercase">{platform}</span>;
 }
-  function PayloadPreview({ campaign }: { campaign: AdCampaign }) { const isMeta = campaign.platform === 'Meta' || campaign.platform === 'Facebook' || campaign.platform === 'Instagram'; const isWP = campaign.platform === 'WordPress' || campaign.platform === 'SEO Blog'; const isGoogle = campaign.platform === 'Google'; let payload: any = {};
-  if (isMeta) { payload = { platform_target: 'meta_social', content: { message: (campaign.generatedCopy || '').slice(0, 60) + '...', media_url: campaign.mediaUrl || '(auto by tenant)', link: campaign.destinationLink || '(auto by tenant)', platforms: ['facebook', 'instagram'],
+  function PayloadPreview({ campaign }: { campaign: AdCampaign }) { 
+    const isMeta = campaign.platform === 'Meta' || campaign.platform === 'Facebook' || campaign.platform === 'Instagram'; 
+    const isWP = campaign.platform === 'WordPress' || campaign.platform === 'SEO Blog'; 
+    const isGoogle = campaign.platform === 'Google'; 
+    let payload: any = {};
+
+    const generateAutoTags = (text: string) => {
+      const lower = text.toLowerCase();
+      if (lower.match(/\b(boiler|heating|hvac|gas|warmth)\b/)) {
+        return ["#HVAC", "#BoilerInstallation", "#HeatingWorks", "#HomeComfort"];
       }
-    };
-  } else if (isWP) { payload = { platform_target: 'wordpress_seo', content: { page_title: campaign.title, seo_keywords: campaign.blogTags || campaign.hashtags, excerpt: (campaign.generatedCopy || '').slice(0, 60) + '...', body_markdown: '## Introduction...', dataforseo_enabled: true, target_domain: campaign.destinationLink || '(auto by tenant)',
+      if (lower.match(/\b(renovation|luxury|home|interiors|design)\b/)) {
+        return ["#LuxuryHomes", "#SydneyRenovations", "#InteriorDesign", "#PremiumLiving"];
       }
+      return ["#PremiumService", "#Excellence", "#QualityWork"];
     };
-  } else if (isGoogle) { let h = campaign.title || ''; if (h.length > 30) h = h.substring(0, 27) + '...'; let d = campaign.generatedCopy || ''; if (d.length > 90) d = d.substring(0, 87) + '...'; payload = { platform_target: 'google_ads', content: { budget: campaign.budget || 50, target_country: campaign.targetCountry || 'AU', ad_headline: h, ad_description: d,
-      }
-    };
-  }
+
+    if (isMeta) { 
+      const tags = generateAutoTags(campaign.generatedCopy || '');
+      const finalMessage = `${campaign.generatedCopy || ''}\n\n${tags.join(' ')}`;
+      
+      payload = { 
+        campaign_id: campaign.id, 
+        workspace_id: 'work_luxe_01', 
+        platform_target: 'meta_social', 
+        campaign_name: campaign.title, 
+        content: { 
+          message: finalMessage, 
+          media_url: campaign.mediaUrl || "", 
+          link: campaign.destinationLink || 'https://luxehr.com.au'
+        }
+      };
+    } else if (isWP) { 
+      const tags = generateAutoTags(campaign.generatedCopy || '');
+      const cleanTags = tags.map(t => t.replace('#', ''));
+      payload = { 
+        campaign_id: campaign.id, 
+        workspace_id: campaign.tenant || 'full_home_renovation', 
+        platform_target: 'wordpress_seo', 
+        campaign_name: campaign.title, 
+        content: { 
+          title: campaign.title, 
+          excerpt: (campaign.generatedCopy || '').slice(0, 60) + '...', 
+          body_markdown: '## Introduction...', 
+          tags: campaign.blogTags && campaign.blogTags.length > 0 ? campaign.blogTags : cleanTags
+        }
+      };
+    } else if (isGoogle) { 
+      let h = campaign.title || ''; 
+      if (h.length > 30) h = h.substring(0, 27) + '...'; 
+      let d = campaign.generatedCopy || ''; 
+      if (d.length > 90) d = d.substring(0, 87) + '...'; 
+      payload = { 
+        campaign_id: campaign.id, 
+        workspace_id: campaign.tenant || 'full_home_renovation', 
+        platform_target: 'google_ads', 
+        campaign_name: campaign.title, 
+        content: { 
+          budget: campaign.budget || 50, 
+          target_country: campaign.targetCountry || 'AU', 
+          ad_headline: h, 
+          ad_description: d
+        }
+      };
+    }
   return (
     <div className="bg-slate-100 dark:bg-slate-800 rounded-lg p-3 font-mono text-[10px] text-slate-900 dark:text-white dark:text-emerald-400 overflow-auto max-h-36">
       <div className="text-slate-600 dark:text-slate-300 mb-1 font-sans text-[9px] uppercase tracking-wider">→ n8n webhook payload preview</div>
       <pre className="whitespace-pre-wrap break-all">{JSON.stringify(payload, null, 2)}</pre>
     </div>
   );
-} export default function AiMarketing() { const [campaigns, setCampaigns] = useState<AdCampaign[]>([]); const [selectedCampaign, setSelectedCampaign] = useState<AdCampaign | null>(null); const [loading, setLoading] = useState(true); const [activeScenario, setActiveScenario] = useState<ScenarioId>('A'); const sc = SCENARIO_MAP[activeScenario]; const ScIcon = activeScenario === 'A' ? FacebookIcon : activeScenario === 'B' ? LayoutTemplate : Search; const [genTenant, setGenTenant] = useState<'heating' | 'screed' | 'electrical'>('heating'); const [customGoal, setCustomGoal] = useState(SCENARIO_MAP.A.placeholder); const [campaignTitle, setCampaignTitle] = useState('');
+} export default function AiMarketing() { const [campaigns, setCampaigns] = useState<AdCampaign[]>([]); const [selectedCampaign, setSelectedCampaign] = useState<AdCampaign | null>(null); const [loading, setLoading] = useState(true); const [activeScenario, setActiveScenario] = useState<ScenarioId>('A'); const sc = SCENARIO_MAP[activeScenario]; const ScIcon = activeScenario === 'A' ? FacebookIcon : activeScenario === 'B' ? LayoutTemplate : Search; const [genTenant, setGenTenant] = useState<'full_home_renovation' | 'kitchen_renovation' | 'bathroom_renovation' | 'granny_flat' | 'extension' | 'multi_unit' | 'new_luxe_homes'>('full_home_renovation'); const [customGoal, setCustomGoal] = useState(SCENARIO_MAP.A.placeholder); const [campaignTitle, setCampaignTitle] = useState('');
   // Scenario A
   const [mediaUrl, setMediaUrl] = useState(''); const [destinationLink, setDestinationLink] = useState('');
   // Scenario B
@@ -54,7 +112,12 @@ const FacebookIcon = () => (
   // Scenario C
   const [budget, setBudget] = useState('50'); const [targetCountry, setTargetCountry] = useState('AU'); const [isGenerating, setIsGenerating] = useState(false); const [isPushing, setIsPushing] = useState(false); const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null); const [deleteConfirm, setDeleteConfirm] = useState<{ id: string; name: string } | null>(null); const [editingCampaign, setEditingCampaign] = useState<AdCampaign | null>(null); const [editTitle, setEditTitle] = useState(''); const [editCopy, setEditCopy] = useState(''); const [landingTitle, setLandingTitle] = useState('Expert Heating Services & Solutions'); const [landingSub, setLandingSub] = useState('Cut your fuel bills by 35% with state-of-the-art climate responsive home solutions.'); const [selectedTemplateColor, setSelectedTemplateColor] = useState('rose'); useEffect(() => { setCustomGoal(sc.placeholder); setCampaignTitle(''); setMediaUrl(''); setDestinationLink(''); setBlogTagsRaw('renovation, luxury, sydney'); setWpDomain(''); setBudget('50'); setTargetCountry('AU');
   }, [activeScenario]); useEffect(() => { if (toast) { const t = setTimeout(() => setToast(null), 5000); return () => clearTimeout(t); }
-  }, [toast]); const loadData = async () => { try { const loaded = await fetchLiveCampaigns(); setCampaigns(loaded); if (loaded.length > 0) { if (!selectedCampaign) setSelectedCampaign(loaded[0]); else { const fresh = loaded.find((c: AdCampaign) => c.id === selectedCampaign.id); setSelectedCampaign(fresh || loaded[0]);
+  }, [toast]); const loadData = async () => { try { 
+      const cached = localStorage.getItem('crm_campaigns');
+      if (cached && !campaigns.length) setCampaigns(JSON.parse(cached));
+      const loaded = await fetchLiveCampaigns(); setCampaigns(loaded); 
+      localStorage.setItem('crm_campaigns', JSON.stringify(loaded));
+      if (loaded.length > 0) { if (!selectedCampaign) setSelectedCampaign(loaded[0]); else { const fresh = loaded.find((c: AdCampaign) => c.id === selectedCampaign.id); setSelectedCampaign(fresh || loaded[0]);
         }
       } else setSelectedCampaign(null);
     } catch (err) { console.error('Failed to load campaigns:', err); } finally { setLoading(false); }
@@ -125,7 +188,7 @@ const FacebookIcon = () => (
       window.dispatchEvent(new CustomEvent('crm_show_toast', { detail: { message: 'Edit update failed: ' + (err.message || err), type: 'error' } }));
     }
   };
-  const handleApplyToLanding = () => { if (!selectedCampaign) return; setLandingTitle(selectedCampaign.title); setLandingSub((selectedCampaign.generatedCopy || '').slice(0, 110) + '...'); if (selectedCampaign.tenant === 'heating') setSelectedTemplateColor('rose'); if (selectedCampaign.tenant === 'screed') setSelectedTemplateColor('teal'); if (selectedCampaign.tenant === 'electrical') setSelectedTemplateColor('amber'); window.dispatchEvent(new CustomEvent('crm_show_toast', { detail: { message: 'Applied campaign copy to the landing page template! 🎨', type: 'success' } 
+  const handleApplyToLanding = () => { if (!selectedCampaign) return; setLandingTitle(selectedCampaign.title); setLandingSub((selectedCampaign.generatedCopy || '').slice(0, 110) + '...'); if (selectedCampaign.tenant === 'full_home_renovation') setSelectedTemplateColor('rose'); if (selectedCampaign.tenant === 'kitchen_renovation') setSelectedTemplateColor('teal'); if (selectedCampaign.tenant === 'bathroom_renovation') setSelectedTemplateColor('amber'); window.dispatchEvent(new CustomEvent('crm_show_toast', { detail: { message: 'Applied campaign copy to the landing page template! 🎨', type: 'success' } 
     }));
   };
   const inp = 'w-full border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-[#4F46E5] bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder:text-neutral-400'; const lbl = 'text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 tracking-wider block mb-1'; return (
@@ -257,7 +320,44 @@ const FacebookIcon = () => (
                 </div>
                 <div className="bg-blue-100/60 rounded-lg px-3 py-2 text-[10px] text-blue-600 leading-relaxed"> One approval triggers posts on <strong>both platforms simultaneously</strong>. The AI caption is optimised for both feeds.
                 </div>
-                <div><label className={lbl}>Media Image URL <span className="font-normal normal-case text-slate-500 dark:text-slate-400">(auto-filled if blank)</span></label><input className={inp} placeholder="https://images.unsplash.com/..." value={mediaUrl} onChange={e => setMediaUrl(e.target.value)} /></div>
+                <div>
+                  <label className={lbl}>Media Image Upload <span className="font-normal normal-case text-slate-500 dark:text-slate-400">(auto-filled if blank)</span></label>
+                  <div className="flex items-center gap-2">
+                    <label className={`${inp} flex items-center justify-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition text-center`}>
+                      <ImageIcon className="w-4 h-4 mr-2" />
+                      <span className="font-semibold text-slate-700 dark:text-slate-200">{mediaUrl && mediaUrl.startsWith('data:image') ? 'Photo Selected' : 'Select Photo to Upload'}</span>
+                      <input type="file" accept="image/*" onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onloadend = async () => {
+                            const base64 = reader.result as string;
+                            setMediaUrl(base64);
+                            try {
+                              const res = await analyzeImageTags(base64);
+                              if (res && res.tags) {
+                                const tagsString = res.tags.join(', ');
+                                setCustomGoal(prev => {
+                                  const sep = prev && !prev.endsWith(' ') && !prev.endsWith('\n') ? '\n\n' : '';
+                                  return prev + sep + 'Target Keywords: ' + tagsString;
+                                });
+                                window.dispatchEvent(new CustomEvent('crm_show_toast', { detail: { message: `AI extracted keywords from image! 🏷️`, type: 'success' } }));
+                              }
+                            } catch (err) {
+                              console.error("Image tag extraction failed", err);
+                            }
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }} className="hidden" />
+                    </label>
+                    {mediaUrl && mediaUrl.startsWith('data:image') && (
+                      <button type="button" onClick={() => setMediaUrl('')} className="p-2 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+                </div>
                 <div><label className={lbl}>Destination Link <span className="font-normal normal-case text-slate-500 dark:text-slate-400">(auto-filled if blank)</span></label><input className={inp} placeholder="https://yoursite.co.uk" value={destinationLink} onChange={e => setDestinationLink(e.target.value)} /></div>
               </div>
             )}

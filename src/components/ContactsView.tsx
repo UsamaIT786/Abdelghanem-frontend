@@ -6,13 +6,13 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
 } from '../lib/api'; export default function ContactsView() { const [activeSubTab, setActiveSubTab] = useState<'contacts' | 'pipeline' | 'proposals'>('contacts'); const [contacts, setContacts] = useState<Contact[]>([]); const [deals, setDeals] = useState<Deal[]>([]); const [loading, setLoading] = useState(true);
   
   // Search and selector filters
-  const [searchTerm, setSearchTerm] = useState(''); const [tenantFilter, setTenantFilter] = useState<'all' | 'heating' | 'screed' | 'electrical'>('all');
+  const [searchTerm, setSearchTerm] = useState(''); const [tenantFilter, setTenantFilter] = useState<'all' | 'full_home_renovation' | 'kitchen_renovation' | 'bathroom_renovation' | 'granny_flat' | 'extension' | 'multi_unit' | 'new_luxe_homes'>('all');
   
   // Create Contact modal simulation state
-  const [showAddContact, setShowAddContact] = useState(false); const [newContactName, setNewContactName] = useState(''); const [newContactCompany, setNewContactCompany] = useState(''); const [newContactEmail, setNewContactEmail] = useState(''); const [newContactPhone, setNewContactPhone] = useState(''); const [newContactTenant, setNewContactTenant] = useState<TenantType>('heating'); const [newContactStatus, setNewContactStatus] = useState<Contact['status']>('Lead'); const [newContactRevenue, setNewContactRevenue] = useState('2500');
+  const [showAddContact, setShowAddContact] = useState(false); const [newContactName, setNewContactName] = useState(''); const [newContactCompany, setNewContactCompany] = useState(''); const [newContactEmail, setNewContactEmail] = useState(''); const [newContactPhone, setNewContactPhone] = useState(''); const [newContactTenant, setNewContactTenant] = useState<TenantType>('full_home_renovation'); const [newContactStatus, setNewContactStatus] = useState<Contact['status']>('Lead'); const [newContactRevenue, setNewContactRevenue] = useState('2500');
 
   // Edit Contact state
-  const [editingContact, setEditingContact] = useState<Contact | null>(null); const [editContactName, setEditContactName] = useState(''); const [editContactCompany, setEditContactCompany] = useState(''); const [editContactEmail, setEditContactEmail] = useState(''); const [editContactPhone, setEditContactPhone] = useState(''); const [editContactTenant, setEditContactTenant] = useState<TenantType>('heating'); const [editContactStatus, setEditContactStatus] = useState<Contact['status']>('Lead'); const [editContactRevenue, setEditContactRevenue] = useState('');
+  const [editingContact, setEditingContact] = useState<Contact | null>(null); const [editContactName, setEditContactName] = useState(''); const [editContactCompany, setEditContactCompany] = useState(''); const [editContactEmail, setEditContactEmail] = useState(''); const [editContactPhone, setEditContactPhone] = useState(''); const [editContactTenant, setEditContactTenant] = useState<TenantType>('full_home_renovation'); const [editContactStatus, setEditContactStatus] = useState<Contact['status']>('Lead'); const [editContactRevenue, setEditContactRevenue] = useState('');
 
   // Edit Deal state
   const [editingDeal, setEditingDeal] = useState<Deal | null>(null); const [editDealTitle, setEditDealTitle] = useState(''); const [editDealCompany, setEditDealCompany] = useState(''); const [editDealValue, setEditDealValue] = useState(''); const [editDealStage, setEditDealStage] = useState<Deal['stage']>('Leads');
@@ -21,8 +21,16 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
   const [deleteConfirm, setDeleteConfirm] = useState<{ type: 'contact' | 'deal'; id: string; name: string } | null>(null);
 
   // Proposal creator states
-  const [selectedPropContact, setSelectedPropContact] = useState<Contact | null>(null); const [proposalNotes, setProposalNotes] = useState('Pricing quoted with high efficiency Eco Combi specifications.'); const [proposalDiscount, setProposalDiscount] = useState('5'); const [propCreated, setPropCreated] = useState(false); const loadData = async () => { try { const [loadedContacts, loadedDeals] = await Promise.all([ fetchLiveContacts(), fetchLiveDeals()
-      ]); setContacts(loadedContacts); setDeals(loadedDeals); if (loadedContacts.length > 0 && !selectedPropContact) { setSelectedPropContact(loadedContacts[0]);
+  const [selectedPropContact, setSelectedPropContact] = useState<Contact | null>(null); const [proposalNotes, setProposalNotes] = useState('Pricing quoted with high efficiency Eco Combi specifications.'); const [proposalDiscount, setProposalDiscount] = useState('5'); const [propCreated, setPropCreated] = useState(false); const loadData = async () => { try { 
+      const cachedContacts = localStorage.getItem('crm_leads');
+      const cachedDeals = localStorage.getItem('crm_deals');
+      if (cachedContacts && !contacts.length) setContacts(JSON.parse(cachedContacts));
+      if (cachedDeals && !deals.length) setDeals(JSON.parse(cachedDeals));
+      const [loadedContacts, loadedDeals] = await Promise.all([ fetchLiveContacts(), fetchLiveDeals()
+      ]); setContacts(loadedContacts); setDeals(loadedDeals); 
+      localStorage.setItem('crm_leads', JSON.stringify(loadedContacts));
+      localStorage.setItem('crm_deals', JSON.stringify(loadedDeals));
+      if (loadedContacts.length > 0 && !selectedPropContact) { setSelectedPropContact(loadedContacts[0]);
       }
     } catch (err) { console.error("Contacts CRM failed to load live database elements:", err);
     } finally { setLoading(false);
@@ -244,9 +252,13 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
           <select className="border px-3 py-1.5 rounded-lg text-xs font-semibold focus:outline-none" style={{ backgroundColor: 'var(--input-bg)', borderColor: 'var(--input-border)', color: 'var(--text-secondary)' }} value={tenantFilter} onChange={(e) => setTenantFilter(e.target.value as any)}
           >
             <option value="all">🏢 All Business Units</option>
-            <option value="heating">Heating Works</option>
-            <option value="screed">Screed Works</option>
-            <option value="electrical">Electrical Works</option>
+            <option value="full_home_renovation">Full Home Renovation</option>
+            <option value="kitchen_renovation">Kitchen Renovation</option>
+            <option value="bathroom_renovation">Bathroom Renovation</option>
+            <option value="granny_flat">Granny Flat</option>
+            <option value="extension">Extension</option>
+            <option value="multi_unit">Multi Unit</option>
+            <option value="new_luxe_homes">New Luxe Homes</option>
           </select>
 
           {activeSubTab === 'contacts' && (
@@ -303,9 +315,13 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
                   <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Business Tenant</label>
                   <select className="saas-input" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={newContactTenant} onChange={(e) => setNewContactTenant(e.target.value as TenantType)}
                   >
-                    <option value="heating">Heating Works</option>
-                    <option value="screed">Screed Works</option>
-                    <option value="electrical">Electrical Works</option>
+                    <option value="full_home_renovation">Full Home Renovation</option>
+                    <option value="kitchen_renovation">Kitchen Renovation</option>
+                    <option value="bathroom_renovation">Bathroom Renovation</option>
+                    <option value="granny_flat">Granny Flat</option>
+                    <option value="extension">Extension</option>
+                    <option value="multi_unit">Multi Unit</option>
+                    <option value="new_luxe_homes">New Luxe Homes</option>
                   </select>
                 </div>
                 <div>
@@ -373,9 +389,13 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
                   <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Tenant</label>
                   <select className="saas-input" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={editContactTenant} onChange={(e) => setEditContactTenant(e.target.value as TenantType)}
                   >
-                    <option value="heating">Heating Works</option>
-                    <option value="screed">Screed Works</option>
-                    <option value="electrical">Electrical Works</option>
+                    <option value="full_home_renovation">Full Home Renovation</option>
+                    <option value="kitchen_renovation">Kitchen Renovation</option>
+                    <option value="bathroom_renovation">Bathroom Renovation</option>
+                    <option value="granny_flat">Granny Flat</option>
+                    <option value="extension">Extension</option>
+                    <option value="multi_unit">Multi Unit</option>
+                    <option value="new_luxe_homes">New Luxe Homes</option>
                   </select>
                 </div>
                 <div>
@@ -419,9 +439,8 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
                   <div key={c.id} className="premium-card premium-card-accent p-5 relative group">
                     {/* Tenant badge */}
                     <div className="absolute top-4 left-4 z-10">
-                      <span className={`premium-badge-tenant ${ c.tenant === 'heating' ? 'premium-badge-heating' : c.tenant === 'screed' ? 'premium-badge-screed' : 'premium-badge-electrical'
-                      }`}>
-                        {c.tenant === 'heating' ? '🔥 HEATING' : c.tenant === 'screed' ? '🌍 SCREED' : '⚡ ELECTRICAL'}
+                      <span className={`premium-badge-tenant premium-badge-${c.tenant}`}>
+                        {c.tenant.replace(/_/g, ' ').toUpperCase()}
                       </span>
                     </div>
 
@@ -584,7 +603,7 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
                         </div>
 
                         <div className="flex justify-between items-start">
-                          <span className={`w-2 h-2 rounded-full ${ deal.tenant === 'heating' ? 'bg-rose-500' : deal.tenant === 'screed' ? 'bg-teal-500' : 'bg-yellow-500'
+                          <span className={`w-2 h-2 rounded-full ${ deal.tenant === 'full_home_renovation' ? 'bg-indigo-500' : deal.tenant === 'kitchen_renovation' ? 'bg-amber-500' : deal.tenant === 'bathroom_renovation' ? 'bg-cyan-500' : deal.tenant === 'granny_flat' ? 'bg-violet-500' : deal.tenant === 'extension' ? 'bg-emerald-500' : deal.tenant === 'multi_unit' ? 'bg-blue-500' : 'bg-slate-500'
                           }`} />
                           <span className="font-bold text-xs" style={{ color: 'var(--text-primary)' }}>£{deal.value?.toLocaleString()}</span>
                         </div>

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'; import { User, UserRole } fr
 } from '../lib/api'; export default function UserManagement() { const [users, setUsers] = useState<User[]>([]); const [loading, setLoading] = useState(true); const [search, setSearch] = useState(''); const [showCreateForm, setShowCreateForm] = useState(false); const [editingUser, setEditingUser] = useState<User | null>(null); const [deleteConfirm, setDeleteConfirm] = useState<{ id: string; name: string } | null>(null);
 
   // Form state
-  const [formName, setFormName] = useState(''); const [formEmail, setFormEmail] = useState(''); const [formPassword, setFormPassword] = useState(''); const [formRole, setFormRole] = useState<UserRole>('Technician'); const [formDept, setFormDept] = useState('Heating'); const [formTenant, setFormTenant] = useState('heating'); const loadUsers = async () => { try { const data = await fetchLiveUsers(); setUsers(data);
+  const [formName, setFormName] = useState(''); const [formEmail, setFormEmail] = useState(''); const [formPassword, setFormPassword] = useState(''); const [formRole, setFormRole] = useState<UserRole>('Technician'); const [formDept, setFormDept] = useState('Full Home Renovation'); const [formTenant, setFormTenant] = useState('full_home_renovation'); const loadUsers = async () => { try { const data = await fetchLiveUsers(); setUsers(data);
     } catch (err) { console.error('Failed to load users:', err);
     } finally { setLoading(false);
     }
@@ -11,7 +11,7 @@ import React, { useState, useEffect } from 'react'; import { User, UserRole } fr
   useEffect(() => { loadUsers(); const ws = initLiveWebSocket((msg) => { if (msg.type === 'USER_CREATED' || msg.type === 'USER_UPDATED' || msg.type === 'USER_DELETED') { loadUsers();
       }
     }); return () => ws.close();
-  }, []); const resetForm = () => { setFormName(''); setFormEmail(''); setFormPassword(''); setFormRole('Technician'); setFormDept('Heating'); setFormTenant('heating');
+  }, []); const resetForm = () => { setFormName(''); setFormEmail(''); setFormPassword(''); setFormRole('Technician'); setFormDept('Full Home Renovation'); setFormTenant('full_home_renovation');
   };
   const handleCreate = async (e: React.FormEvent) => { e.preventDefault(); try { await createLiveUser({ name: formName, email: formEmail, password: formPassword, role: formRole, department: formDept, tenantId: formTenant,
       }); resetForm(); setShowCreateForm(false); await loadUsers(); window.dispatchEvent(new CustomEvent('crm_show_toast', { detail: { message: `User account created for "${formName}"! 👤`, type: 'success' } 
@@ -133,13 +133,13 @@ import React, { useState, useEffect } from 'react'; import { User, UserRole } fr
               <div>
                 <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 mb-1.5 block">Department</label>
                 <select className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 /50 text-slate-900 dark:text-white text-sm focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/20 outline-none" value={formDept} onChange={e => setFormDept(e.target.value)}>
-                  <option value="Heating">Heating</option><option value="Screed">Screed</option><option value="Electrical">Electrical</option><option value="Administration">Administration</option>
+                  <option value="Full Home Renovation">Full Home Renovation</option><option value="Kitchen Renovation">Kitchen Renovation</option><option value="Bathroom Renovation">Bathroom Renovation</option><option value="Granny Flat">Granny Flat</option><option value="Extension">Extension</option><option value="Multi Unit">Multi Unit</option><option value="New Luxe Homes">New Luxe Homes</option><option value="Administration">Administration</option>
                 </select>
               </div>
               <div>
                 <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 mb-1.5 block">Tenant Access</label>
                 <select className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 /50 text-slate-900 dark:text-white text-sm focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/20 outline-none" value={formTenant} onChange={e => setFormTenant(e.target.value)}>
-                  <option value="all">All Tenants</option><option value="heating">Heating</option><option value="screed">Screed</option><option value="electrical">Electrical</option>
+                  <option value="all">All Tenants</option><option value="full_home_renovation">Full Home Renovation</option><option value="kitchen_renovation">Kitchen Renovation</option><option value="bathroom_renovation">Bathroom Renovation</option><option value="granny_flat">Granny Flat</option><option value="extension">Extension</option><option value="multi_unit">Multi Unit</option><option value="new_luxe_homes">New Luxe Homes</option>
                 </select>
               </div>
             </div>
@@ -234,9 +234,13 @@ import React, { useState, useEffect } from 'react'; import { User, UserRole } fr
           <div className="space-y-2.5">
             {[
               { dept: 'Administration', users: users.filter(u => u.department === 'Administration').length, color: 'purple' },
-              { dept: 'Heating', users: users.filter(u => u.department === 'Heating').length, color: 'rose' },
-              { dept: 'Screed', users: users.filter(u => u.department === 'Screed').length, color: 'teal' },
-              { dept: 'Electrical', users: users.filter(u => u.department === 'Electrical').length, color: 'amber' },
+              { dept: 'Full Home Renovation', users: users.filter(u => u.department === 'Full Home Renovation').length, color: 'indigo' },
+              { dept: 'Kitchen Renovation', users: users.filter(u => u.department === 'Kitchen Renovation').length, color: 'amber' },
+              { dept: 'Bathroom Renovation', users: users.filter(u => u.department === 'Bathroom Renovation').length, color: 'cyan' },
+              { dept: 'Granny Flat', users: users.filter(u => u.department === 'Granny Flat').length, color: 'violet' },
+              { dept: 'Extension', users: users.filter(u => u.department === 'Extension').length, color: 'emerald' },
+              { dept: 'Multi Unit', users: users.filter(u => u.department === 'Multi Unit').length, color: 'blue' },
+              { dept: 'New Luxe Homes', users: users.filter(u => u.department === 'New Luxe Homes').length, color: 'slate' },
             ].map(d => (
               <div key={d.dept} className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 /30">
                 <span className="text-xs font-medium text-slate-600 dark:text-slate-300 ">{d.dept}</span>
