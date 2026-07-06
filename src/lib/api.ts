@@ -105,7 +105,8 @@ export async function apiFetch(endpoint: string, options: RequestInit = {}): Pro
     const errorBody = await response.json().catch(() => ({}));
     if (response.status === 401 || response.status === 403) {
       clearSession();
-      window.location.reload();
+      // window.location.reload();
+      window.dispatchEvent(new CustomEvent('crm_auth_expired'));
     }
     throw new Error(errorBody.error || "Integration server error");
   }
@@ -268,7 +269,8 @@ export async function uploadLiveDocument(file: File): Promise<any> {
       } else {
         if (xhr.status === 401 || xhr.status === 403) {
           clearSession();
-          window.location.reload();
+          // window.location.reload();
+          window.dispatchEvent(new CustomEvent('crm_auth_expired'));
         }
         try {
           const body = JSON.parse(xhr.responseText);

@@ -59,14 +59,31 @@ const FacebookIcon = () => (
       } else setSelectedCampaign(null);
     } catch (err) { console.error('Failed to load campaigns:', err); } finally { setLoading(false); }
   };
-  useEffect(() => { loadData(); const ws = initLiveWebSocket((msg: any) => { if (['CAMPAIGN_CREATED', 'CAMPAIGN_UPDATED', 'CAMPAIGN_DELETED'].includes(msg.type)) loadData();
-    }); return () => ws.close();
-  }, []); const handleGenerate = async (e: React.FormEvent) => { e.preventDefault(); setIsGenerating(true); try { const extras: any = {};
+  useEffect(() => { 
+    loadData(); 
+    const ws = initLiveWebSocket((msg: any) => { 
+      if (['CAMPAIGN_CREATED', 'CAMPAIGN_UPDATED', 'CAMPAIGN_DELETED'].includes(msg.type)) loadData();
+    }); 
+
+    // Listen for automated background polling
+    const handleHydration = () => loadData();
+    window.addEventListener('crm_global_hydration_tick', handleHydration);
+
+    return () => {
+      ws.close();
+      window.removeEventListener('crm_global_hydration_tick', handleHydration);
+    };
+  }, []); 
+
+  const handleGenerate = async (e: React.FormEvent) => { e.preventDefault(); setIsGenerating(true); try { const extras: any = {};
   if (campaignTitle) extras.campaignTitle = campaignTitle; if (activeScenario === 'A') { if (mediaUrl) extras.mediaUrl = mediaUrl; if (destinationLink) extras.destinationLink = destinationLink;
       } else if (activeScenario === 'B') { extras.blogTags = blogTagsRaw.split(',').map((t: string) => t.trim()).filter(Boolean); if (wpDomain) extras.destinationLink = wpDomain;
       } else if (activeScenario === 'C') { extras.budget = Number(budget) || 50; extras.targetCountry = targetCountry || 'AU';
       }
-  const created = await generateLiveCampaign(sc.platform, genTenant, customGoal, extras); await loadData(); setSelectedCampaign(created); window.dispatchEvent(new CustomEvent('crm_show_toast', { detail: { message: `AI Ad Campaign "${created.title || 'Untitled'}" generated successfully! 🪄`, type: 'success' } 
+  const created = await generateLiveCampaign(sc.platform, genTenant, customGoal, extras); 
+      setCampaigns(prev => [created, ...prev]);
+      setSelectedCampaign(created); 
+      window.dispatchEvent(new CustomEvent('crm_show_toast', { detail: { message: `AI Ad Campaign "${created.title || 'Untitled'}" generated successfully! 🪄`, type: 'success' } 
       }));
     } catch (err: any) { window.dispatchEvent(new CustomEvent('crm_show_toast', { detail: { message: 'Generation failed: ' + (err.message || err), type: 'error' } 
       }));

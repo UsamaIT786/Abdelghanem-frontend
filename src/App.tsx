@@ -81,10 +81,27 @@ import { getSavedToken, getSavedTenant, getSavedUser, clearSession, saveSession,
     };
   }, [isLoggedIn]);
 
+  // Global High-Frequency Polling Re-Hydration (3000ms)
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    const poller = setInterval(() => {
+      // Triggers silent state hydration across active dashboards
+      window.dispatchEvent(new CustomEvent('crm_global_hydration_tick'));
+    }, 3000);
+    return () => clearInterval(poller);
+  }, [isLoggedIn]);
+
   // Enforce Dark Mode
   useEffect(() => { 
     document.documentElement.classList.add('dark');
   }, []); 
+
+  // Handle Auth expiry cleanly without hard page reloads
+  useEffect(() => {
+    const handleAuthExpired = () => setIsLoggedIn(false);
+    window.addEventListener('crm_auth_expired', handleAuthExpired);
+    return () => window.removeEventListener('crm_auth_expired', handleAuthExpired);
+  }, []);
   const handleLoginSuccess = (tenant: TenantType | 'all', role: UserRole, name: string, avatar: string, email: string) => { setCurrentTenant(tenant); setUserRole(role); setUserName(name); setUserAvatar(avatar); setUserEmail(email); setIsLoggedIn(true);
 
     // Auto-route based on login category

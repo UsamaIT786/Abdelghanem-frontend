@@ -1,1 +1,12 @@
-[]
+[
+  {
+    "id": "c-1783361859762",
+    "name": "it",
+    "company": "IT Solution Studio",
+    "email": "itsolutionsstudio786@gmail.com",
+    "phone": "07700 900550",
+    "status": "Lead",
+    "revenue": 2500,
+    "tenant": "heating"
+  }
+]

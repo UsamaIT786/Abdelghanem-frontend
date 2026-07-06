@@ -11,7 +11,16 @@ import { PremiumAreaChart, PremiumBarChart, PremiumDonutChart, PremiumGaugeChart
   useEffect(() => { loadData(); const ws = initLiveWebSocket((message) => { if ( message.type === "DEAL_CREATED" || message.type === "DEAL_UPDATED" || message.type === "DEAL_DELETED" || message.type === "CONTACT_CREATED" || message.type === "CONTACT_UPDATED" || message.type === "CONTACT_DELETED" || message.type === "TASK_CREATED" || message.type === "TASK_UPDATED" || message.type === "TASK_DELETED"
       ) { loadData();
       }
-    }); return () => ws.close();
+    }); 
+    
+    // Listen for automated background polling
+    const handleHydration = () => loadData();
+    window.addEventListener('crm_global_hydration_tick', handleHydration);
+
+    return () => {
+      ws.close();
+      window.removeEventListener('crm_global_hydration_tick', handleHydration);
+    };
   }, []); const totalRevenue = analytics?.kpis?.totalRevenue || 0; const pipelineValue = analytics?.kpis?.pipelineValue || 0; const customerCount = analytics?.kpis?.customerCount || 0; const activeTechnicians = analytics?.kpis?.activeTechnicians || 0; const monthlyData = analytics?.charts?.monthlyTrend || []; const divisionData = analytics?.charts?.divisionDistribution || []; const revenueChartData = monthlyData.length > 0
     ? monthlyData.map((d: any) => ({ label: d.month, value: d.Revenue || 0 }))
     : []; const targetChartData = monthlyData.length > 0

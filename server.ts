@@ -28,40 +28,28 @@ app.use(express.json());
 // Multi-tenant context filter header
 const TENANT_HEADER = "x-tenant-id";
 
-// Initialize JSON FS Storage Engine
-const DATA_DIR = path.join(process.cwd(), "backend", "data");
-
-async function ensureDataDir() {
-  try {
-    await fs.promises.mkdir(DATA_DIR, { recursive: true });
-  } catch (err) {
-    console.error("Error creating data directory", err);
-  }
+// SERVERLESS SAFE MEMORY-CACHE ARCHITECTURE
+const globalRef = global as any;
+if (!globalRef.crmDb) {
+  globalRef.crmDb = { 
+    leads: [], 
+    campaigns: [], 
+    tasks: [], 
+    deals: [], 
+    documents: [], 
+    users: [], 
+    logs: [] 
+  };
 }
-ensureDataDir();
+const db = globalRef.crmDb;
 
+// Provide seamless async interface to avoid massive rewrite of endpoints while switching to pure memory
 async function readCollection(collectionName: string) {
-  const filePath = path.join(DATA_DIR, `${collectionName}.json`);
-  try {
-    const data = await fs.promises.readFile(filePath, "utf-8");
-    return JSON.parse(data);
-  } catch (err: any) {
-    if (err.code === "ENOENT") {
-      await fs.promises.writeFile(filePath, "[]", "utf-8");
-      return [];
-    }
-    console.warn(`Error reading ${collectionName}.json:`, err);
-    return [];
-  }
+  return db[collectionName] || [];
 }
 
 async function writeCollection(collectionName: string, data: any) {
-  const filePath = path.join(DATA_DIR, `${collectionName}.json`);
-  try {
-    await fs.promises.writeFile(filePath, JSON.stringify(data, null, 2), "utf-8");
-  } catch (err) {
-    console.error(`Error writing ${collectionName}.json:`, err);
-  }
+  db[collectionName] = data;
 }
 
 // Initialize Gemini Client
@@ -536,9 +524,10 @@ app.delete("/api/tech-tasks/:id", async (req, res) => {
 app.get("/api/analytics", async (req, res) => {
   const tenantId = req.headers[TENANT_HEADER] || req.query.tenant || "all";
   
-  const allDeals = await readCollection("deals");
-  const allLeads = await readCollection("leads");
-  const allTasks = await readCollection("tasks");
+  const allDeals = db.deals || [];
+  const allLeads = db.leads || [];
+  const allTasks = db.tasks || [];
+  const allCampaigns = db.campaigns || [];
   
   // Filter core records based on tenant
   const deals = tenantId === "all" ? allDeals : allDeals.filter((d: any) => d.tenant === tenantId);
@@ -550,7 +539,8 @@ app.get("/api/analytics", async (req, res) => {
                        deals.filter((d: any) => d.stage === "Won").reduce((sum: number, d: any) => sum + (d.value || 0), 0);
   
   const pipelineValue = deals.filter((d: any) => d.stage !== "Won").reduce((sum: number, d: any) => sum + (d.value || 0), 0);
-  const customerCount = contacts.length;
+  const customerCount = db.leads.length; // Live Exact Length
+  const activeCampaigns = db.campaigns.length; // Live Exact Length
   
   const activeTechnicians = Array.from(new Set(tasks.map((t: any) => t.technician))).length;
 
@@ -569,7 +559,7 @@ app.get("/api/analytics", async (req, res) => {
     { month: "Mar", Revenue: Math.round(totalRevenue * 0.70), Target: 15400, Leads: 32 },
     { month: "Apr", Revenue: Math.round(totalRevenue * 0.60), Target: 18000, Leads: 25 },
     { month: "May", Revenue: Math.round(totalRevenue * 0.90), Target: 20000, Leads: 45 },
-    { month: "Jun", Revenue: totalRevenue, Target: 24000, Leads: 50 },
+    { month: "Jun", Revenue: totalRevenue, Target: 24000, Leads: db.leads.length }, // Dynamic
   ];
 
   res.json({
@@ -577,6 +567,7 @@ app.get("/api/analytics", async (req, res) => {
       totalRevenue,
       pipelineValue,
       customerCount,
+      activeCampaigns,
       activeTechnicians,
       growthRate: "18.4%"
     },

@@ -34,7 +34,16 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
   const ws = initLiveWebSocket((message) => { if ( message.type === "CONTACT_CREATED" || message.type === "CONTACT_UPDATED" || message.type === "CONTACT_DELETED" || message.type === "DEAL_CREATED" || message.type === "DEAL_UPDATED" || message.type === "DEAL_DELETED"
       ) { loadData();
       }
-    }); return () => ws.close();
+    });
+    
+    // Listen for automated background polling
+    const handleHydration = () => loadData();
+    window.addEventListener('crm_global_hydration_tick', handleHydration);
+    
+    return () => {
+      ws.close();
+      window.removeEventListener('crm_global_hydration_tick', handleHydration);
+    };
   }, []);
 
   // Handlers
@@ -53,6 +62,9 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
       setNewContactName(''); setNewContactCompany(''); setNewContactEmail(''); setNewContactPhone(''); setShowAddContact(false);
   window.dispatchEvent(new CustomEvent('crm_show_toast', { detail: { message: `Contact "${newContactName}" created successfully! 👤`, type: 'success' } 
       }));
+
+      // Immediate state hydration callback
+      loadData();
     } catch (err) { alert("Failed to insert CRM records: " + err);
     }
   };
