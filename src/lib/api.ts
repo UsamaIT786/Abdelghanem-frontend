@@ -77,6 +77,7 @@ export async function apiFetch(endpoint: string, options: RequestInit = {}): Pro
   const response = await fetch(`${API_BASE}${safeEndpoint}`, {
     ...options,
     headers,
+    cache: "no-store",
   });
 
   if (!response.ok) {

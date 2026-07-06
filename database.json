@@ -10,58 +10,7 @@
       "status": "Active"
     }
   ],
-  "contacts": [
-    {
-      "id": "c-1781967681023",
-      "name": "Usama",
-      "company": "IT Solution Studio",
-      "email": "itsolutionsstudio786@gmail.com",
-      "phone": "03302819536",
-      "status": "Contract",
-      "revenue": 2500,
-      "tenant": "heating"
-    },
-    {
-      "id": "c-1781560563689",
-      "name": "Abdelghannam & Team",
-      "company": "Abdelghannam & Team",
-      "email": "abdelghannam&team@email.com",
-      "phone": "07700 900550",
-      "status": "Lead",
-      "revenue": 6000,
-      "tenant": "heating"
-    },
-    {
-      "id": "c-1781558646665",
-      "name": "Extracted Commercial Developer Ltd",
-      "company": "Extracted Commercial Developer Ltd",
-      "email": "extractedcommercialdeveloperltd@email.com",
-      "phone": "07700 900550",
-      "status": "Lead",
-      "revenue": 14500,
-      "tenant": "heating"
-    },
-    {
-      "id": "c4",
-      "name": "Sophia Parker",
-      "company": "Elite Screeding Solutions",
-      "email": "sophia.p@elitescreed.com",
-      "phone": "+44 7911 112233",
-      "status": "Proposal",
-      "revenue": 600,
-      "tenant": "screed"
-    },
-    {
-      "id": "c6",
-      "name": "Liam Carter",
-      "company": "Grid Spark Electrical",
-      "email": "l.carter@gridspark.com",
-      "phone": "+44 7911 778899",
-      "status": "Lead",
-      "revenue": 6955,
-      "tenant": "electrical"
-    }
-  ],
+  "contacts": [],
   "deals": [
     {
       "id": "d-1781967682896",
@@ -217,6 +166,78 @@
   "pdfAttachments": [],
   "adCampaigns": [],
   "systemLogs": [
+    {
+      "id": "log-1783357140644",
+      "service": "Authorization Gate",
+      "event": "Secure session generated for Enterprise Administrator",
+      "status": "success",
+      "timestamp": "06/07/2026, 21:59:00",
+      "payloadSize": "512 B"
+    },
+    {
+      "id": "log-1783356581808",
+      "service": "Sales CRM Core",
+      "event": "Removed client database record ID: c6",
+      "status": "warning",
+      "timestamp": "06/07/2026, 21:49:41",
+      "payloadSize": "320 B"
+    },
+    {
+      "id": "log-1783356572343",
+      "service": "Sales CRM Core",
+      "event": "Removed client database record ID: c4",
+      "status": "warning",
+      "timestamp": "06/07/2026, 21:49:32",
+      "payloadSize": "320 B"
+    },
+    {
+      "id": "log-1783356558356",
+      "service": "Sales CRM Core",
+      "event": "Removed client database record ID: c-1781560563689",
+      "status": "warning",
+      "timestamp": "06/07/2026, 21:49:18",
+      "payloadSize": "320 B"
+    },
+    {
+      "id": "log-1783356538432",
+      "service": "Authorization Gate",
+      "event": "Secure session generated for Enterprise Administrator",
+      "status": "success",
+      "timestamp": "06/07/2026, 21:48:58",
+      "payloadSize": "512 B"
+    },
+    {
+      "id": "log-1783356518625",
+      "service": "Core System Kernel",
+      "event": "Abdelghanem CRM server boot initialized successfully on port 3000",
+      "status": "success",
+      "timestamp": "06/07/2026, 21:48:38",
+      "payloadSize": "1.0 KB"
+    },
+    {
+      "id": "log-1783355385116",
+      "service": "Sales CRM Core",
+      "event": "Removed client database record ID: c-1781558646665",
+      "status": "warning",
+      "timestamp": "06/07/2026, 21:29:45",
+      "payloadSize": "320 B"
+    },
+    {
+      "id": "log-1783355372682",
+      "service": "Sales CRM Core",
+      "event": "Removed client database record ID: c-1781967681023",
+      "status": "warning",
+      "timestamp": "06/07/2026, 21:29:32",
+      "payloadSize": "320 B"
+    },
+    {
+      "id": "log-1783354659205",
+      "service": "Core System Kernel",
+      "event": "Abdelghanem CRM server boot initialized successfully on port 3000",
+      "status": "success",
+      "timestamp": "06/07/2026, 21:17:39",
+      "payloadSize": "1.0 KB"
+    },
     {
       "id": "log-1783168623905",
       "service": "Marketing Gateway",
@@ -384,78 +405,6 @@
       "status": "warning",
       "timestamp": "03/07/2026, 22:25:49",
       "payloadSize": "240 B"
-    },
-    {
-      "id": "log-1783099545791",
-      "service": "Marketing Gateway",
-      "event": "Aborted campaign configuration record ID: camp_fa_1181",
-      "status": "warning",
-      "timestamp": "03/07/2026, 22:25:45",
-      "payloadSize": "240 B"
-    },
-    {
-      "id": "log-1783099541734",
-      "service": "Marketing Gateway",
-      "event": "Aborted campaign configuration record ID: camp_fa_9144",
-      "status": "warning",
-      "timestamp": "03/07/2026, 22:25:41",
-      "payloadSize": "240 B"
-    },
-    {
-      "id": "log-1783099415332",
-      "service": "n8n Callback Webhook",
-      "event": "Incoming callback parsed for \"hi\". System state updated to processed. Google Sheets: Updated.",
-      "status": "success",
-      "timestamp": "03/07/2026, 22:23:35",
-      "payloadSize": "173 B"
-    },
-    {
-      "id": "log-1783099409865",
-      "service": "n8n Pipeline Dispatcher",
-      "event": "Triggered n8n flow [facebook] for campaign: hi. Status: Processing...",
-      "status": "success",
-      "timestamp": "03/07/2026, 22:23:29",
-      "payloadSize": "321 B"
-    },
-    {
-      "id": "log-1783099280050",
-      "service": "n8n Callback Webhook",
-      "event": "Incoming callback parsed for \"hi\". System state updated to processed. Google Sheets: Updated.",
-      "status": "success",
-      "timestamp": "03/07/2026, 22:21:20",
-      "payloadSize": "173 B"
-    },
-    {
-      "id": "log-1783099274724",
-      "service": "n8n Pipeline Dispatcher",
-      "event": "Triggered n8n flow [facebook] for campaign: hi. Status: Processing...",
-      "status": "success",
-      "timestamp": "03/07/2026, 22:21:14",
-      "payloadSize": "321 B"
-    },
-    {
-      "id": "log-1783099234119",
-      "service": "Core System Kernel",
-      "event": "Abdelghanem CRM server boot initialized successfully on port 3000",
-      "status": "success",
-      "timestamp": "03/07/2026, 22:20:34",
-      "payloadSize": "1.0 KB"
-    },
-    {
-      "id": "log-1783098653462",
-      "service": "Core System Kernel",
-      "event": "Abdelghanem CRM server boot initialized successfully on port 3000",
-      "status": "success",
-      "timestamp": "03/07/2026, 22:10:53",
-      "payloadSize": "1.0 KB"
-    },
-    {
-      "id": "log-1783098406694",
-      "service": "n8n Callback Webhook",
-      "event": "Incoming callback parsed for \"Hello\". System state updated to processed. Google Sheets: Updated.",
-      "status": "success",
-      "timestamp": "03/07/2026, 22:06:46",
-      "payloadSize": "173 B"
     }
   ]
 }
