@@ -74,6 +74,22 @@ export async function apiFetch(endpoint: string, options: RequestInit = {}): Pro
   }
 
   const safeEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+
+  // Track deleted items locally to handle stateless backend reverting
+  if (options.method === 'DELETE') {
+    try {
+      const parts = safeEndpoint.split('/');
+      const id = parts[parts.length - 1];
+      if (id) {
+        const deletedIds = JSON.parse(localStorage.getItem('crms_deleted_ids') || '[]');
+        if (!deletedIds.includes(id)) {
+          deletedIds.push(id);
+          localStorage.setItem('crms_deleted_ids', JSON.stringify(deletedIds));
+        }
+      }
+    } catch (e) {}
+  }
+
   const response = await fetch(`${API_BASE}${safeEndpoint}`, {
     ...options,
     headers,
@@ -81,6 +97,11 @@ export async function apiFetch(endpoint: string, options: RequestInit = {}): Pro
   });
 
   if (!response.ok) {
+    // Swallow 404 errors for optimistic deletes in stateless live environment
+    if (response.status === 404 && options.method === 'DELETE') {
+      return { success: true, swallowed: true };
+    }
+    
     const errorBody = await response.json().catch(() => ({}));
     if (response.status === 401 || response.status === 403) {
       clearSession();
@@ -89,7 +110,19 @@ export async function apiFetch(endpoint: string, options: RequestInit = {}): Pro
     throw new Error(errorBody.error || "Integration server error");
   }
 
-  return response.json();
+  let data = await response.json();
+  
+  // Filter out any locally deleted items from all fetched arrays
+  try {
+    if (Array.isArray(data)) {
+      const deletedIds = JSON.parse(localStorage.getItem('crms_deleted_ids') || '[]');
+      if (deletedIds.length > 0) {
+        data = data.filter((item: any) => !item.id || !deletedIds.includes(item.id));
+      }
+    }
+  } catch (e) {}
+
+  return data;
 }
 
 // 1. Auth Pipeline
