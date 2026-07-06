@@ -4,7 +4,7 @@ dotenv.config();
 import express from "express";
 import http from "http";
 import path from "path";
-import fs from "fs";
+  import fs from "fs";
 import { WebSocketServer, WebSocket } from "ws";
 import multer from "multer";
 import axios from "axios";
@@ -28,167 +28,39 @@ app.use(express.json());
 // Multi-tenant context filter header
 const TENANT_HEADER = "x-tenant-id";
 
-// Initialize JSON database
-const DB_FILE = path.join(process.cwd(), "database.json");
+// Initialize JSON FS Storage Engine
+const DATA_DIR = path.join(process.cwd(), "backend", "data");
 
-// Initial mock dataset (aligned with client mockData.ts)
-const initialDb = {
-  users: [
-    { id: "1", name: "Robert Johnson", email: "admin@crms.com", role: "Admin", department: "Administration", avatar: "https://ui-avatars.com/api/?name=Robert+Johnson&background=4F46E5&color=fff&size=150", status: "Active" },
-    { id: "2", name: "Isabella Cooper", email: "screed@crms.com", role: "Marketer", department: "Screed", avatar: "https://ui-avatars.com/api/?name=Isabella+Cooper&background=06B6D4&color=fff&size=150", status: "Active" },
-    { id: "3", name: "John Smith", email: "elec@crms.com", role: "Technician", department: "Electrical", avatar: "https://ui-avatars.com/api/?name=John+Smith&background=EAB308&color=fff&size=150", status: "Active" },
-    { id: "4", name: "Sophia Parker", email: "screed@crms.com", role: "Operator", department: "Screed", avatar: "https://ui-avatars.com/api/?name=Sophia+Parker&background=06B6D4&color=fff&size=150", status: "Active" },
-    { id: "5", name: "Ethan Reynolds", email: "heat@crms.com", role: "Technician", department: "Heating", avatar: "https://ui-avatars.com/api/?name=Ethan+Reynolds&background=EF4444&color=fff&size=150", status: "Active" },
-    { id: "6", name: "Liam Carter", email: "elec@crms.com", role: "Operator", department: "Electrical", avatar: "https://ui-avatars.com/api/?name=Liam+Carter&background=EAB308&color=fff&size=150", status: "Active" }
-  ],
-  contacts: [
-    { id: "c1", name: "Robert Johnson", company: "Thermal Grid Inc", email: "robert.j@thermalgrid.com", phone: "+44 7911 123456", status: "Won", revenue: 7500, tenant: "heating" },
-    { id: "c2", name: "Isabella Cooper", company: "Apex Foundations", email: "i.cooper@apex.co.uk", phone: "+44 7911 654321", status: "Won", revenue: 2000, tenant: "screed" },
-    { id: "c3", name: "John Smith", company: "Direct Current Ltd", email: "j.smith@directcurrent.co.uk", phone: "+44 7911 987654", status: "Contacted", revenue: 1600, tenant: "electrical" },
-    { id: "c4", name: "Sophia Parker", company: "Elite Screeding Solutions", email: "sophia.p@elitescreed.com", phone: "+44 7911 112233", status: "Proposal", revenue: 600, tenant: "screed" },
-    { id: "c5", name: "Ethan Reynolds", company: "Boiler Eco System", email: "e.reynolds@boiler-eco.co.uk", phone: "+44 7911 445566", status: "Won", revenue: 2800, tenant: "heating" },
-    { id: "c6", name: "Liam Carter", company: "Grid Spark Electrical", email: "l.carter@gridspark.com", phone: "+44 7911 778899", status: "Lead", revenue: 6955, tenant: "electrical" }
-  ],
-  deals: [
-    { id: "d1", title: "Boiler Upgrade Combo x10", company: "Metro Living Apartments", value: 34000, stage: "Won", tenant: "heating", date: "15 Mar 2026" },
-    { id: "d2", title: "Liquid Screed Pour - Phase 2", company: "Tesco Retail Hub", value: 18500, stage: "Proposal", tenant: "screed", date: "04 Apr 2026" },
-    { id: "d3", title: "Full Rewire & EV Chargers", company: "Hampton Estates", value: 12200, stage: "Contacted", tenant: "electrical", date: "21 May 2026" },
-    { id: "d4", title: "Commercial Heat Pump Install", company: "Tech Park South", value: 45000, stage: "Leads", tenant: "heating", date: "01 Jun 2026" },
-    { id: "d5", title: "Self-leaving screed layout", company: "High Definition Apartments", value: 9200, stage: "Contract", tenant: "screed", date: "12 Jun 2026" }
-  ],
-  technicianTasks: [
-    { id: "t1", technician: "Dave Miller (Heating lead)", client: "Vance Residence", phone: "07700 900077", type: "Installation", status: "In Progress", time: "08:00 - 10:30", tenant: "heating" },
-    { id: "t2", technician: "Sarah Connor (Screed lead)", client: "John Connor House", phone: "07700 900124", type: "Inspection", status: "Scheduled", time: "10:00 - 12:00", tenant: "screed" },
-    { id: "t3", technician: "Mark Sparky (Electrical Lead)", client: "Warehouse 9 Depot", phone: "07700 900543", type: "Repair", status: "Completed", time: "11:00 - 13:00", tenant: "electrical" },
-    { id: "t4", technician: "Dave Miller (Heating lead)", client: "High Street Coffee", phone: "07700 900987", type: "Maintenance", status: "Scheduled", time: "14:00 - 15:30", tenant: "heating" },
-    { id: "t5", technician: "Alex Brown (Screed Operator)", client: "New Build Site B", phone: "07700 900321", type: "Installation", status: "Pending", time: "15:00 - 17:30", tenant: "screed" }
-  ],
-  pdfAttachments: [
-    {
-      id: "pdf-1",
-      fileName: "heatspec_quote_3342.pdf",
-      fileSize: "1.4 MB",
-      uploadedAt: "14 Jun 2026, 12:30",
-      status: "Parsed",
-      extractedData: {
-        clientName: "Wessex Care Homes",
-        address: "42 Winchester Rd, Southampton",
-        totalAmount: "£14,850",
-        items: ["3x EcoHeat Combi Boilers", "Flue Adaptation kit", "12x Smart Radiator TRVs", "Pipe insulation suite"],
-        confidence: 97,
-        boilerModel: "EcoHeat Combi v2"
-      }
-    },
-    {
-      id: "pdf-2",
-      fileName: "screed_volume_tender_re.pdf",
-      fileSize: "890 KB",
-      uploadedAt: "13 Jun 2026, 09:12",
-      status: "Parsed",
-      extractedData: {
-        clientName: "BuildCorp South East",
-        address: "Site 8, Greenwich Refinery Block",
-        totalAmount: "£8,400",
-        items: ["120sqm Liquid Anhydrite Screed", "Damp Proof Membrane", "Perimeter Expansion Strip"],
-        confidence: 94,
-        screedThickness: "55mm FlowScreed"
-      }
-    },
-    {
-      id: "pdf-3",
-      fileName: "three_phase_supply_elec.pdf",
-      fileSize: "2.1 MB",
-      uploadedAt: "12 Jun 2026, 15:04",
-      status: "Parsed",
-      extractedData: {
-        clientName: "GigaLogistics Hub",
-        address: "Unit 4, Meridian Industrial Park",
-        totalAmount: "£22,100",
-        items: ["Three-Phase Distribution Board Installation", "6x Dual Type 2 22kW EV Chargers", "Armoured Cable Feed (50m)"],
-        confidence: 91,
-        wiringStandard: "BS 7671 Amendment 2"
-      }
-    }
-  ],
-  adCampaigns: [
-    {
-      id: "campaign-1",
-      title: "Eco Combi Heating Drive",
-      platform: "Facebook",
-      generatedCopy: "🚀 Cut your home heating bills by up to 35%! Upgrade to a premium A-rated smart combi boiler with Heating Works. Zero percent finance available this summer and up to 10 years manufacturer warranty! Click below to book your free home survey.",
-      hashtags: ["HeatingWorks", "BoilerUpgrade", "SmartHeating", "EcoTech", "HomeComfort"],
-      status: "Pending Approval",
-      createdAt: "14 Jun 2026, 10:00",
-      tenant: "heating"
-    },
-    {
-      id: "campaign-2",
-      title: "Flawless Liquid Screed",
-      platform: "Instagram",
-      generatedCopy: "Level up your development with flawless screeding! ✨ Our liquid screeding dries faster, offers excellent thermal conductivity for underfloor systems, and leaves a premium level finish. No cracks, no stress. Contact Screed Works today for a fast quote!",
-      hashtags: ["ScreedWorks", "SelfLevelingScreed", "UnderfloorHeating", "PropertyRenovation", "FlooringDirect"],
-      status: "Approved",
-      createdAt: "13 Jun 2026, 11:30",
-      tenant: "screed"
-    },
-    {
-      id: "campaign-3",
-      title: "EV Charger Installation Deal",
-      platform: "Facebook",
-      generatedCopy: "Switching to electric? 🔌 Get your high-speed home and business EV Chargers installed by certified technicians from Electrical Works. Guaranteed compliant, safe, and fully insured. Clean electrical infrastructure begins here!",
-      hashtags: ["ElectricalWorks", "EVCharging", "ElectricCar", "TechHome", "SparkySecure"],
-      status: "Draft",
-      createdAt: "11 Jun 2026, 14:00",
-      tenant: "electrical"
-    }
-  ],
-  systemLogs: [
-    { id: "log-1", service: "n8n: Intake Webhook", event: "PDF Smart Extraction Trigger", status: "success", timestamp: "14 Jun 2026, 14:15:20", payloadSize: "2.4 KB" },
-    { id: "log-2", service: "n8n: CRM Sync", event: "Google Sheet Lead Contact Push", status: "success", timestamp: "14 Jun 2026, 14:10:05", payloadSize: "1.2 KB" },
-    { id: "log-3", service: "Gemini 3.5 Flash API", event: "Hashtag Recommendation Response", status: "success", timestamp: "14 Jun 2026, 14:02:44", payloadSize: "0.8 KB" },
-    { id: "log-4", service: "n8n: Facebook Ad Dispatcher", event: "Auth Refresh retry", status: "warning", timestamp: "14 Jun 2026, 13:55:12", payloadSize: "3.1 KB" },
-    { id: "log-5", service: "Intellicall API Gate", event: "SMS Notification Failure: No credits", status: "error", timestamp: "14 Jun 2026, 12:44:02", payloadSize: "0.2 KB" }
-  ]
-};
-
-// Database helper functions
-let globalDbCache: any = null;
-
-async function getDb() {
-  if (globalDbCache) return globalDbCache;
-
+async function ensureDataDir() {
   try {
-    if (process.env.NODE_ENV !== "production") {
-      if (fs.existsSync(DB_FILE)) {
-        const data = await fs.promises.readFile(DB_FILE, "utf-8");
-        globalDbCache = JSON.parse(data);
-        
-        // Safeguard for campaign records missing
-        if (!globalDbCache.adCampaigns) {
-          globalDbCache.adCampaigns = initialDb.adCampaigns;
-          await saveDb(globalDbCache);
-        }
-        return globalDbCache;
-      }
-    }
-  } catch (error) {
-    console.warn("Local DB read failed or not available, falling back to in-memory initialDb", error);
+    await fs.promises.mkdir(DATA_DIR, { recursive: true });
+  } catch (err) {
+    console.error("Error creating data directory", err);
   }
+}
+ensureDataDir();
 
-  // Fallback to initialDb
-  globalDbCache = JSON.parse(JSON.stringify(initialDb));
-  return globalDbCache;
+async function readCollection(collectionName: string) {
+  const filePath = path.join(DATA_DIR, `${collectionName}.json`);
+  try {
+    const data = await fs.promises.readFile(filePath, "utf-8");
+    return JSON.parse(data);
+  } catch (err: any) {
+    if (err.code === "ENOENT") {
+      await fs.promises.writeFile(filePath, "[]", "utf-8");
+      return [];
+    }
+    console.warn(`Error reading ${collectionName}.json:`, err);
+    return [];
+  }
 }
 
-async function saveDb(data: any) {
-  globalDbCache = data;
-
-  if (process.env.NODE_ENV !== "production") {
-    try {
-      await fs.promises.writeFile(DB_FILE, JSON.stringify(data, null, 2), "utf-8");
-    } catch (error) {
-      console.error("Silent error: Failed to save DB locally", error);
-    }
+async function writeCollection(collectionName: string, data: any) {
+  const filePath = path.join(DATA_DIR, `${collectionName}.json`);
+  try {
+    await fs.promises.writeFile(filePath, JSON.stringify(data, null, 2), "utf-8");
+  } catch (err) {
+    console.error(`Error writing ${collectionName}.json:`, err);
   }
 }
 
@@ -257,7 +129,7 @@ wss.on("connection", (ws) => {
 
 // Helper for adding system log
 async function createSystemLog(service: string, event: string, status: "success" | "warning" | "error", sizeBytes = 1024) {
-  const db = await getDb();
+  const logs = await readCollection("logs");
   const formatSize = (bytes: number) => {
     if (bytes < 1024) return `${bytes} B`;
     return `${(bytes / 1024).toFixed(1)} KB`;
@@ -270,12 +142,12 @@ async function createSystemLog(service: string, event: string, status: "success"
     timestamp: new Date().toLocaleString("en-GB", { hour12: false }),
     payloadSize: formatSize(sizeBytes)
   };
-  db.systemLogs.unshift(newLog);
+  logs.unshift(newLog);
   // Cap logs at 30 entries
-  if (db.systemLogs.length > 30) {
-    db.systemLogs.pop();
+  if (logs.length > 30) {
+    logs.pop();
   }
-  await saveDb(db);
+  await writeCollection("logs", logs);
   broadcast({ type: "LOG_CREATED", data: newLog });
 }
 
@@ -340,18 +212,18 @@ app.post("/api/auth/login", async (req, res) => {
   });
 });
 
-// 2. CONTACTS API (Multi-tenant aware)
-app.get("/api/contacts", async (req, res) => {
+// 2. LEADS API (Multi-tenant aware)
+app.get("/api/leads", async (req, res) => {
   const tenantId = req.headers[TENANT_HEADER] || req.query.tenant || "all";
-  const db = await getDb();
-  let filtered = db.contacts;
+  const leads = await readCollection("leads");
+  let filtered = leads;
   if (tenantId !== "all") {
-    filtered = db.contacts.filter((c: any) => c.tenant === tenantId);
+    filtered = leads.filter((c: any) => c.tenant === tenantId);
   }
   res.json(filtered);
 });
 
-app.post("/api/contacts", async (req, res) => {
+app.post("/api/leads", async (req, res) => {
   const tenantId = req.headers[TENANT_HEADER] || req.body.tenant || "all";
   const { name, company, email, phone, status, revenue } = req.body;
   
@@ -359,7 +231,7 @@ app.post("/api/contacts", async (req, res) => {
     return res.status(400).json({ error: "Client Contact Name is required" });
   }
 
-  const db = await getDb();
+  const leads = await readCollection("leads");
   const created = {
     id: `c-${Date.now()}`,
     name,
@@ -371,8 +243,8 @@ app.post("/api/contacts", async (req, res) => {
     tenant: tenantId === "all" ? "heating" : tenantId
   };
 
-  db.contacts.unshift(created);
-  await saveDb(db);
+  leads.unshift(created);
+  await writeCollection("leads", leads);
 
   await createSystemLog("Sales CRM Core", `Contact card created for ${name}`, "success", 1024);
   broadcast({ type: "CONTACT_CREATED", data: created, tenant: created.tenant });
@@ -380,33 +252,33 @@ app.post("/api/contacts", async (req, res) => {
   res.status(201).json(created);
 });
 
-app.put("/api/contacts/:id", async (req, res) => {
+app.put("/api/leads/:id", async (req, res) => {
   const { id } = req.params;
-  const db = await getDb();
-  const index = db.contacts.findIndex((c: any) => c.id === id);
+  const leads = await readCollection("leads");
+  const index = leads.findIndex((c: any) => c.id === id);
   if (index === -1) {
     return res.status(404).json({ error: "Contact not found" });
   }
-  db.contacts[index] = { ...db.contacts[index], ...req.body };
-  const updated = db.contacts[index];
-  await saveDb(db);
+  leads[index] = { ...leads[index], ...req.body };
+  const updated = leads[index];
+  await writeCollection("leads", leads);
   await createSystemLog("Sales CRM Core", `Contact card modified for ${updated.name}`, "success", 768);
   broadcast({ type: "CONTACT_UPDATED", data: updated, tenant: updated.tenant });
   res.json(updated);
 });
 
-app.patch("/api/contacts/:id", async (req, res) => {
+app.patch("/api/leads/:id", async (req, res) => {
   const { id } = req.params;
-  const db = await getDb();
-  const index = db.contacts.findIndex((c: any) => c.id === id);
+  const leads = await readCollection("leads");
+  const index = leads.findIndex((c: any) => c.id === id);
 
   if (index === -1) {
     return res.status(404).json({ error: "Contact not found" });
   }
 
-  db.contacts[index] = { ...db.contacts[index], ...req.body };
-  const updated = db.contacts[index];
-  await saveDb(db);
+  leads[index] = { ...leads[index], ...req.body };
+  const updated = leads[index];
+  await writeCollection("leads", leads);
 
   await createSystemLog("Sales CRM Core", `Contact card modified for ${updated.name}`, "success", 768);
   broadcast({ type: "CONTACT_UPDATED", data: updated, tenant: updated.tenant });
@@ -414,17 +286,17 @@ app.patch("/api/contacts/:id", async (req, res) => {
   res.json(updated);
 });
 
-app.delete("/api/contacts/:id", async (req, res) => {
+app.delete("/api/leads/:id", async (req, res) => {
   const { id } = req.params;
-  const db = await getDb();
-  const contact = db.contacts.find((c: any) => c.id === id);
+  let leads = await readCollection("leads");
+  const contact = leads.find((c: any) => c.id === id);
 
   if (!contact) {
     return res.status(404).json({ error: "Contact not found" });
   }
 
-  db.contacts = db.contacts.filter((c: any) => c.id !== id);
-  await saveDb(db);
+  leads = leads.filter((c: any) => c.id !== id);
+  await writeCollection("leads", leads);
 
   await createSystemLog("Sales CRM Core", `Removed client database record ID: ${id}`, "warning", 320);
   broadcast({ type: "CONTACT_DELETED", id, tenant: contact.tenant });
@@ -435,10 +307,10 @@ app.delete("/api/contacts/:id", async (req, res) => {
 // 3. DEALS API (Multi-tenant aware)
 app.get("/api/deals", async (req, res) => {
   const tenantId = req.headers[TENANT_HEADER] || req.query.tenant || "all";
-  const db = await getDb();
-  let filtered = db.deals;
+  const deals = await readCollection("deals");
+  let filtered = deals;
   if (tenantId !== "all") {
-    filtered = db.deals.filter((d: any) => d.tenant === tenantId);
+    filtered = deals.filter((d: any) => d.tenant === tenantId);
   }
   res.json(filtered);
 });
@@ -451,7 +323,7 @@ app.post("/api/deals", async (req, res) => {
     return res.status(400).json({ error: "Deal Title and Company are required" });
   }
 
-  const db = await getDb();
+  const deals = await readCollection("deals");
   const created = {
     id: `d-${Date.now()}`,
     title,
@@ -462,8 +334,8 @@ app.post("/api/deals", async (req, res) => {
     date: new Date().toLocaleDateString("en-GB", { day: 'numeric', month: 'short', year: 'numeric' })
   };
 
-  db.deals.unshift(created);
-  await saveDb(db);
+  deals.unshift(created);
+  await writeCollection("deals", deals);
 
   await createSystemLog("Pipeline Engine", `Deal pipeline created: ${title}`, "success", 1200);
   broadcast({ type: "DEAL_CREATED", data: created, tenant: created.tenant });
@@ -473,14 +345,14 @@ app.post("/api/deals", async (req, res) => {
 
 app.put("/api/deals/:id", async (req, res) => {
   const { id } = req.params;
-  const db = await getDb();
-  const index = db.deals.findIndex((d: any) => d.id === id);
+  const deals = await readCollection("deals");
+  const index = deals.findIndex((d: any) => d.id === id);
   if (index === -1) {
     return res.status(404).json({ error: "Deal not found" });
   }
-  db.deals[index] = { ...db.deals[index], ...req.body };
-  const updated = db.deals[index];
-  await saveDb(db);
+  deals[index] = { ...deals[index], ...req.body };
+  const updated = deals[index];
+  await writeCollection("deals", deals);
   await createSystemLog("Pipeline Engine", `Deal pipeline modified: ${updated.title} stage -> ${updated.stage}`, "success", 900);
   broadcast({ type: "DEAL_UPDATED", data: updated, tenant: updated.tenant });
   res.json(updated);
@@ -488,16 +360,16 @@ app.put("/api/deals/:id", async (req, res) => {
 
 app.patch("/api/deals/:id", async (req, res) => {
   const { id } = req.params;
-  const db = await getDb();
-  const index = db.deals.findIndex((d: any) => d.id === id);
+  const deals = await readCollection("deals");
+  const index = deals.findIndex((d: any) => d.id === id);
 
   if (index === -1) {
     return res.status(404).json({ error: "Deal not found" });
   }
 
-  db.deals[index] = { ...db.deals[index], ...req.body };
-  const updated = db.deals[index];
-  await saveDb(db);
+  deals[index] = { ...deals[index], ...req.body };
+  const updated = deals[index];
+  await writeCollection("deals", deals);
 
   await createSystemLog("Pipeline Engine", `Deal pipeline modified: ${updated.title} stage -> ${updated.stage}`, "success", 900);
   broadcast({ type: "DEAL_UPDATED", data: updated, tenant: updated.tenant });
@@ -507,15 +379,15 @@ app.patch("/api/deals/:id", async (req, res) => {
 
 app.delete("/api/deals/:id", async (req, res) => {
   const { id } = req.params;
-  const db = await getDb();
-  const deal = db.deals.find((d: any) => d.id === id);
+  let deals = await readCollection("deals");
+  const deal = deals.find((d: any) => d.id === id);
 
   if (!deal) {
     return res.status(404).json({ error: "Deal not found" });
   }
 
-  db.deals = db.deals.filter((d: any) => d.id !== id);
-  await saveDb(db);
+  deals = deals.filter((d: any) => d.id !== id);
+  await writeCollection("deals", deals);
 
   await createSystemLog("Pipeline Engine", `Deleted deal pipeline element ID: ${id}`, "warning", 310);
   broadcast({ type: "DEAL_DELETED", id, tenant: deal.tenant });
@@ -526,10 +398,10 @@ app.delete("/api/deals/:id", async (req, res) => {
 // 4. TECHNICIAN TASK DISPATCH API
 app.get("/api/tasks", async (req, res) => {
   const tenantId = req.headers[TENANT_HEADER] || req.query.tenant || "all";
-  const db = await getDb();
-  let filtered = db.technicianTasks;
+  const tasks = await readCollection("tasks");
+  let filtered = tasks;
   if (tenantId !== "all") {
-    filtered = db.technicianTasks.filter((t: any) => t.tenant === tenantId);
+    filtered = tasks.filter((t: any) => t.tenant === tenantId);
   }
   res.json(filtered);
 });
@@ -539,7 +411,7 @@ app.post("/api/tasks", async (req, res) => {
   if (!client || !technician) {
     return res.status(400).json({ error: "Technician and Client Name are required" });
   }
-  const db = await getDb();
+  const tasks = await readCollection("tasks");
   const created = {
     id: `task-${Date.now()}`,
     technician,
@@ -550,8 +422,8 @@ app.post("/api/tasks", async (req, res) => {
     time: time || "09:00 - 11:00",
     tenant: tenant || "heating"
   };
-  db.technicianTasks.push(created);
-  await saveDb(db);
+  tasks.push(created);
+  await writeCollection("tasks", tasks);
   await createSystemLog("Dispatching Engine", `Dispatched task to ${technician} for ${client} (${created.type})`, "success", 1400);
   broadcast({ type: "TASK_CREATED", data: created, tenant: created.tenant });
   res.status(201).json(created);
@@ -559,14 +431,14 @@ app.post("/api/tasks", async (req, res) => {
 
 app.put("/api/tasks/:id", async (req, res) => {
   const { id } = req.params;
-  const db = await getDb();
-  const index = db.technicianTasks.findIndex((t: any) => t.id === id);
+  const tasks = await readCollection("tasks");
+  const index = tasks.findIndex((t: any) => t.id === id);
   if (index === -1) {
     return res.status(404).json({ error: "Task not found" });
   }
-  db.technicianTasks[index] = { ...db.technicianTasks[index], ...req.body };
-  const updated = db.technicianTasks[index];
-  await saveDb(db);
+  tasks[index] = { ...tasks[index], ...req.body };
+  const updated = tasks[index];
+  await writeCollection("tasks", tasks);
   await createSystemLog("Dispatching Engine", `Updated dispatch card for ${updated.technician} status: ${updated.status}`, "success", 800);
   broadcast({ type: "TASK_UPDATED", data: updated, tenant: updated.tenant });
   res.json(updated);
@@ -574,13 +446,13 @@ app.put("/api/tasks/:id", async (req, res) => {
 
 app.delete("/api/tasks/:id", async (req, res) => {
   const { id } = req.params;
-  const db = await getDb();
-  const task = db.technicianTasks.find((t: any) => t.id === id);
+  let tasks = await readCollection("tasks");
+  const task = tasks.find((t: any) => t.id === id);
   if (!task) {
     return res.status(404).json({ error: "Task not found" });
   }
-  db.technicianTasks = db.technicianTasks.filter((t: any) => t.id !== id);
-  await saveDb(db);
+  tasks = tasks.filter((t: any) => t.id !== id);
+  await writeCollection("tasks", tasks);
   await createSystemLog("Dispatching Engine", `Recalled workforce dispatch card ID: ${id}`, "error", 400);
   broadcast({ type: "TASK_DELETED", id, tenant: task.tenant });
   res.json({ success: true, id });
@@ -588,10 +460,10 @@ app.delete("/api/tasks/:id", async (req, res) => {
 
 app.get("/api/tech-tasks", async (req, res) => {
   const tenantId = req.headers[TENANT_HEADER] || req.query.tenant || "all";
-  const db = await getDb();
-  let filtered = db.technicianTasks;
+  const tasks = await readCollection("tasks");
+  let filtered = tasks;
   if (tenantId !== "all") {
-    filtered = db.technicianTasks.filter((t: any) => t.tenant === tenantId);
+    filtered = tasks.filter((t: any) => t.tenant === tenantId);
   }
   res.json(filtered);
 });
@@ -602,7 +474,7 @@ app.post("/api/tech-tasks", async (req, res) => {
     return res.status(400).json({ error: "Technician and Client Name are required" });
   }
 
-  const db = await getDb();
+  const tasks = await readCollection("tasks");
   const created = {
     id: `task-${Date.now()}`,
     technician,
@@ -614,8 +486,8 @@ app.post("/api/tech-tasks", async (req, res) => {
     tenant: tenant || "heating"
   };
 
-  db.technicianTasks.push(created);
-  await saveDb(db);
+  tasks.push(created);
+  await writeCollection("tasks", tasks);
 
   await createSystemLog("Dispatching Engine", `Dispatched task to ${technician} for ${client} (${created.type})`, "success", 1400);
   broadcast({ type: "TASK_CREATED", data: created, tenant: created.tenant });
@@ -625,16 +497,16 @@ app.post("/api/tech-tasks", async (req, res) => {
 
 app.patch("/api/tech-tasks/:id", async (req, res) => {
   const { id } = req.params;
-  const db = await getDb();
-  const index = db.technicianTasks.findIndex((t: any) => t.id === id);
+  const tasks = await readCollection("tasks");
+  const index = tasks.findIndex((t: any) => t.id === id);
 
   if (index === -1) {
     return res.status(404).json({ error: "Task not found" });
   }
 
-  db.technicianTasks[index] = { ...db.technicianTasks[index], ...req.body };
-  const updated = db.technicianTasks[index];
-  await saveDb(db);
+  tasks[index] = { ...tasks[index], ...req.body };
+  const updated = tasks[index];
+  await writeCollection("tasks", tasks);
 
   await createSystemLog("Dispatching Engine", `Updated dispatch card for ${updated.technician} status: ${updated.status}`, "success", 800);
   broadcast({ type: "TASK_UPDATED", data: updated, tenant: updated.tenant });
@@ -644,15 +516,15 @@ app.patch("/api/tech-tasks/:id", async (req, res) => {
 
 app.delete("/api/tech-tasks/:id", async (req, res) => {
   const { id } = req.params;
-  const db = await getDb();
-  const task = db.technicianTasks.find((t: any) => t.id === id);
+  let tasks = await readCollection("tasks");
+  const task = tasks.find((t: any) => t.id === id);
 
   if (!task) {
     return res.status(404).json({ error: "Task not found" });
   }
 
-  db.technicianTasks = db.technicianTasks.filter((t: any) => t.id !== id);
-  await saveDb(db);
+  tasks = tasks.filter((t: any) => t.id !== id);
+  await writeCollection("tasks", tasks);
 
   await createSystemLog("Dispatching Engine", `Recalled workforce dispatch card ID: ${id}`, "error", 400);
   broadcast({ type: "TASK_DELETED", id, tenant: task.tenant });
@@ -663,12 +535,15 @@ app.delete("/api/tech-tasks/:id", async (req, res) => {
 // 5. LIVE ANALYTICS AGGREGATOR
 app.get("/api/analytics", async (req, res) => {
   const tenantId = req.headers[TENANT_HEADER] || req.query.tenant || "all";
-  const db = await getDb();
+  
+  const allDeals = await readCollection("deals");
+  const allLeads = await readCollection("leads");
+  const allTasks = await readCollection("tasks");
   
   // Filter core records based on tenant
-  const deals = tenantId === "all" ? db.deals : db.deals.filter((d: any) => d.tenant === tenantId);
-  const contacts = tenantId === "all" ? db.contacts : db.contacts.filter((c: any) => c.tenant === tenantId);
-  const tasks = tenantId === "all" ? db.technicianTasks : db.technicianTasks.filter((t: any) => t.tenant === tenantId);
+  const deals = tenantId === "all" ? allDeals : allDeals.filter((d: any) => d.tenant === tenantId);
+  const contacts = tenantId === "all" ? allLeads : allLeads.filter((c: any) => c.tenant === tenantId);
+  const tasks = tenantId === "all" ? allTasks : allTasks.filter((t: any) => t.tenant === tenantId);
 
   // Aggregates
   const totalRevenue = contacts.reduce((sum: number, c: any) => sum + (c.revenue || 0), 0) +
@@ -682,9 +557,9 @@ app.get("/api/analytics", async (req, res) => {
   // Let's build real charts data dynamically mapped from db records!
   // 1. Revenue by Tenant distribution (or month)
   const divisionDistribution = [
-    { name: "Heating Team", value: db.contacts.filter((c: any) => c.tenant === "heating").reduce((s: any, c: any) => s + c.revenue, 0) + db.deals.filter((d: any) => d.tenant === "heating" && d.stage === "Won").reduce((s: any, d: any) => s + d.value, 0) },
-    { name: "Screed Team", value: db.contacts.filter((c: any) => c.tenant === "screed").reduce((s: any, c: any) => s + c.revenue, 0) + db.deals.filter((d: any) => d.tenant === "screed" && d.stage === "Won").reduce((s: any, d: any) => s + d.value, 0) },
-    { name: "Electrical Team", value: db.contacts.filter((c: any) => c.tenant === "electrical").reduce((s: any, c: any) => s + c.revenue, 0) + db.deals.filter((d: any) => d.tenant === "electrical" && d.stage === "Won").reduce((s: any, d: any) => s + d.value, 0) },
+    { name: "Heating Team", value: allLeads.filter((c: any) => c.tenant === "heating").reduce((s: any, c: any) => s + c.revenue, 0) + allDeals.filter((d: any) => d.tenant === "heating" && d.stage === "Won").reduce((s: any, d: any) => s + d.value, 0) },
+    { name: "Screed Team", value: allLeads.filter((c: any) => c.tenant === "screed").reduce((s: any, c: any) => s + c.revenue, 0) + allDeals.filter((d: any) => d.tenant === "screed" && d.stage === "Won").reduce((s: any, d: any) => s + d.value, 0) },
+    { name: "Electrical Team", value: allLeads.filter((c: any) => c.tenant === "electrical").reduce((s: any, c: any) => s + c.revenue, 0) + allDeals.filter((d: any) => d.tenant === "electrical" && d.stage === "Won").reduce((s: any, d: any) => s + d.value, 0) },
   ];
 
   // 2. Monthly Trend calculation
@@ -714,8 +589,8 @@ app.get("/api/analytics", async (req, res) => {
 
 // 6. AI SMART PDF SCAN INTAKE CONTROLLER (Powered by Gemini 3.5-flash)
 app.get("/api/documents", async (req, res) => {
-  const db = await getDb();
-  res.json(db.pdfAttachments);
+  const documents = await readCollection("documents");
+  res.json(documents);
 });
 
 app.post("/api/documents", uploadLoader.single("file"), async (req, res) => {
@@ -810,7 +685,7 @@ You must strictly output JSON matching the required schema.`;
 
     broadcast({ type: "DOCUMENT_PROGRESS", id: documentId, percent: 90, status: "Indexing terms into DB" });
 
-    const db = await getDb();
+    const documents = await readCollection("documents");
     const newDoc = {
       id: documentId,
       fileName,
@@ -829,8 +704,8 @@ You must strictly output JSON matching the required schema.`;
       }
     };
 
-    db.pdfAttachments.unshift(newDoc);
-    await saveDb(db);
+    documents.unshift(newDoc);
+    await writeCollection("documents", documents);
 
     broadcast({ type: "DOCUMENT_PROGRESS", id: documentId, percent: 100, status: "Completed" });
     await createSystemLog("Automated Smart Intake", `Successfully auto-parsed document: ${fileName} with confidence ${newDoc.extractedData.confidence}%`, "success", 2048);
@@ -843,7 +718,7 @@ You must strictly output JSON matching the required schema.`;
     broadcast({ type: "DOCUMENT_PROGRESS", id: documentId, percent: 100, status: "Error" });
     await createSystemLog("Automated Smart Intake", `Error parsing document: ${fileName}. Details: ${error.message || error}`, "error", 512);
     
-    const db = await getDb();
+    const documents = await readCollection("documents");
     const errDoc = {
       id: documentId,
       fileName,
@@ -855,8 +730,8 @@ You must strictly output JSON matching the required schema.`;
         items: []
       }
     };
-    db.pdfAttachments.unshift(errDoc);
-    await saveDb(db);
+    documents.unshift(errDoc);
+    await writeCollection("documents", documents);
     broadcast({ type: "DOCUMENT_CREATED", data: errDoc });
 
     res.status(500).json({ error: "Failed to parse document with Gemini pipeline", details: error.message });
@@ -865,14 +740,14 @@ You must strictly output JSON matching the required schema.`;
 
 app.put("/api/documents/:id", async (req, res) => {
   const { id } = req.params;
-  const db = await getDb();
-  const index = db.pdfAttachments.findIndex((d: any) => d.id === id);
+  const documents = await readCollection("documents");
+  const index = documents.findIndex((d: any) => d.id === id);
   if (index === -1) {
     return res.status(404).json({ error: "Document not found" });
   }
-  db.pdfAttachments[index] = { ...db.pdfAttachments[index], ...req.body };
-  const updated = db.pdfAttachments[index];
-  await saveDb(db);
+  documents[index] = { ...documents[index], ...req.body };
+  const updated = documents[index];
+  await writeCollection("documents", documents);
   await createSystemLog("Automated Smart Intake", `Document record ${id} updated`, "success", 512);
   broadcast({ type: "DOCUMENT_UPDATED", data: updated });
   res.json(updated);
@@ -880,9 +755,9 @@ app.put("/api/documents/:id", async (req, res) => {
 
 app.delete("/api/documents/:id", async (req, res) => {
   const { id } = req.params;
-  const db = await getDb();
-  db.pdfAttachments = db.pdfAttachments.filter((a: any) => a.id !== id);
-  await saveDb(db);
+  let documents = await readCollection("documents");
+  documents = documents.filter((a: any) => a.id !== id);
+  await writeCollection("documents", documents);
   await createSystemLog("Automated Smart Intake", `Document record ${id} removed from CRM Index`, "warning", 240);
   broadcast({ type: "DOCUMENT_DELETED", id });
   res.json({ success: true, id });
@@ -890,8 +765,8 @@ app.delete("/api/documents/:id", async (req, res) => {
 
 // 7. AI MARKETING GENERATOR GATE (Powered by Gemini 3.5-flash)
 app.get("/api/campaigns", async (req, res) => {
-  const db = await getDb();
-  res.json(db.adCampaigns);
+  const campaigns = await readCollection("campaigns");
+  res.json(campaigns);
 });
 
 app.post("/api/campaigns/generate", async (req, res) => {
@@ -968,7 +843,7 @@ app.post("/api/campaigns/generate", async (req, res) => {
     };
     const tenantDefaults = defaultMedia[tenant] || defaultMedia["heating"];
 
-    const db = await getDb();
+    const campaigns = await readCollection("campaigns");
     const created: any = {
       id: campaignId,
       title: campaignTitle || `${tenant.toUpperCase()} ${platform} Launch`,
@@ -988,8 +863,8 @@ app.post("/api/campaigns/generate", async (req, res) => {
       targetCountry: targetCountry || "AU"
     };
 
-    db.adCampaigns.unshift(created);
-    await saveDb(db);
+    campaigns.unshift(created);
+    await writeCollection("campaigns", campaigns);
 
     await createSystemLog("AI Copywriter", `Created marketing draft for ${created.title}`, "success", 1540);
     broadcast({ type: "CAMPAIGN_CREATED", data: created, tenant: created.tenant });
@@ -1004,15 +879,15 @@ app.post("/api/campaigns/generate", async (req, res) => {
 
 app.post("/api/campaigns/:id/approve", async (req, res) => {
   const { id } = req.params;
-  const db = await getDb();
-  const index = db.adCampaigns.findIndex((c: any) => c.id === id);
+  const campaigns = await readCollection("campaigns");
+  const index = campaigns.findIndex((c: any) => c.id === id);
 
   if (index === -1) {
     res.status(404).json({ error: "Campaign not found" });
     return;
   }
 
-  const campaign = db.adCampaigns[index];
+  const campaign = campaigns[index];
 
   // Map campaign platform to n8n scenario target
   let platformTarget = "meta_social"; // Default to Scenario A
@@ -1112,10 +987,10 @@ app.post("/api/campaigns/:id/approve", async (req, res) => {
     }
 
     // Update status to Approved on successful dispatch
-    db.adCampaigns[index].status = "Approved";
-    await saveDb(db);
+    campaigns[index].status = "Approved";
+    await writeCollection("campaigns", campaigns);
 
-    const updated = db.adCampaigns[index];
+    const updated = campaigns[index];
     await createSystemLog("n8n Bridge", `Campaign "${updated.title}" pushed to ad networks successfully. n8n status: ${response.status}`, "success", 1024);
     broadcast({ type: "CAMPAIGN_UPDATED", data: updated, tenant: updated.tenant });
 
@@ -1125,7 +1000,7 @@ app.post("/api/campaigns/:id/approve", async (req, res) => {
     console.error("n8n webhook dispatch failed:", error.message);
 
     // Keep campaign status as "Pending Approval" (do not mark it as Approved)
-    const updated = db.adCampaigns[index];
+    const updated = campaigns[index];
     await createSystemLog("n8n Bridge", `Webhook dispatch failed for "${updated.title}". Error: ${error.message}`, "error", 640);
 
     res.status(500).json({ error: `n8n webhook dispatch failed: ${error.message}`, details: error.message });
@@ -1174,8 +1049,8 @@ app.post("/api/v1/automation/sync", async (req, res) => {
   const webhookUrl = process.env.N8N_WEBHOOK_URL || process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL || "https://akigh90.app.n8n.cloud/webhook/crm-campaign-trigger";
 
   // Initialize/Update Campaign in database
-  const db = await getDb();
-  let existingIndex = db.adCampaigns.findIndex((c: any) => c.id === resolvedCampaignId);
+  const campaigns = await readCollection("campaigns");
+  let existingIndex = campaigns.findIndex((c: any) => c.id === resolvedCampaignId);
 
   const platformFriendly: Record<string, string> = {
     facebook: "Meta",
@@ -1201,11 +1076,11 @@ app.post("/api/v1/automation/sync", async (req, res) => {
   };
 
   if (existingIndex !== -1) {
-    db.adCampaigns[existingIndex] = { ...db.adCampaigns[existingIndex], ...currentCampaignRecord };
+    campaigns[existingIndex] = { ...campaigns[existingIndex], ...currentCampaignRecord };
   } else {
-    db.adCampaigns.unshift(currentCampaignRecord);
+    campaigns.unshift(currentCampaignRecord);
   }
-  await saveDb(db);
+  await writeCollection("campaigns", campaigns);
 
   await createSystemLog(
     "n8n Pipeline Dispatcher",
@@ -1255,8 +1130,8 @@ app.post("/api/v1/automation/callback", async (req, res) => {
     return res.status(400).json({ error: "Missing campaign_id in callback payload" });
   }
 
-  const db = await getDb();
-  const index = db.adCampaigns.findIndex((c: any) => c.id === campaign_id);
+  const campaigns = await readCollection("campaigns");
+  const index = campaigns.findIndex((c: any) => c.id === campaign_id);
 
   if (index === -1) {
     console.warn(`Callback received for non-existent campaign: ${campaign_id}`);
@@ -1264,7 +1139,7 @@ app.post("/api/v1/automation/callback", async (req, res) => {
     return res.status(404).json({ error: "Campaign not found" });
   }
 
-  const campaign = db.adCampaigns[index];
+  const campaign = campaigns[index];
   
   // Map callback status to CRM tracking states
   let updatedStatus = "Pipeline Error ❌";
@@ -1278,14 +1153,14 @@ app.post("/api/v1/automation/callback", async (req, res) => {
     logStatus = "warning";
   }
 
-  db.adCampaigns[index].status = updatedStatus;
+  campaigns[index].status = updatedStatus;
   if (google_sheets_updated !== undefined) {
-    db.adCampaigns[index].googleSheetsUpdated = google_sheets_updated;
+    campaigns[index].googleSheetsUpdated = google_sheets_updated;
   }
-  db.adCampaigns[index].updatedAt = new Date().toLocaleString("en-GB", { hour12: false });
-  db.adCampaigns[index].metrics = additional_metrics || {};
+  campaigns[index].updatedAt = new Date().toLocaleString("en-GB", { hour12: false });
+  campaigns[index].metrics = additional_metrics || {};
 
-  await saveDb(db);
+  await writeCollection("campaigns", campaigns);
 
   // Log system callback event
   await createSystemLog(
@@ -1298,7 +1173,7 @@ app.post("/api/v1/automation/callback", async (req, res) => {
   // Broadcast updates
   broadcast({
     type: "CAMPAIGN_UPDATED",
-    data: db.adCampaigns[index],
+    data: campaigns[index],
     tenant: campaign.tenant
   });
 
@@ -1320,14 +1195,14 @@ app.post("/api/v1/automation/callback", async (req, res) => {
 
 app.put("/api/campaigns/:id", async (req, res) => {
   const { id } = req.params;
-  const db = await getDb();
-  const index = db.adCampaigns.findIndex((c: any) => c.id === id);
+  const campaigns = await readCollection("campaigns");
+  const index = campaigns.findIndex((c: any) => c.id === id);
   if (index === -1) {
     return res.status(404).json({ error: "Campaign not found" });
   }
-  db.adCampaigns[index] = { ...db.adCampaigns[index], ...req.body };
-  const updated = db.adCampaigns[index];
-  await saveDb(db);
+  campaigns[index] = { ...campaigns[index], ...req.body };
+  const updated = campaigns[index];
+  await writeCollection("campaigns", campaigns);
   await createSystemLog("Marketing Gateway", `Campaign ${updated.title} updated`, "success", 600);
   broadcast({ type: "CAMPAIGN_UPDATED", data: updated, tenant: updated.tenant });
   res.json(updated);
@@ -1335,9 +1210,9 @@ app.put("/api/campaigns/:id", async (req, res) => {
 
 app.delete("/api/campaigns/:id", async (req, res) => {
   const { id } = req.params;
-  const db = await getDb();
-  db.adCampaigns = db.adCampaigns.filter((c: any) => c.id !== id);
-  await saveDb(db);
+  let campaigns = await readCollection("campaigns");
+  campaigns = campaigns.filter((c: any) => c.id !== id);
+  await writeCollection("campaigns", campaigns);
   await createSystemLog("Marketing Gateway", `Aborted campaign configuration record ID: ${id}`, "warning", 240);
   broadcast({ type: "CAMPAIGN_DELETED", id });
   res.json({ success: true, id });
@@ -1345,9 +1220,9 @@ app.delete("/api/campaigns/:id", async (req, res) => {
 
 // 8. USER MANAGEMENT API
 app.get("/api/users", async (req, res) => {
-  const db = await getDb();
+  const users = await readCollection("users");
   // Strip password hash fields before sending
-  const safeUsers = db.users.map(({ passwordHash, ...user }) => user);
+  const safeUsers = users.map(({ passwordHash, ...user }: any) => user);
   res.json(safeUsers);
 });
 
@@ -1356,8 +1231,8 @@ app.post("/api/users", async (req, res) => {
   if (!name || !email || !password) {
     return res.status(400).json({ error: "Name, email and password are required" });
   }
-  const db = await getDb();
-  if (db.users.some((u: any) => u.email.toLowerCase() === email.toLowerCase())) {
+  const users = await readCollection("users");
+  if (users.some((u: any) => u.email.toLowerCase() === email.toLowerCase())) {
     return res.status(400).json({ error: "A user with this email already exists" });
   }
   const newUser = {
@@ -1370,8 +1245,8 @@ app.post("/api/users", async (req, res) => {
     avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=4F46E5&color=fff&size=150`,
     tenantId: tenantId || "all"
   };
-  db.users.push(newUser);
-  await saveDb(db);
+  users.push(newUser);
+  await writeCollection("users", users);
   await createSystemLog("User Management", `User created: ${name} (${newUser.role})`, "success", 512);
   broadcast({ type: "USER_CREATED", data: { id: newUser.id, name: newUser.name } });
   const { passwordHash, ...safeUser } = newUser;
@@ -1380,8 +1255,8 @@ app.post("/api/users", async (req, res) => {
 
 app.put("/api/users/:id", async (req, res) => {
   const { id } = req.params;
-  const db = await getDb();
-  const index = db.users.findIndex((u: any) => u.id === id);
+  const users = await readCollection("users");
+  const index = users.findIndex((u: any) => u.id === id);
   if (index === -1) return res.status(404).json({ error: "User not found" });
 
   const updateData = { ...req.body };
@@ -1392,22 +1267,22 @@ app.put("/api/users/:id", async (req, res) => {
   delete updateData.passwordHash;
   delete updateData.id;
 
-  db.users[index] = { ...db.users[index], ...updateData };
-  await saveDb(db);
-  await createSystemLog("User Management", `User updated: ${db.users[index].name}`, "success", 512);
+  users[index] = { ...users[index], ...updateData };
+  await writeCollection("users", users);
+  await createSystemLog("User Management", `User updated: ${users[index].name}`, "success", 512);
   broadcast({ type: "USER_UPDATED", data: { id } });
-  const { passwordHash, ...safeUser } = db.users[index];
+  const { passwordHash, ...safeUser } = users[index];
   res.json(safeUser);
 });
 
 app.delete("/api/users/:id", async (req, res) => {
   const { id } = req.params;
-  const db = await getDb();
-  const idx = db.users.findIndex((u: any) => u.id === id);
+  let users = await readCollection("users");
+  const idx = users.findIndex((u: any) => u.id === id);
   if (idx === -1) return res.status(404).json({ error: "User not found" });
-  const deletedName = db.users[idx].name;
-  db.users = db.users.filter((u: any) => u.id !== id);
-  await saveDb(db);
+  const deletedName = users[idx].name;
+  users = users.filter((u: any) => u.id !== id);
+  await writeCollection("users", users);
   await createSystemLog("User Management", `User deleted: ${deletedName}`, "warning", 320);
   broadcast({ type: "USER_DELETED", data: { id } });
   res.json({ success: true, id, name: deletedName });
@@ -1415,8 +1290,8 @@ app.delete("/api/users/:id", async (req, res) => {
 
 // 9. LOGS API
 app.get("/api/logs", async (req, res) => {
-  const db = await getDb();
-  res.json(db.systemLogs);
+  const logs = await readCollection("logs");
+  res.json(logs);
 });
 
 // Configure Vite integration inside server.ts for dev/prod environment

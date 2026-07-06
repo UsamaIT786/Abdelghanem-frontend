@@ -150,25 +150,25 @@ export async function fetchLiveAnalytics(tenant: string) {
 
 // 3. Contacts CRM Operations
 export async function fetchLiveContacts() {
-  return apiFetch(`/contacts`);
+  return apiFetch(`/leads`);
 }
 
 export async function createLiveContact(contact: { name: string; company: string; email: string; phone: string; status: string; revenue: number; tenant: string }) {
-  return apiFetch("/contacts", {
+  return apiFetch("/leads", {
     method: "POST",
     body: JSON.stringify(contact),
   });
 }
 
 export async function updateLiveContact(id: string, contactPayload: any) {
-  return apiFetch(`/contacts/${id}`, {
+  return apiFetch(`/leads/${id}`, {
     method: "PUT",
     body: JSON.stringify(contactPayload),
   });
 }
 
 export async function deleteLiveContact(id: string) {
-  return apiFetch(`/contacts/${id}`, {
+  return apiFetch(`/leads/${id}`, {
     method: "DELETE",
   });
 }
