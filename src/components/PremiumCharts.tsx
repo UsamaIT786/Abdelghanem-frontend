@@ -8,7 +8,7 @@ interface AreaChartProps { data: { label: string; value: number }[]; gradientFro
       // ease-out cubic
   const ease = 1 - Math.pow(1 - p, 3); setProgress(ease); if (p < 1) animRef.current = requestAnimationFrame(step);
     }; animRef.current = requestAnimationFrame(step); return () => cancelAnimationFrame(animRef.current);
-  }, [animated]); if (!data.length) { return <div className="flex items-center justify-center h-40 text-xs text-slate-500 dark:text-slate-400">No data</div>;
+  }, [animated]); if (!data.length) { return <div className="flex items-center justify-center h-40 text-xs text-neutral-600 dark:text-neutral-400 transition-colors">No data</div>;
   }
   const w = 1000; const h = height; const padX = 50; const padY = 40; const maxVal = Math.max(...data.map(d => d.value), 1); const scale = ((h - padY * 2) / maxVal) * progress; const pts = data.map((d, i) => { const x = padX + (i * (w - padX * 2)) / Math.max(data.length - 1, 1); const y = h - padY - d.value * scale; return { x, y, ...d };
   });
@@ -87,7 +87,7 @@ interface AreaChartProps { data: { label: string; value: number }[]; gradientFro
         <div className="absolute pointer-events-none z-20 px-3.5 py-2.5 rounded-xl shadow-xl border backdrop-blur-md transition-all duration-200" style={{ left: `${(pts[hoveredIdx].x / w) * 100}%`, top: `${(pts[hoveredIdx].y / h) * 100}%`, transform: 'translate(-50%, -110%)', backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)',
           }}
         >
-          <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400">{pts[hoveredIdx].label}</div>
+          <div className="text-[10px] font-semibold text-neutral-600 dark:text-neutral-400 transition-colors">{pts[hoveredIdx].label}</div>
           <div className="text-sm font-bold" style={{ color: lineColor }}>
             £{pts[hoveredIdx].value.toLocaleString()}
           </div>
@@ -110,7 +110,7 @@ interface BarChartProps { data: { label: string; value: number; color?: string }
 ]; export function PremiumBarChart({ data, height = 280, showValue = true, barWidth = 32,
 }: BarChartProps) { const [hoveredIdx, setHoveredIdx] = useState<number | null>(null); const [animProgress, setAnimProgress] = useState(0); const animRef = useRef<number>(0); useEffect(() => { let start: number | null = null; const duration = 800; const step = (ts: number) => { if (!start) start = ts; const p = Math.min((ts - start) / duration, 1); setAnimProgress(1 - Math.pow(1 - p, 3)); if (p < 1) animRef.current = requestAnimationFrame(step);
     }; animRef.current = requestAnimationFrame(step); return () => cancelAnimationFrame(animRef.current);
-  }, []); if (!data.length) { return <div className="flex items-center justify-center h-40 text-xs text-slate-500 dark:text-slate-400">No data</div>;
+  }, []); if (!data.length) { return <div className="flex items-center justify-center h-40 text-xs text-neutral-600 dark:text-neutral-400 transition-colors">No data</div>;
   }
   const maxVal = Math.max(...data.map(d => d.value), 1); return (
     <div className="relative w-full pt-4">
@@ -130,8 +130,8 @@ interface BarChartProps { data: { label: string; value: number; color?: string }
                 <div className="absolute bottom-full mb-2 pointer-events-none z-20 px-3 py-2 rounded-xl shadow-xl border backdrop-blur-md whitespace-nowrap transition-all duration-200" style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)',
                   }}
                 >
-                  <div className="text-[9px] font-semibold text-slate-500 dark:text-slate-400 text-center">{b.label}</div>
-                  <div className="text-xs font-bold text-center bg-gradient-to-r bg-clip-text text-transparent" style={{ backgroundImage: `linear-gradient(to right, ${color.replace('from-[', '').replace('] to-[', ', ').replace(']', '')})` }}>
+                  <div className="text-[9px] font-semibold text-neutral-600 dark:text-neutral-400 transition-colors text-center">{b.label}</div>
+                  <div className="text-xs font-bold text-center" style={{ backgroundImage: `linear-gradient(to right, ${color.replace('from-[', '').replace('] to-[', ', ').replace(']', '')})` }}>
                     £{b.value.toLocaleString()}
                   </div>
                 </div>
@@ -142,7 +142,7 @@ interface BarChartProps { data: { label: string; value: number; color?: string }
                 }}
               >
                 {/* Gradient fill */}
-                <div className={`absolute bottom-0 w-full rounded-t-lg bg-gradient-to-t ${color} transition-all duration-300`} style={{ height: '100%', boxShadow: isHovered ? `0 0 20px ${color.includes('f43f5e') ? '#f43f5e' : color.includes('8b5cf6') ? '#8b5cf6' : color.includes('06b6d4') ? '#06b6d4' : color.includes('f59e0b') ? '#f59e0b' : color.includes('10b981') ? '#10b981' : '#ec4899'}40` : 'none', transform: isHovered ? 'scaleX(1.1)' : 'scaleX(1)', transformOrigin: 'bottom center',
+                <div className={`absolute bottom-0 w-full rounded-t-lg  ${color} transition-all duration-300`} style={{ height: '100%', boxShadow: isHovered ? `0 0 20px ${color.includes('f43f5e') ? '#f43f5e' : color.includes('8b5cf6') ? '#8b5cf6' : color.includes('06b6d4') ? '#06b6d4' : color.includes('f59e0b') ? '#f59e0b' : color.includes('10b981') ? '#10b981' : '#ec4899'}40` : 'none', transform: isHovered ? 'scaleX(1.1)' : 'scaleX(1)', transformOrigin: 'bottom center',
                   }}
                 />
               </div>
@@ -155,7 +155,7 @@ interface BarChartProps { data: { label: string; value: number; color?: string }
 
               {/* Mini value */}
               {showValue && (
-                <span className="text-[8px] text-slate-500 dark:text-slate-400 font-mono mt-0.5">
+                <span className="text-[8px] text-neutral-600 dark:text-neutral-400 transition-colors font-mono mt-0.5">
                   £{(b.value / 1000).toFixed(0)}k
                 </span>
               )}
@@ -173,7 +173,7 @@ interface DonutChartProps { data: { name: string; value: number; color: string }
 }: DonutChartProps) { const [hoveredSlice, setHoveredSlice] = useState<number | null>(null); const [animProgress, setAnimProgress] = useState(animated ? 0 : 1); const animRef = useRef<number>(0); useEffect(() => { if (!animated) { setAnimProgress(1); return; }
   let start: number | null = null; const duration = 1000; const step = (ts: number) => { if (!start) start = ts; const p = Math.min((ts - start) / duration, 1); setAnimProgress(1 - Math.pow(1 - p, 3)); if (p < 1) animRef.current = requestAnimationFrame(step);
     }; animRef.current = requestAnimationFrame(step); return () => cancelAnimationFrame(animRef.current);
-  }, [animated]); if (!data.length) { return <div className="flex items-center justify-center h-40 text-xs text-slate-500 dark:text-slate-400">No data</div>;
+  }, [animated]); if (!data.length) { return <div className="flex items-center justify-center h-40 text-xs text-neutral-600 dark:text-neutral-400 transition-colors">No data</div>;
   }
   const total = data.reduce((s, d) => s + d.value, 0) || 1; const cx = size / 2; const cy = size / 2; const strokeWidth = outerRadius - innerRadius; const r = (outerRadius + innerRadius) / 2; const circumference = 2 * Math.PI * r; let cumulativeAngle = -Math.PI / 2;
 

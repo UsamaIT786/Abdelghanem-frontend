@@ -71,21 +71,21 @@ import { PremiumAreaChart, PremiumBarChart, PremiumDonutChart, PremiumGaugeChart
             {(['6m', '1y', 'all'] as const).map(t => (
               <button key={t} onClick={() => setTimeframe(t)} className={`px-3 py-1.5 rounded-md transition ${ timeframe === t
                     ? 'bg-white dark:bg-slate-900 shadow-sm text-slate-900 dark:text-white '
-                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 '
+                    : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white '
                 }`}
               >
                 {t === '6m' ? '6 Months' : t === '1y' ? '1 Year' : 'All Time'}
               </button>
             ))}
           </div>
-          <button onClick={handleExport} className="p-2 border rounded-lg transition shadow-sm flex items-center gap-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-700 dark:hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-700 hover:border-slate-300 dark:hover:border-slate-300 active:scale-95" style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)', cursor: 'pointer' }}
+          <button onClick={handleExport} className="p-2 border rounded-lg transition shadow-sm flex items-center gap-1.5 hover:bg-neutral-100 dark:hover:bg-neutral-900 dark:hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors dark:hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors active:scale-95" style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)', cursor: 'pointer' }}
           >
-            <Download className="w-3.5 h-3.5 text-slate-600 dark:text-slate-300 " />
-            <span className="text-xs font-bold text-slate-600 dark:text-slate-300 ">Export</span>
+            <Download className="w-3.5 h-3.5 text-neutral-600 dark:text-neutral-400 transition-colors" />
+            <span className="text-xs font-bold text-neutral-600 dark:text-neutral-400 transition-colors">Export</span>
           </button>
-          <button onClick={loadData} title="Refresh" className="p-2 border rounded-lg transition shadow-sm hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-700 dark:hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-700 hover:border-slate-300 dark:hover:border-slate-300 active:scale-95" style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)', cursor: 'pointer' }} 
+          <button onClick={loadData} title="Refresh" className="p-2 border rounded-lg transition shadow-sm hover:bg-neutral-100 dark:hover:bg-neutral-900 dark:hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors dark:hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors active:scale-95" style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)', cursor: 'pointer' }} 
           >
-            <RefreshCw className={`w-3.5 h-3.5 text-slate-600 dark:text-slate-300  ${loading ? 'animate-spin text-indigo-500' : ''}`} />
+            <RefreshCw className={`w-3.5 h-3.5 text-neutral-600 dark:text-neutral-400 transition-colors  ${loading ? 'animate-spin text-black dark:text-white' : ''}`} />
           </button>
         </div>
       </div>
@@ -97,7 +97,7 @@ import { PremiumAreaChart, PremiumBarChart, PremiumDonutChart, PremiumGaugeChart
         >
           <div className="flex items-center justify-between mb-3">
             <div className="relative">
-              <div className="relative w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shadow-sm">
+              <div className="relative w-12 h-12 rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-center text-black dark:text-white shadow-sm">
                 <DollarSign className="w-5 h-5" />
               </div>
             </div>
@@ -121,19 +121,19 @@ import { PremiumAreaChart, PremiumBarChart, PremiumDonutChart, PremiumGaugeChart
           </div>
           <div className="mt-2 flex items-center gap-1.5">
             <div className="h-1.5 flex-1 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
-              <div className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-emerald-500" style={{ width: `${Math.min((totalRevenue / Math.max(totalRevenue, pipelineValue, 1)) * 100, 100)}%` }} />
+              <div className="h-full rounded-full from-emerald-400 to-emerald-500" style={{ width: `${Math.min((totalRevenue / Math.max(totalRevenue, pipelineValue, 1)) * 100, 100)}%` }} />
             </div>
-            <span className="text-[8px] font-mono text-slate-500 dark:text-slate-400">Live</span>
+            <span className="text-[8px] font-mono text-neutral-600 dark:text-neutral-400 transition-colors">Live</span>
           </div>
         </div>
 
         {/* Pipeline Valuation */}
         <div className="sleek-card p-6 relative overflow-hidden group" style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)' }}
         >
-          <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-rose-500/5 to-transparent rounded-full -mr-8 -mt-8" />
+          <div className="absolute top-0 right-0 w-24 h-24 from-rose-500/5 to-transparent rounded-full -mr-8 -mt-8" />
           <div className="flex items-center justify-between mb-3">
             <div className="relative">
-              <div className="relative w-12 h-12 rounded-xl bg-rose-50 dark:bg-rose-500/10 border border-rose-100 dark:border-rose-500/20 flex items-center justify-center text-rose-600 dark:text-rose-400 shadow-sm">
+              <div className="relative w-12 h-12 rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-center text-black dark:text-white shadow-sm">
                 <Banknote className="w-5 h-5" />
               </div>
             </div>
@@ -153,7 +153,7 @@ import { PremiumAreaChart, PremiumBarChart, PremiumDonutChart, PremiumGaugeChart
         >
           <div className="flex items-center justify-between mb-3">
             <div className="relative">
-              <div className="relative w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-500/20 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shadow-sm">
+              <div className="relative w-12 h-12 rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-center text-black dark:text-white shadow-sm">
                 <Users className="w-5 h-5" />
               </div>
             </div>
@@ -167,7 +167,7 @@ import { PremiumAreaChart, PremiumBarChart, PremiumDonutChart, PremiumGaugeChart
             {loading ? "..." : customerCount}
           </div>
           <div className="mt-2 flex items-center gap-1 text-[9px]" style={{ color: 'var(--text-muted)' }}>
-            <Users className="w-3 h-3 text-indigo-500" />
+            <Users className="w-3 h-3 text-black dark:text-white" />
             <span>From database</span>
           </div>
         </div>
@@ -177,7 +177,7 @@ import { PremiumAreaChart, PremiumBarChart, PremiumDonutChart, PremiumGaugeChart
         >
           <div className="flex items-center justify-between mb-3">
             <div className="relative">
-              <div className="relative w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-500/10 border border-amber-100 dark:border-amber-500/20 flex items-center justify-center text-amber-600 dark:text-amber-400 shadow-sm">
+              <div className="relative w-12 h-12 rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-center text-black dark:text-white shadow-sm">
                 <Zap className="w-5 h-5" />
               </div>
             </div>
@@ -204,7 +204,7 @@ import { PremiumAreaChart, PremiumBarChart, PremiumDonutChart, PremiumGaugeChart
             />
           )}
           {loading && (
-            <div className="h-20 flex items-center justify-center text-xs text-slate-500 dark:text-slate-400">Loading...</div>
+            <div className="h-20 flex items-center justify-center text-xs text-neutral-600 dark:text-neutral-400 transition-colors">Loading...</div>
           )}
         </div>
       </div>
@@ -226,13 +226,13 @@ import { PremiumAreaChart, PremiumBarChart, PremiumDonutChart, PremiumGaugeChart
               <div className="flex text-[10px] font-semibold rounded-lg p-0.5 border" style={{ borderColor: 'var(--border-color)', backgroundColor: 'var(--bg-tertiary)' }}>
                 <button onClick={() => setSelectedMetric('revenue')} className={`px-2.5 py-1 rounded-md transition ${ selectedMetric === 'revenue'
                       ? 'bg-rose-500 text-white shadow-sm'
-                      : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                      : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white'
                   }`}
                 > Revenue
                 </button>
                 <button onClick={() => setSelectedMetric('target')} className={`px-2.5 py-1 rounded-md transition ${ selectedMetric === 'target'
                       ? 'bg-violet-500 text-white shadow-sm'
-                      : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                      : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white'
                   }`}
                 > Target
                 </button>
@@ -256,19 +256,19 @@ import { PremiumAreaChart, PremiumBarChart, PremiumDonutChart, PremiumGaugeChart
               {/* Summary stats bar */}
               <div className="grid grid-cols-3 gap-4 mt-6 pt-4 border-t" style={{ borderColor: 'var(--border-color)' }}>
                 <div className="text-center">
-                  <div className="text-[9px] font-medium text-slate-500 dark:text-slate-400">Monthly Avg</div>
+                  <div className="text-[9px] font-medium text-neutral-600 dark:text-neutral-400 transition-colors">Monthly Avg</div>
                   <div className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>
                     £{Math.round(avgRevenue).toLocaleString()}
                   </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-[9px] font-medium text-slate-500 dark:text-slate-400">Best Month</div>
+                  <div className="text-[9px] font-medium text-neutral-600 dark:text-neutral-400 transition-colors">Best Month</div>
                   <div className="text-sm font-bold text-emerald-500">
                     £{(Math.max(...revenueChartData.map(d => d.value), 0)).toLocaleString()}
                   </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-[9px] font-medium text-slate-500 dark:text-slate-400">Growth Rate</div>
+                  <div className="text-[9px] font-medium text-neutral-600 dark:text-neutral-400 transition-colors">Growth Rate</div>
                   <div className={`text-sm font-bold ${revenueGrowth >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
                     {revenueGrowth >= 0 ? '+' : ''}{revenueGrowth.toFixed(1)}%
                   </div>
@@ -352,12 +352,12 @@ import { PremiumAreaChart, PremiumBarChart, PremiumDonutChart, PremiumGaugeChart
             <h2 className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Monthly Lead Volume</h2>
           </div>
           {loading ? (
-            <div className="h-40 flex items-center justify-center text-xs text-slate-500 dark:text-slate-400">Loading...</div>
+            <div className="h-40 flex items-center justify-center text-xs text-neutral-600 dark:text-neutral-400 transition-colors">Loading...</div>
           ) : leadsChartData.length > 0 ? (
             <PremiumBarChart data={leadsChartData} height={200} barWidth={28} showValue={false}
             />
           ) : (
-            <div className="text-center py-12 text-xs text-slate-500 dark:text-slate-400">
+            <div className="text-center py-12 text-xs text-neutral-600 dark:text-neutral-400 transition-colors">
               <Activity className="w-8 h-8 mx-auto mb-2 opacity-40" /> No lead data available
             </div>
           )}
@@ -372,7 +372,7 @@ import { PremiumAreaChart, PremiumBarChart, PremiumDonutChart, PremiumGaugeChart
           </div>
 
           {loading ? (
-            <div className="h-40 flex items-center justify-center text-xs text-slate-500 dark:text-slate-400">Loading...</div>
+            <div className="h-40 flex items-center justify-center text-xs text-neutral-600 dark:text-neutral-400 transition-colors">Loading...</div>
           ) : (
             <div className="space-y-5">
               {/* Achievement rate */}
@@ -382,7 +382,7 @@ import { PremiumAreaChart, PremiumBarChart, PremiumDonutChart, PremiumGaugeChart
                   <span className="font-bold" style={{ color: 'var(--text-primary)' }}>{achievementRate.toFixed(0)}%</span>
                 </div>
                 <div className="h-2.5 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
-                  <div className="h-full rounded-full bg-gradient-to-r from-violet-500 to-purple-500 transition-all duration-1000" style={{ width: `${achievementRate}%` }}
+                  <div className="h-full rounded-full from-violet-500 transition-all duration-1000" style={{ width: `${achievementRate}%` }}
                   />
                 </div>
               </div>
@@ -398,7 +398,7 @@ import { PremiumAreaChart, PremiumBarChart, PremiumDonutChart, PremiumGaugeChart
                   </span>
                 </div>
                 <div className="flex gap-1 h-2.5 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
-                  <div className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-emerald-500 transition-all duration-1000" style={{ width: `${Math.min(
+                  <div className="h-full rounded-full from-emerald-400 to-emerald-500 transition-all duration-1000" style={{ width: `${Math.min(
                         (monthlyData.reduce((s: number, d: any) => s + (d.Revenue || 0), 0) / Math.max(monthlyData.reduce((s: number, d: any) => s + (d.Target || 0), 0), 1)) * 100, 100
                       )}%`,
                     }}
@@ -413,7 +413,7 @@ import { PremiumAreaChart, PremiumBarChart, PremiumDonutChart, PremiumGaugeChart
                   <span className="font-bold text-emerald-500">+{Math.round(customerCount * 0.12)} this year</span>
                 </div>
                 <div className="h-2.5 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
-                  <div className="h-full rounded-full bg-gradient-to-r from-indigo-400 to-indigo-500 transition-all duration-1000" style={{ width: `${Math.min((customerCount / Math.max(customerCount, 50)) * 100, 100)}%` }} />
+                  <div className="h-full rounded-full bg-black dark:bg-white text-white dark:text-black transition-all duration-1000" style={{ width: `${Math.min((customerCount / Math.max(customerCount, 50)) * 100, 100)}%` }} />
                 </div>
               </div>
 
@@ -421,15 +421,15 @@ import { PremiumAreaChart, PremiumBarChart, PremiumDonutChart, PremiumGaugeChart
               <div className="grid grid-cols-3 gap-3 pt-3">
                 <div className="text-center p-3 rounded-xl" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
                   <div className="text-lg font-black" style={{ color: 'var(--text-primary)' }}>{monthlyData.length}</div>
-                  <div className="text-[9px] text-slate-500 dark:text-slate-400">Months</div>
+                  <div className="text-[9px] text-neutral-600 dark:text-neutral-400 transition-colors">Months</div>
                 </div>
                 <div className="text-center p-3 rounded-xl" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
                   <div className="text-lg font-black text-emerald-500">{targetAchieved}</div>
-                  <div className="text-[9px] text-slate-500 dark:text-slate-400">Targets Hit</div>
+                  <div className="text-[9px] text-neutral-600 dark:text-neutral-400 transition-colors">Targets Hit</div>
                 </div>
                 <div className="text-center p-3 rounded-xl" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
                   <div className="text-lg font-black" style={{ color: 'var(--text-primary)' }}>{monthlyData.length - targetAchieved}</div>
-                  <div className="text-[9px] text-slate-500 dark:text-slate-400">Missed</div>
+                  <div className="text-[9px] text-neutral-600 dark:text-neutral-400 transition-colors">Missed</div>
                 </div>
               </div>
             </div>
@@ -443,7 +443,7 @@ import { PremiumAreaChart, PremiumBarChart, PremiumDonutChart, PremiumGaugeChart
         <div className="flex justify-between items-center mb-6">
           <div>
             <div className="flex items-center gap-2">
-              <BarChart3 className="w-4 h-4 text-slate-600 dark:text-slate-300" />
+              <BarChart3 className="w-4 h-4 text-neutral-600 dark:text-neutral-400 transition-colors" />
               <h2 className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Monthly Performance</h2>
             </div>
             <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>Revenue, targets and leads by month</p>
@@ -464,7 +464,7 @@ import { PremiumAreaChart, PremiumBarChart, PremiumDonutChart, PremiumGaugeChart
             </thead>
             <tbody className="divide-y text-xs" style={{ borderColor: 'var(--border-color)' }}>
               {monthlyData.length > 0 ? monthlyData.map((row: any, i: number) => { const hitTarget = row.Revenue >= row.Target; return (
-                  <tr key={i} className="hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-700/30 /30 transition duration-150">
+                  <tr key={i} className="hover:bg-neutral-100 dark:hover:bg-neutral-900/30 /30 transition duration-150">
                     <td className="py-3.5 px-4 font-mono font-medium" style={{ color: 'var(--text-secondary)' }}>{row.month}</td>
                     <td className="py-3.5 px-4 text-right font-bold" style={{ color: 'var(--text-primary)' }}>
                       £{row.Revenue?.toLocaleString() || 0}

@@ -7,11 +7,11 @@ import { fetchLiveCampaigns, generateLiveCampaign, updateLiveCampaign, approveLi
 
 // Facebook icon (not in lucide, so inline SVG)
 const FacebookIcon = () => (
-  <svg className="w-4 h-4 text-slate-900 dark:text-white " viewBox="0 0 24 24" fill="currentColor">
+  <svg className="w-4 h-4 text-slate-900 dark:text-white" viewBox="0 0 24 24" fill="currentColor">
     <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
   </svg>
-); const SCENARIO_MAP = { A: { id: 'A' as ScenarioId, label: 'Meta Social Post', sub: 'Facebook + Instagram simultaneously', bgClass: 'from-blue-600 to-indigo-700', badgeBg: 'bg-blue-100 text-blue-700', borderActive: 'border-blue-500 bg-blue-50', n8nTarget: 'meta_social', platform: 'Meta', description: 'Creates a post on BOTH Facebook and Instagram at the same time. AI writes a dual-platform caption with media image and destination link.', placeholder: 'Promote 10-year boiler warranties and 0% interest finance for new boiler installs. Drive inquiries for heating works.',
-  }, B: { id: 'B' as ScenarioId, label: 'DataForSEO + WordPress', sub: 'Landing page creation', bgClass: 'from-violet-600 to-purple-700', badgeBg: 'bg-violet-100 text-violet-700', borderActive: 'border-violet-500 bg-violet-50', n8nTarget: 'wordpress_seo', platform: 'WordPress', description: 'Uses DataForSEO keyword analysis to create a fully optimised WordPress landing page with SEO metadata, body copy, and a CTA.', placeholder: 'Create a landing page for liquid screed flooring services targeting builders and contractors in London.',
+); const SCENARIO_MAP = { A: { id: 'A' as ScenarioId, label: 'Meta Social Post', sub: 'Facebook + Instagram simultaneously', bgClass: 'bg-black dark:bg-white text-white dark:text-black ', badgeBg: 'bg-neutral-100 dark:bg-neutral-9000 text-black dark:text-white', borderActive: 'border-black dark:border-white bg-neutral-100 dark:bg-neutral-900', n8nTarget: 'meta_social', platform: 'Meta', description: 'Creates a post on BOTH Facebook and Instagram at the same time. AI writes a dual-platform caption with media image and destination link.', placeholder: 'Promote 10-year boiler warranties and 0% interest finance for new boiler installs. Drive inquiries for heating works.',
+  }, B: { id: 'B' as ScenarioId, label: 'DataForSEO + WordPress', sub: 'Landing page creation', bgClass: 'from-violet-600 ', badgeBg: 'bg-violet-100 text-violet-700', borderActive: 'border-violet-500 bg-violet-50', n8nTarget: 'wordpress_seo', platform: 'WordPress', description: 'Uses DataForSEO keyword analysis to create a fully optimised WordPress landing page with SEO metadata, body copy, and a CTA.', placeholder: 'Create a landing page for liquid screed flooring services targeting builders and contractors in London.',
   }, C: { id: 'C' as ScenarioId, label: 'Google Ads Campaign', sub: 'Search & Display', bgClass: 'from-rose-600 to-orange-600', badgeBg: 'bg-rose-100 text-rose-700', borderActive: 'border-rose-500 bg-rose-50', n8nTarget: 'google_ads', platform: 'Google', description: 'Triggers a Google Ads Search campaign. Headline is auto-constrained to <=30 chars, description to <=90 chars per Google Ads policy.', placeholder: 'Drive leads for certified EV charger installation. Target homeowners and commercial properties.',
   },
 } as const; const TENANTS = [
@@ -23,15 +23,15 @@ const FacebookIcon = () => (
   { value: 'multi_unit', label: 'Multi Unit' },
   { value: 'new_luxe_homes', label: 'New Luxe Homes' },
 ] as const; function StatusBadge({ status }: { status: string }) { const cfg: Record<string, string> = { Live: 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-400', Approved: 'bg-teal-100 text-teal-700',
-    'Pending Approval': 'bg-amber-100 text-amber-700', Draft: 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 ', Published: 'bg-sky-100 text-sky-700',
+    'Pending Approval': 'bg-amber-100 text-amber-700', Draft: 'bg-slate-100 dark:bg-slate-800 text-neutral-600 dark:text-neutral-400 transition-colors ', Published: 'bg-sky-100 text-sky-700',
   };
   return (
-    <span className={`px-1.5 py-0.5 rounded text-[8px] tracking-wider uppercase font-extrabold ${cfg[status] || 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'}`}>
+    <span className={`px-1.5 py-0.5 rounded text-[8px] tracking-wider uppercase font-extrabold ${cfg[status] || 'bg-slate-100 dark:bg-slate-800 text-neutral-600 dark:text-neutral-400 transition-colors'}`}>
       {status === 'Live' ? '● Live' : status}
     </span>
   );
 }
-  function ScenarioPill({ platform }: { platform: string }) { if (platform === 'Meta' || platform === 'Facebook' || platform === 'Instagram') return <span className="text-[8px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-bold uppercase">A · Meta</span>; if (platform === 'WordPress' || platform === 'SEO Blog') return <span className="text-[8px] bg-violet-100 text-violet-700 px-1.5 py-0.5 rounded font-bold uppercase">B · WP</span>; if (platform === 'Google') return <span className="text-[8px] bg-rose-100 text-rose-700 px-1.5 py-0.5 rounded font-bold uppercase">C · Ads</span>; return <span className="text-[8px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-1.5 py-0.5 rounded font-bold uppercase">{platform}</span>;
+  function ScenarioPill({ platform }: { platform: string }) { if (platform === 'Meta' || platform === 'Facebook' || platform === 'Instagram') return <span className="text-[8px] bg-neutral-100 dark:bg-neutral-9000 text-black dark:text-white px-1.5 py-0.5 rounded font-bold uppercase">A · Meta</span>; if (platform === 'WordPress' || platform === 'SEO Blog') return <span className="text-[8px] bg-violet-100 text-violet-700 px-1.5 py-0.5 rounded font-bold uppercase">B · WP</span>; if (platform === 'Google') return <span className="text-[8px] bg-rose-100 text-rose-700 px-1.5 py-0.5 rounded font-bold uppercase">C · Ads</span>; return <span className="text-[8px] bg-slate-100 dark:bg-slate-800 text-neutral-600 dark:text-neutral-400 transition-colors px-1.5 py-0.5 rounded font-bold uppercase">{platform}</span>;
 }
   function PayloadPreview({ campaign }: { campaign: AdCampaign }) { 
     const isMeta = campaign.platform === 'Meta' || campaign.platform === 'Facebook' || campaign.platform === 'Instagram'; 
@@ -100,7 +100,7 @@ const FacebookIcon = () => (
     }
   return (
     <div className="bg-slate-100 dark:bg-slate-800 rounded-lg p-3 font-mono text-[10px] text-slate-900 dark:text-white dark:text-emerald-400 overflow-auto max-h-36">
-      <div className="text-slate-600 dark:text-slate-300 mb-1 font-sans text-[9px] uppercase tracking-wider">→ n8n webhook payload preview</div>
+      <div className="text-neutral-600 dark:text-neutral-400 transition-colors mb-1 font-sans text-[9px] uppercase tracking-wider">→ n8n webhook payload preview</div>
       <pre className="whitespace-pre-wrap break-all">{JSON.stringify(payload, null, 2)}</pre>
     </div>
   );
@@ -191,16 +191,16 @@ const FacebookIcon = () => (
   const handleApplyToLanding = () => { if (!selectedCampaign) return; setLandingTitle(selectedCampaign.title); setLandingSub((selectedCampaign.generatedCopy || '').slice(0, 110) + '...'); if (selectedCampaign.tenant === 'full_home_renovation') setSelectedTemplateColor('rose'); if (selectedCampaign.tenant === 'kitchen_renovation') setSelectedTemplateColor('teal'); if (selectedCampaign.tenant === 'bathroom_renovation') setSelectedTemplateColor('amber'); window.dispatchEvent(new CustomEvent('crm_show_toast', { detail: { message: 'Applied campaign copy to the landing page template! 🎨', type: 'success' } 
     }));
   };
-  const inp = 'w-full border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-[#4F46E5] bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder:text-neutral-400'; const lbl = 'text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 tracking-wider block mb-1'; return (
+  const inp = 'w-full border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-[#4F46E5] bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder:text-neutral-400'; const lbl = 'text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors tracking-wider block mb-1'; return (
     <div className="space-y-6">
 
       {deleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
           <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl border space-y-4">
             <div className="flex items-center gap-3 text-rose-600"><AlertTriangle className="w-6 h-6" /><h3 className="font-bold text-lg">Confirm Deletion</h3></div>
-            <p className="text-sm text-slate-600 dark:text-slate-300">Delete <strong>{deleteConfirm.name}</strong>? This cannot be undone.</p>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400 transition-colors">Delete <strong>{deleteConfirm.name}</strong>? This cannot be undone.</p>
             <div className="flex gap-2 justify-end pt-2">
-              <button onClick={() => setDeleteConfirm(null)} className="px-4 py-2 rounded-lg border text-sm font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-700 transition">Cancel</button>
+              <button onClick={() => setDeleteConfirm(null)} className="px-4 py-2 rounded-lg border text-sm font-semibold hover:bg-neutral-100 dark:hover:bg-neutral-900 transition">Cancel</button>
               <button onClick={executeDeleteConfirm} className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-sm font-bold transition flex items-center gap-1.5"><Trash2 className="w-4 h-4" />Delete</button>
             </div>
           </div>
@@ -211,14 +211,14 @@ const FacebookIcon = () => (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
           <form onSubmit={handleSaveEdit} className="bg-white dark:bg-slate-900 rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl border space-y-4">
             <div className="flex justify-between items-center">
-              <span className="text-sm font-extrabold flex items-center gap-2 text-slate-900 dark:text-white"><Pencil className="w-4 h-4 text-purple-500" />Edit Campaign</span>
-              <button type="button" onClick={() => setEditingCampaign(null)}><X className="w-4 h-4 text-slate-500 dark:text-slate-400" /></button>
+              <span className="text-sm font-extrabold flex items-center gap-2 text-slate-900 dark:text-white"><Pencil className="w-4 h-4 text-black dark:text-white" />Edit Campaign</span>
+              <button type="button" onClick={() => setEditingCampaign(null)}><X className="w-4 h-4 text-neutral-600 dark:text-neutral-400 transition-colors" /></button>
             </div>
             <div><label className={lbl}>Campaign Title</label><input className={inp} required value={editTitle} onChange={e => setEditTitle(e.target.value)} /></div>
             <div><label className={lbl}>Ad / Content Copy</label><textarea className={`${inp} h-28`} value={editCopy} onChange={e => setEditCopy(e.target.value)} /></div>
             <div className="flex gap-2">
-              <button type="submit" className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-xs py-2.5 rounded-lg shadow hover:opacity-95 transition"><Check className="w-3.5 h-3.5 inline mr-1" />Save Changes</button>
-              <button type="button" onClick={() => setEditingCampaign(null)} className="px-4 py-2.5 border rounded-lg text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-700 transition">Discard</button>
+              <button type="submit" className="flex-1 bg-black dark:bg-white text-white dark:text-black to-pink-600 text-white font-bold text-xs py-2.5 rounded-lg shadow hover:opacity-95 transition"><Check className="w-3.5 h-3.5 inline mr-1" />Save Changes</button>
+              <button type="button" onClick={() => setEditingCampaign(null)} className="px-4 py-2.5 border rounded-lg text-xs font-semibold hover:bg-neutral-100 dark:hover:bg-neutral-900 transition">Discard</button>
             </div>
           </form>
         </div>
@@ -241,28 +241,28 @@ const FacebookIcon = () => (
         {(Object.values(SCENARIO_MAP) as (typeof SCENARIO_MAP[ScenarioId])[]).map(s => { const isActive = activeScenario === s.id; const Icon = s.id === 'A' ? FacebookIcon : s.id === 'B' ? LayoutTemplate : Search; return (
             <button key={s.id} onClick={() => setActiveScenario(s.id)} className={`text-left p-4 rounded-xl border-2 transition-all duration-200 shadow-sm ${isActive ? s.borderActive + ' shadow-md' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-neutral-300 hover:shadow'}`}>
               <div className="flex items-start gap-3">
-                <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${s.bgClass} flex items-center justify-center flex-shrink-0 shadow`}>
+                <div className={`w-10 h-10 rounded-xl  ${s.bgClass} flex items-center justify-center flex-shrink-0 shadow`}>
                   <Icon />
                 </div>
                 <div className="flex-1 min-w-0">
                   <span className={`text-[9px] font-extrabold uppercase tracking-widest ${s.badgeBg} px-1.5 py-0.5 rounded`}>Scenario {s.id}</span>
                   <div className="text-xs font-bold text-slate-900 dark:text-white mt-0.5">{s.label}</div>
-                  <div className="text-[10px] text-slate-500 dark:text-slate-400">{s.sub}</div>
+                  <div className="text-[10px] text-neutral-600 dark:text-neutral-400 transition-colors">{s.sub}</div>
                 </div>
-                <ChevronRight className={`w-4 h-4 mt-1 flex-shrink-0 transition-transform ${isActive ? 'text-slate-600 dark:text-slate-300 rotate-90' : 'text-slate-500 dark:text-slate-400'}`} />
+                <ChevronRight className={`w-4 h-4 mt-1 flex-shrink-0 transition-transform ${isActive ? 'text-neutral-600 dark:text-neutral-400 transition-colors rotate-90' : 'text-neutral-600 dark:text-neutral-400 transition-colors'}`} />
               </div>
-              <p className="text-[10px] text-slate-600 dark:text-slate-300 mt-3 leading-relaxed">{s.description}</p>
+              <p className="text-[10px] text-neutral-600 dark:text-neutral-400 transition-colors mt-3 leading-relaxed">{s.description}</p>
               <div className="mt-2 flex items-center gap-1.5">
-                <Zap className="w-3 h-3 text-slate-500 dark:text-slate-400" />
-                <code className="text-[9px] text-slate-500 dark:text-slate-400 font-mono bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">platform_target: "{s.n8nTarget}"</code>
+                <Zap className="w-3 h-3 text-neutral-600 dark:text-neutral-400 transition-colors" />
+                <code className="text-[9px] text-neutral-600 dark:text-neutral-400 transition-colors font-mono bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">platform_target: "{s.n8nTarget}"</code>
               </div>
               {/* Platform icons for Scenario A */}
               {s.id === 'A' && (
                 <div className="mt-2 flex items-center gap-1.5">
-                  <span className="text-[9px] text-blue-500 font-bold flex items-center gap-1">
+                  <span className="text-[9px] text-black dark:text-white font-bold flex items-center gap-1">
                     <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /></svg> Facebook
                   </span>
-                  <span className="text-slate-500 dark:text-slate-400">+</span>
+                  <span className="text-neutral-600 dark:text-neutral-400 transition-colors">+</span>
                   <span className="text-[9px] text-pink-500 font-bold flex items-center gap-1">
                     <Instagram className="w-3 h-3" /> Instagram
                   </span>
@@ -284,7 +284,7 @@ const FacebookIcon = () => (
 
         {/* LEFT: Generation form */}
         <div className="lg:col-span-2 border rounded-xl shadow-sm overflow-hidden" style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)' }}>
-          <div className={`bg-gradient-to-r ${sc.bgClass} px-5 py-4`}>
+          <div className={` ${sc.bgClass} px-5 py-4`}>
             <div className="flex items-center gap-2.5">
               <ScIcon />
               <div>
@@ -297,7 +297,7 @@ const FacebookIcon = () => (
           <form onSubmit={handleGenerate} className="p-5 space-y-4">
 
             <div>
-              <label className={lbl}>Campaign Title <span className="normal-case font-normal text-slate-500 dark:text-slate-400">(optional)</span></label>
+              <label className={lbl}>Campaign Title <span className="normal-case font-normal text-neutral-600 dark:text-neutral-400 transition-colors">(optional)</span></label>
               <input className={inp} placeholder={`e.g. ${sc.label} — Q3 Drive`} value={campaignTitle} onChange={e => setCampaignTitle(e.target.value)} />
             </div>
 
@@ -310,20 +310,20 @@ const FacebookIcon = () => (
 
             {/* Scenario A: Meta-specific fields */}
             {activeScenario === 'A' && (
-              <div className="space-y-3 p-3.5 rounded-xl bg-blue-50 border border-blue-100">
+              <div className="space-y-3 p-3.5 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-blue-100">
                 <div className="flex items-center gap-2 mb-1">
                   <div className="flex items-center gap-1">
-                    <svg className="w-3.5 h-3.5 text-blue-600" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /></svg>
+                    <svg className="w-3.5 h-3.5 text-black dark:text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /></svg>
                     <Instagram className="w-3.5 h-3.5 text-pink-500" />
                   </div>
-                  <p className="text-[10px] font-bold text-blue-700 uppercase tracking-wider">Posts to Facebook & Instagram</p>
+                  <p className="text-[10px] font-bold text-black dark:text-white uppercase tracking-wider">Posts to Facebook & Instagram</p>
                 </div>
-                <div className="bg-blue-100/60 rounded-lg px-3 py-2 text-[10px] text-blue-600 leading-relaxed"> One approval triggers posts on <strong>both platforms simultaneously</strong>. The AI caption is optimised for both feeds.
+                <div className="bg-neutral-100 dark:bg-neutral-9000/60 rounded-lg px-3 py-2 text-[10px] text-black dark:text-white leading-relaxed"> One approval triggers posts on <strong>both platforms simultaneously</strong>. The AI caption is optimised for both feeds.
                 </div>
                 <div>
-                  <label className={lbl}>Media Image Upload <span className="font-normal normal-case text-slate-500 dark:text-slate-400">(auto-filled if blank)</span></label>
+                  <label className={lbl}>Media Image Upload <span className="font-normal normal-case text-neutral-600 dark:text-neutral-400 transition-colors">(auto-filled if blank)</span></label>
                   <div className="flex items-center gap-2">
-                    <label className={`${inp} flex items-center justify-center cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition text-center`}>
+                    <label className={`${inp} flex items-center justify-center cursor-pointer hover:bg-slate-50 dark:hover:bg-neutral-100 dark:hover:bg-neutral-900 transition text-center`}>
                       <ImageIcon className="w-4 h-4 mr-2" />
                       <span className="font-semibold text-slate-700 dark:text-slate-200">{mediaUrl && mediaUrl.startsWith('data:image') ? 'Photo Selected' : 'Select Photo to Upload'}</span>
                       <input type="file" accept="image/*" onChange={(e) => {
@@ -358,7 +358,7 @@ const FacebookIcon = () => (
                     )}
                   </div>
                 </div>
-                <div><label className={lbl}>Destination Link <span className="font-normal normal-case text-slate-500 dark:text-slate-400">(auto-filled if blank)</span></label><input className={inp} placeholder="https://yoursite.co.uk" value={destinationLink} onChange={e => setDestinationLink(e.target.value)} /></div>
+                <div><label className={lbl}>Destination Link <span className="font-normal normal-case text-neutral-600 dark:text-neutral-400 transition-colors">(auto-filled if blank)</span></label><input className={inp} placeholder="https://yoursite.co.uk" value={destinationLink} onChange={e => setDestinationLink(e.target.value)} /></div>
               </div>
             )}
 
@@ -372,11 +372,11 @@ const FacebookIcon = () => (
                 <div className="bg-violet-100/60 rounded-lg px-3 py-2 text-[10px] text-violet-700 leading-relaxed"> n8n runs DataForSEO keyword analysis on your terms, then publishes an SEO-optimised landing page to WordPress automatically.
                 </div>
                 <div>
-                  <label className={lbl}>SEO Keyword Targets <span className="font-normal normal-case text-slate-500 dark:text-slate-400">(comma-separated)</span></label>
+                  <label className={lbl}>SEO Keyword Targets <span className="font-normal normal-case text-neutral-600 dark:text-neutral-400 transition-colors">(comma-separated)</span></label>
                   <input className={inp} placeholder="liquid screed, flooring contractor, london" value={blogTagsRaw} onChange={e => setBlogTagsRaw(e.target.value)} />
                 </div>
                 <div>
-                  <label className={lbl}>WordPress Domain <span className="font-normal normal-case text-slate-500 dark:text-slate-400">(optional override)</span></label>
+                  <label className={lbl}>WordPress Domain <span className="font-normal normal-case text-neutral-600 dark:text-neutral-400 transition-colors">(optional override)</span></label>
                   <input className={inp} placeholder="yourbusiness.co.uk" value={wpDomain} onChange={e => setWpDomain(e.target.value)} />
                 </div>
               </div>
@@ -412,7 +412,7 @@ const FacebookIcon = () => (
               <textarea className={`${inp} h-20 resize-none`} value={customGoal} onChange={e => setCustomGoal(e.target.value)} placeholder="Describe the campaign goal, key offers, or differentiators..." />
             </div>
 
-            <button type="submit" disabled={isGenerating} className={`w-full bg-gradient-to-r ${sc.bgClass} text-slate-900 dark:text-white font-bold text-xs py-3 rounded-lg shadow-lg hover:opacity-90 transition flex items-center justify-center gap-1.5 disabled:opacity-60 disabled:cursor-not-allowed`}>
+            <button type="submit" disabled={isGenerating} className={`w-full  ${sc.bgClass} text-slate-900 dark:text-white font-bold text-xs py-3 rounded-lg shadow-lg hover:opacity-90 transition flex items-center justify-center gap-1.5 disabled:opacity-60 disabled:cursor-not-allowed`}>
               {isGenerating
                 ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /><span>Generating AI Copy...</span></>
                 : <><Sparkles className="w-3.5 h-3.5" /><span>Generate & Draft Campaign</span></>
@@ -440,27 +440,27 @@ const FacebookIcon = () => (
             {/* Campaign log */}
             <div className="border rounded-xl overflow-hidden" style={{ borderColor: 'var(--card-border)', backgroundColor: 'var(--card-bg)' }}>
               <div className="px-4 py-2.5 border-b flex items-center justify-between" style={{ borderColor: 'var(--card-border)' }}>
-                <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5"><Activity className="w-3 h-3" />Campaign Log</span>
-                <span className="text-[9px] text-slate-500 dark:text-slate-400">{campaigns.length} records</span>
+                <span className="text-[10px] font-bold text-neutral-600 dark:text-neutral-400 transition-colors uppercase tracking-wider flex items-center gap-1.5"><Activity className="w-3 h-3" />Campaign Log</span>
+                <span className="text-[9px] text-neutral-600 dark:text-neutral-400 transition-colors">{campaigns.length} records</span>
               </div>
               <div className="max-h-80 overflow-y-auto divide-y divide-neutral-100">
                 {loading ? (
-                  <div className="text-center py-10 text-xs text-slate-500 dark:text-slate-400 flex items-center justify-center gap-2"><Loader2 className="w-4 h-4 animate-spin" />Loading...</div>
+                  <div className="text-center py-10 text-xs text-neutral-600 dark:text-neutral-400 transition-colors flex items-center justify-center gap-2"><Loader2 className="w-4 h-4 animate-spin" />Loading...</div>
                 ) : campaigns.length === 0 ? (
-                  <div className="text-center py-10 text-xs text-slate-500 dark:text-slate-400 italic">No campaigns yet. Generate one on the left.</div>
+                  <div className="text-center py-10 text-xs text-neutral-600 dark:text-neutral-400 transition-colors italic">No campaigns yet. Generate one on the left.</div>
                 ) : campaigns.map((camp: AdCampaign) => (
-                  <div key={camp.id} onClick={() => setSelectedCampaign(camp)} className={`px-3 py-2.5 cursor-pointer transition flex justify-between items-center group ${selectedCampaign?.id === camp.id ? 'bg-[#4F46E5]/8 border-l-2 border-[#4F46E5]' : 'hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-700'}`}>
+                  <div key={camp.id} onClick={() => setSelectedCampaign(camp)} className={`px-3 py-2.5 cursor-pointer transition flex justify-between items-center group ${selectedCampaign?.id === camp.id ? 'bg-[#4F46E5]/8 border-l-2 border-[#4F46E5]' : 'hover:bg-neutral-100 dark:hover:bg-neutral-900'}`}>
                     <div className="flex items-center gap-2 min-w-0">
                       <ScenarioPill platform={camp.platform} />
                       <div className="min-w-0">
                         <h4 className="text-xs font-semibold text-slate-900 dark:text-white truncate max-w-[120px]">{camp.title}</h4>
-                        <span className="text-[9px] text-slate-500 dark:text-slate-400">{camp.createdAt}</span>
+                        <span className="text-[9px] text-neutral-600 dark:text-neutral-400 transition-colors">{camp.createdAt}</span>
                       </div>
                     </div>
                     <div className="flex items-center gap-1.5 flex-shrink-0">
                       <StatusBadge status={camp.status} />
-                      <button onClick={e => { e.stopPropagation(); setEditingCampaign(camp); setEditTitle(camp.title); setEditCopy(camp.generatedCopy); }} className="opacity-0 group-hover:opacity-100 text-slate-500 dark:text-slate-400 hover:text-blue-600 p-0.5 rounded transition"><Pencil className="w-3 h-3" /></button>
-                      <button onClick={e => { e.stopPropagation(); setDeleteConfirm({ id: camp.id, name: camp.title }); }} className="opacity-0 group-hover:opacity-100 text-slate-500 dark:text-slate-400 hover:text-rose-600 p-0.5 rounded transition"><Trash2 className="w-3 h-3" /></button>
+                      <button onClick={e => { e.stopPropagation(); setEditingCampaign(camp); setEditTitle(camp.title); setEditCopy(camp.generatedCopy); }} className="opacity-0 group-hover:opacity-100 text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:text-white p-0.5 rounded transition"><Pencil className="w-3 h-3" /></button>
+                      <button onClick={e => { e.stopPropagation(); setDeleteConfirm({ id: camp.id, name: camp.title }); }} className="opacity-0 group-hover:opacity-100 text-neutral-600 dark:text-neutral-400 transition-colors hover:text-rose-600 p-0.5 rounded transition"><Trash2 className="w-3 h-3" /></button>
                     </div>
                   </div>
                 ))}
@@ -475,7 +475,7 @@ const FacebookIcon = () => (
                     <div><ScenarioPill platform={selectedCampaign.platform} /><h3 className="text-xs font-bold text-slate-900 dark:text-white mt-1">{selectedCampaign.title}</h3></div>
                     <StatusBadge status={selectedCampaign.status} />
                   </div>
-                  <div className="bg-slate-50 dark:bg-slate-900/50 rounded-lg p-3 border text-xs text-slate-600 dark:text-slate-300 leading-relaxed max-h-20 overflow-y-auto whitespace-pre-wrap">
+                  <div className="bg-slate-50 dark:bg-slate-900/50 rounded-lg p-3 border text-xs text-neutral-600 dark:text-neutral-400 transition-colors leading-relaxed max-h-20 overflow-y-auto whitespace-pre-wrap">
                     {selectedCampaign.generatedCopy}
                   </div>
                   {selectedCampaign.hashtags?.length > 0 && (
@@ -495,13 +495,13 @@ const FacebookIcon = () => (
                     ) : selectedCampaign.status === 'Approved' ? (
                       <>
                         <div className="flex items-center justify-center gap-2 py-2 rounded-lg bg-amber-50 border border-amber-300 text-amber-700 text-xs font-bold">Locally Approved — n8n was unreachable</div>
-                        <button onClick={() => executeApprove(selectedCampaign.id)} disabled={isPushing} className="w-full py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:opacity-90 disabled:opacity-60 text-white text-xs font-bold rounded-lg shadow transition flex items-center justify-center gap-1">
+                        <button onClick={() => executeApprove(selectedCampaign.id)} disabled={isPushing} className="w-full py-2 from-emerald-600 to-teal-600 hover:opacity-90 disabled:opacity-60 text-white text-xs font-bold rounded-lg shadow transition flex items-center justify-center gap-1">
                           {isPushing ? <><Loader2 className="w-3.5 h-3.5 animate-spin" />Retrying...</> : <><Send className="w-3.5 h-3.5" />Retry Push to n8n</>}
                         </button>
                         <button onClick={handleApplyToLanding} className="w-full py-2 bg-white dark:bg-slate-900 hover:bg-black text-slate-900 dark:text-white text-xs font-bold rounded-lg transition flex items-center justify-center gap-1"><Globe className="w-3.5 h-3.5" />Apply to Landing Page</button>
                       </>
                     ) : (
-                      <button onClick={() => executeApprove(selectedCampaign.id)} disabled={isPushing} className="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 disabled:opacity-60 disabled:cursor-not-allowed text-white text-xs font-bold rounded-lg shadow-md transition flex items-center justify-center gap-2">
+                      <button onClick={() => executeApprove(selectedCampaign.id)} disabled={isPushing} className="w-full py-3 from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 disabled:opacity-60 disabled:cursor-not-allowed text-white text-xs font-bold rounded-lg shadow-md transition flex items-center justify-center gap-2">
                         {isPushing
                           ? <><Loader2 className="w-4 h-4 animate-spin" /><span>Triggering n8n Workflow...</span></>
                           : <><Rocket className="w-4 h-4" /><span>Approve & Trigger n8n Workflow</span></>
@@ -511,7 +511,7 @@ const FacebookIcon = () => (
                   </div>
                 </>
               ) : (
-                <div className="flex flex-col items-center justify-center h-full py-12 text-slate-500 dark:text-slate-400 text-xs italic">
+                <div className="flex flex-col items-center justify-center h-full py-12 text-neutral-600 dark:text-neutral-400 transition-colors text-xs italic">
                   <Activity className="w-8 h-8 mb-3 opacity-30" />Select a campaign from the log to review and push to n8n.
                 </div>
               )}
@@ -540,13 +540,13 @@ const FacebookIcon = () => (
             <button onClick={() => { const cMap: Record<string,any> = { rose:  { bg: '#1e293b', bb: '#7f1d1d60', bt: '#fca5a5', bd: '#7f1d1d', cta: '#e11d48' }, teal:  { bg: '#0f172a', bb: '#064e3b60', bt: '#6ee7b7', bd: '#064e3b', cta: '#0d9488' }, amber: { bg: '#0f172a', bb: '#7c2d1260', bt: '#fcd34d', bd: '#7c2d12', cta: '#d97706' },
                 };
   const col = cMap[selectedTemplateColor] || cMap['rose']; const html = `<html><head><meta charset='utf-8'><title>${landingTitle}</title><style>body{font-family:Arial,sans-serif;margin:0;padding:40px;background:${col.bg};color:#fff}.badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:bold;background:${col.bb};color:${col.bt};border:1px solid ${col.bd}}h1{font-size:28px;margin:20px 0 10px}p{color:#94a3b8;font-size:14px;line-height:1.6;max-width:600px}.footer{margin-top:40px;padding-top:20px;border-top:1px solid #1e293b;display:flex;justify-content:space-between;align-items:center}.cta{padding:8px 24px;border-radius:8px;font-weight:bold;background:${col.cta};color:#fff;border:none;cursor:pointer}</style></head><body><span class='badge'>Featured Special Offer</span><h1>${landingTitle}</h1><p>${landingSub}</p><div class='footer'><span style='color:#64748b'>Lead Intake Form Integrated</span><button class='cta'>Secure Quote Fast Callout</button></div></body></html>`; const blob = new Blob([html], { type: 'text/html' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `landing-${selectedTemplateColor}-${Date.now()}.html`; a.click(); URL.revokeObjectURL(url);
-              }} className="w-full py-2 bg-gradient-to-r from-[#4F46E5] to-[#06B6D4] hover:opacity-95 text-slate-900 dark:text-white font-bold text-xs rounded-lg transition"
+              }} className="w-full py-2 from-[#4F46E5] to-[#06B6D4] hover:opacity-95 text-slate-900 dark:text-white font-bold text-xs rounded-lg transition"
             > Download Landing Page HTML
             </button>
           </div>
           <div className="col-span-2 bg-neutral-900 border border-slate-200 dark:border-slate-700 rounded-xl p-6 text-slate-900 dark:text-white min-h-[200px] flex flex-col justify-between relative overflow-hidden">
             <div className={`absolute -right-20 -top-20 w-48 h-48 rounded-full blur-3xl opacity-20 ${selectedTemplateColor === 'rose' ? 'bg-rose-500' : selectedTemplateColor === 'teal' ? 'bg-teal-500' : 'bg-amber-500'}`} />
-            <div className="flex justify-between items-center text-[10px] uppercase font-mono tracking-widest text-slate-500 dark:text-slate-400">
+            <div className="flex justify-between items-center text-[10px] uppercase font-mono tracking-widest text-neutral-600 dark:text-neutral-400 transition-colors">
               <span>PUBLIC DOMAIN PREVIEW</span>
               <span className="text-emerald-400 flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />Live SSL Active</span>
             </div>
@@ -554,10 +554,10 @@ const FacebookIcon = () => (
               <span className={`inline-block px-2.5 py-0.5 rounded text-[8px] uppercase tracking-wider font-extrabold ${selectedTemplateColor === 'rose' ? 'bg-rose-900/40 text-rose-300 border border-rose-800' : selectedTemplateColor === 'teal' ? 'bg-teal-900/40 text-teal-300 border border-teal-800' : 'bg-amber-900/40 text-amber-300 border border-amber-800'}`}> Featured Special Offer
               </span>
               <h1 className="text-lg font-bold leading-tight text-slate-900 dark:text-white max-w-xl">{landingTitle}</h1>
-              <p className="text-slate-500 dark:text-slate-400 text-xs max-w-lg leading-relaxed">{landingSub}</p>
+              <p className="text-neutral-600 dark:text-neutral-400 transition-colors text-xs max-w-lg leading-relaxed">{landingSub}</p>
             </div>
             <div className="flex justify-between items-center mt-6 border-t border-slate-200 dark:border-slate-700 pt-4">
-              <span className="text-slate-600 dark:text-slate-300 text-[10px]">Lead Intake Form Integrated</span>
+              <span className="text-neutral-600 dark:text-neutral-400 transition-colors text-[10px]">Lead Intake Form Integrated</span>
               <button className={`py-1.5 px-4 rounded font-bold text-[11px] text-white ${selectedTemplateColor === 'rose' ? 'bg-rose-600' : selectedTemplateColor === 'teal' ? 'bg-teal-600' : 'bg-amber-600'}`}>Secure Quote Fast Callout</button>
             </div>
           </div>

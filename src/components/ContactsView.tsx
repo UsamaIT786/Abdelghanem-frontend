@@ -192,10 +192,10 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
               <AlertTriangle className="w-6 h-6" />
               <h3 className="font-bold text-lg">Confirm Deletion</h3>
             </div>
-            <p className="text-sm text-slate-600 dark:text-slate-300 "> Are you sure you want to delete <strong className="text-slate-900 dark:text-white ">{deleteConfirm.name}</strong>? This action cannot be undone and will permanently remove this record from the database.
+            <p className="text-sm text-neutral-600 dark:text-neutral-400 transition-colors"> Are you sure you want to delete <strong className="text-slate-900 dark:text-white">{deleteConfirm.name}</strong>? This action cannot be undone and will permanently remove this record from the database.
             </p>
             <div className="flex gap-2 justify-end pt-2">
-              <button onClick={() => setDeleteConfirm(null)} className="px-4 py-2 rounded-lg border text-sm font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-700 transition"
+              <button onClick={() => setDeleteConfirm(null)} className="px-4 py-2 rounded-lg border text-sm font-semibold hover:bg-neutral-100 dark:hover:bg-neutral-900 transition"
               > Cancel
               </button>
               <button onClick={handleDeleteConfirm} className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-sm font-bold transition flex items-center gap-1.5"
@@ -216,21 +216,21 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
 
         {/* Tab Switchers */}
         <div className="flex p-1 rounded-xl border text-xs" style={{ backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--border-color)' }}>
-          <button onClick={() => setActiveSubTab('contacts')} className={`px-4 py-2 rounded-lg font-semibold transition ${ activeSubTab === 'contacts' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white '
+          <button onClick={() => setActiveSubTab('contacts')} className={`px-4 py-2 rounded-lg font-semibold transition ${ activeSubTab === 'contacts' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white '
             }`}
           >
             <Users className="w-3.5 h-3.5 inline mr-1" />
             <span>Contacts & Leads</span>
           </button>
           
-          <button onClick={() => setActiveSubTab('pipeline')} className={`px-4 py-2 rounded-lg font-semibold transition ${ activeSubTab === 'pipeline' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white '
+          <button onClick={() => setActiveSubTab('pipeline')} className={`px-4 py-2 rounded-lg font-semibold transition ${ activeSubTab === 'pipeline' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white '
             }`}
           >
             <Layers className="w-3.5 h-3.5 inline mr-1" />
             <span>Deals Pipeline Board</span>
           </button>
 
-          <button onClick={() => setActiveSubTab('proposals')} className={`px-4 py-2 rounded-lg font-semibold transition ${ activeSubTab === 'proposals' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white '
+          <button onClick={() => setActiveSubTab('proposals')} className={`px-4 py-2 rounded-lg font-semibold transition ${ activeSubTab === 'proposals' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white '
             }`}
           >
             <FileText className="w-3.5 h-3.5 inline mr-1" />
@@ -243,7 +243,7 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
       <div className="p-4 rounded-xl border flex flex-col md:flex-row gap-4 items-center justify-between" style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)' }}
       >
         <div className="relative w-full md:w-96">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-500 dark:text-slate-400" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-600 dark:text-neutral-400 transition-colors" />
           <input type="text" className="w-full pl-9 pr-4 py-2 rounded-lg text-xs placeholder:text-neutral-400 focus:outline-none focus:ring-1 focus:ring-slate-900" style={{ backgroundColor: 'var(--input-bg)', borderColor: 'var(--input-border)', color: 'var(--text-primary)' }} placeholder="Search details by client name, email, or company..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
@@ -262,7 +262,7 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
           </select>
 
           {activeSubTab === 'contacts' && (
-            <button onClick={() => setShowAddContact(true)} className="px-3 py-1.5 rounded-lg bg-indigo-600 text-white font-semibold text-xs flex items-center gap-1 hover:bg-indigo-700 transition shadow-sm"
+            <button onClick={() => setShowAddContact(true)} className="px-3 py-1.5 rounded-lg bg-black dark:bg-white text-white dark:text-black text-white font-semibold text-xs flex items-center gap-1 hover:bg-black dark:bg-white text-white dark:text-black transition shadow-sm"
             >
               <UserPlus className="w-3.5 h-3.5" />
               <span>Add Client</span>
@@ -277,29 +277,29 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
       {activeSubTab === 'contacts' && (
         <div className="space-y-6">
           {showAddContact && (
-            <form onSubmit={handleAddContactSubmit} className="bg-gradient-to-tr from-[#4F46E5]/5 to-[#06B6D4]/5 p-5 rounded-xl border border-[#4F46E5]/20 space-y-4 animate-scale-in">
+            <form onSubmit={handleAddContactSubmit} className="from-[#4F46E5]/5 to-[#06B6D4]/5 p-5 rounded-xl border border-[#4F46E5]/20 space-y-4 animate-scale-in">
               <div className="flex justify-between items-center">
                 <span className="text-xs font-extrabold uppercase tracking-widest" style={{ color: 'var(--text-primary)' }}>
                   ✏️ Create New Associated Business Client Card
                 </span>
-                <button type="button" onClick={() => setShowAddContact(false)} className="text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 font-bold"
+                <button type="button" onClick={() => setShowAddContact(false)} className="text-xs text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white font-bold"
                 > Cancel
                 </button>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Client Full Name</label>
+                  <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Client Full Name</label>
                   <input type="text" required placeholder="e.g. Marcus Aurelius" className="saas-input" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={newContactName} onChange={(e) => setNewContactName(e.target.value)}
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Company / Developer Name</label>
+                  <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Company / Developer Name</label>
                   <input type="text" placeholder="e.g. Rome Housing Corp" className="saas-input" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={newContactCompany} onChange={(e) => setNewContactCompany(e.target.value)}
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Email Connection Address</label>
+                  <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Email Connection Address</label>
                   <input type="email" required placeholder="email@example.com" className="saas-input" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={newContactEmail} onChange={(e) => setNewContactEmail(e.target.value)}
                   />
                 </div>
@@ -307,12 +307,12 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
 
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
-                  <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Phone Number</label>
+                  <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Phone Number</label>
                   <input type="text" placeholder="e.g. +44 7911..." className="saas-input" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={newContactPhone} onChange={(e) => setNewContactPhone(e.target.value)}
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Business Tenant</label>
+                  <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Business Tenant</label>
                   <select className="saas-input" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={newContactTenant} onChange={(e) => setNewContactTenant(e.target.value as TenantType)}
                   >
                     <option value="full_home_renovation">Full Home Renovation</option>
@@ -325,7 +325,7 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
                   </select>
                 </div>
                 <div>
-                  <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Current Status</label>
+                  <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Current Status</label>
                   <select className="saas-input" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={newContactStatus} onChange={(e) => setNewContactStatus(e.target.value as any)}
                   >
                     <option value="Lead">Lead</option>
@@ -336,13 +336,13 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
                   </select>
                 </div>
                 <div>
-                  <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Estimated Contract Value (£)</label>
+                  <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Estimated Contract Value (£)</label>
                   <input type="number" className="saas-input" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={newContactRevenue} onChange={(e) => setNewContactRevenue(e.target.value)}
                   />
                 </div>
               </div>
 
-              <button type="submit" className="w-full bg-gradient-to-r from-[#4F46E5] to-[#06B6D4] hover:opacity-95 text-slate-900 dark:text-white font-bold text-xs py-2.5 rounded-lg shadow transition"
+              <button type="submit" className="w-full from-[#4F46E5] to-[#06B6D4] hover:opacity-95 text-slate-900 dark:text-white font-bold text-xs py-2.5 rounded-lg shadow transition"
               > Confirm and Push to Master Database
               </button>
             </form>
@@ -350,12 +350,12 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
 
           {/* Edit Contact Modal */}
           {editingContact && (
-            <form onSubmit={handleSaveEditContact} className="bg-gradient-to-tr from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 p-5 rounded-xl border border-blue-200 dark:border-blue-800 space-y-4 animate-scale-in">
+            <form onSubmit={handleSaveEditContact} className="bg-black dark:bg-white text-white dark:text-black dark:bg-black dark:bg-white text-white dark:text-black/30 dark:/30 p-5 rounded-xl border border-blue-200 dark:border-blue-800 space-y-4 animate-scale-in">
               <div className="flex justify-between items-center">
                 <span className="text-xs font-extrabold uppercase tracking-widest flex items-center gap-1.5" style={{ color: 'var(--text-primary)' }}>
-                  <Pencil className="w-3.5 h-3.5 text-blue-500" /> Edit Contact: {editingContact.name}
+                  <Pencil className="w-3.5 h-3.5 text-black dark:text-white" /> Edit Contact: {editingContact.name}
                 </span>
-                <button type="button" onClick={() => setEditingContact(null)} className="text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 font-bold flex items-center gap-1"
+                <button type="button" onClick={() => setEditingContact(null)} className="text-xs text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white font-bold flex items-center gap-1"
                 >
                   <X className="w-3.5 h-3.5" /> Cancel
                 </button>
@@ -363,17 +363,17 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Client Full Name</label>
+                  <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Client Full Name</label>
                   <input type="text" required className="saas-input" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={editContactName} onChange={(e) => setEditContactName(e.target.value)}
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Company</label>
+                  <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Company</label>
                   <input type="text" className="saas-input" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={editContactCompany} onChange={(e) => setEditContactCompany(e.target.value)}
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Email</label>
+                  <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Email</label>
                   <input type="email" required className="saas-input" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={editContactEmail} onChange={(e) => setEditContactEmail(e.target.value)}
                   />
                 </div>
@@ -381,12 +381,12 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
 
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
-                  <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Phone</label>
+                  <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Phone</label>
                   <input type="text" className="saas-input" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={editContactPhone} onChange={(e) => setEditContactPhone(e.target.value)}
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Tenant</label>
+                  <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Tenant</label>
                   <select className="saas-input" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={editContactTenant} onChange={(e) => setEditContactTenant(e.target.value as TenantType)}
                   >
                     <option value="full_home_renovation">Full Home Renovation</option>
@@ -399,7 +399,7 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
                   </select>
                 </div>
                 <div>
-                  <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Status</label>
+                  <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Status</label>
                   <select className="saas-input" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={editContactStatus} onChange={(e) => setEditContactStatus(e.target.value as any)}
                   >
                     <option value="Lead">Lead</option>
@@ -410,18 +410,18 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
                   </select>
                 </div>
                 <div>
-                  <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Revenue (£)</label>
+                  <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Revenue (£)</label>
                   <input type="number" className="saas-input" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={editContactRevenue} onChange={(e) => setEditContactRevenue(e.target.value)}
                   />
                 </div>
               </div>
 
               <div className="flex gap-2">
-                <button type="submit" className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-95 text-white font-bold text-xs py-2.5 rounded-lg shadow transition"
+                <button type="submit" className="flex-1 bg-black dark:bg-white text-white dark:text-black hover:opacity-95 text-white font-bold text-xs py-2.5 rounded-lg shadow transition"
                 >
                   <Check className="w-3.5 h-3.5 inline mr-1" /> Save Changes
                 </button>
-                <button type="button" onClick={() => setEditingContact(null)} className="px-4 py-2.5 border rounded-lg text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-700 transition"
+                <button type="button" onClick={() => setEditingContact(null)} className="px-4 py-2.5 border rounded-lg text-xs font-semibold hover:bg-neutral-100 dark:hover:bg-neutral-900 transition"
                 > Discard
                 </button>
               </div>
@@ -431,7 +431,7 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
           {/* Active Contacts Grid columns */}
           {loading ? (
             <div className="text-center py-16 text-sm" style={{ color: 'var(--text-muted)' }}>
-              <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" /> Loading contacts...
+              <div className="w-8 h-8 border-2 border-black dark:border-white border-t-transparent rounded-full animate-spin mx-auto mb-3" /> Loading contacts...
             </div>
           ) : (
             <div className="responsive-grid">
@@ -493,7 +493,7 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
                       </div>
                       <span className={`status-chip ${ c.status === 'Won' ? 'status-chip-won' : c.status === 'Contract' ? 'status-chip-contract' : c.status === 'Proposal' ? 'status-chip-proposal' : c.status === 'Contacted' ? 'status-chip-contacted' : 'status-chip-leads'
                       }`}>
-                        <span className={`status-dot ${ c.status === 'Won' ? 'bg-emerald-500' : c.status === 'Contract' ? 'bg-indigo-500' : c.status === 'Proposal' ? 'bg-amber-500' : c.status === 'Contacted' ? 'bg-blue-500' : 'bg-slate-400'
+                        <span className={`status-dot ${ c.status === 'Won' ? 'bg-emerald-500' : c.status === 'Contract' ? 'bg-black dark:bg-white text-white dark:text-black' : c.status === 'Proposal' ? 'bg-amber-500' : c.status === 'Contacted' ? 'bg-black dark:bg-white text-white dark:text-black' : 'bg-slate-400'
                         }`} />
                         {c.status}
                       </span>
@@ -518,12 +518,12 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
         <div className="space-y-6">
           {/* Edit Deal Modal */}
           {editingDeal && (
-            <form onSubmit={handleSaveEditDeal} className="bg-gradient-to-tr from-purple-50 to-indigo-50 dark:from-purple-950/30 dark:to-indigo-950/30 p-5 rounded-xl border border-purple-200 dark:border-purple-800 space-y-4 animate-scale-in">
+            <form onSubmit={handleSaveEditDeal} className="bg-black dark:bg-white text-white dark:text-black dark:bg-black dark:bg-white text-white dark:text-black/30 dark:/30 p-5 rounded-xl border border-purple-200 dark:border-purple-800 space-y-4 animate-scale-in">
               <div className="flex justify-between items-center">
                 <span className="text-xs font-extrabold uppercase tracking-widest flex items-center gap-1.5" style={{ color: 'var(--text-primary)' }}>
-                  <Pencil className="w-3.5 h-3.5 text-purple-500" /> Edit Deal: {editingDeal.title}
+                  <Pencil className="w-3.5 h-3.5 text-black dark:text-white" /> Edit Deal: {editingDeal.title}
                 </span>
-                <button type="button" onClick={() => setEditingDeal(null)} className="text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 font-bold flex items-center gap-1"
+                <button type="button" onClick={() => setEditingDeal(null)} className="text-xs text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white font-bold flex items-center gap-1"
                 >
                   <X className="w-3.5 h-3.5" /> Cancel
                 </button>
@@ -531,12 +531,12 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Deal Title</label>
+                  <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Deal Title</label>
                   <input type="text" required className="saas-input" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={editDealTitle} onChange={(e) => setEditDealTitle(e.target.value)}
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Company</label>
+                  <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Company</label>
                   <input type="text" required className="saas-input" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={editDealCompany} onChange={(e) => setEditDealCompany(e.target.value)}
                   />
                 </div>
@@ -544,12 +544,12 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Value (£)</label>
+                  <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Value (£)</label>
                   <input type="number" className="saas-input" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={editDealValue} onChange={(e) => setEditDealValue(e.target.value)}
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Stage</label>
+                  <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Stage</label>
                   <select className="saas-input" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={editDealStage} onChange={(e) => setEditDealStage(e.target.value as Deal['stage'])}
                   >
                     <option value="Leads">Leads</option>
@@ -562,11 +562,11 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
               </div>
 
               <div className="flex gap-2">
-                <button type="submit" className="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-95 text-white font-bold text-xs py-2.5 rounded-lg shadow transition"
+                <button type="submit" className="flex-1 bg-black dark:bg-white text-white dark:text-black hover:opacity-95 text-white font-bold text-xs py-2.5 rounded-lg shadow transition"
                 >
                   <Check className="w-3.5 h-3.5 inline mr-1" /> Save Deal Changes
                 </button>
-                <button type="button" onClick={() => setEditingDeal(null)} className="px-4 py-2.5 border rounded-lg text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-700 transition"
+                <button type="button" onClick={() => setEditingDeal(null)} className="px-4 py-2.5 border rounded-lg text-xs font-semibold hover:bg-neutral-100 dark:hover:bg-neutral-900 transition"
                 > Discard
                 </button>
               </div>
@@ -580,7 +580,7 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
                   {/* Stage Header */}
                   <div className="flex items-center justify-between mb-3 pb-2 border-b" style={{ borderColor: 'var(--border-color)' }}>
                     <span className="text-xs font-bold uppercase tracking-wide" style={{ color: 'var(--text-primary)' }}>{stage}</span>
-                    <span className="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-mono text-[10px] px-1.5 py-0.5 rounded">
+                    <span className="bg-slate-100 dark:bg-slate-800 text-neutral-600 dark:text-neutral-400 transition-colors font-mono text-[10px] px-1.5 py-0.5 rounded">
                       {stageDeals.length}
                     </span>
                   </div>
@@ -592,7 +592,7 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
                       >
                         {/* Edit/Delete buttons */}
                         <div className="absolute top-2 right-2 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button onClick={() => handleStartEditDeal(deal)} className="p-1 bg-white dark:bg-slate-900 border rounded hover:bg-blue-50 dark:hover:bg-blue-900/30 text-blue-600 transition shadow-sm" title="Edit Deal"
+                          <button onClick={() => handleStartEditDeal(deal)} className="p-1 bg-white dark:bg-slate-900 border rounded hover:bg-neutral-100 dark:bg-neutral-900 dark:hover:bg-blue-900/30 text-black dark:text-white transition shadow-sm" title="Edit Deal"
                           >
                             <Pencil className="w-3 h-3" />
                           </button>
@@ -603,7 +603,7 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
                         </div>
 
                         <div className="flex justify-between items-start">
-                          <span className={`w-2 h-2 rounded-full ${ deal.tenant === 'full_home_renovation' ? 'bg-indigo-500' : deal.tenant === 'kitchen_renovation' ? 'bg-amber-500' : deal.tenant === 'bathroom_renovation' ? 'bg-cyan-500' : deal.tenant === 'granny_flat' ? 'bg-violet-500' : deal.tenant === 'extension' ? 'bg-emerald-500' : deal.tenant === 'multi_unit' ? 'bg-blue-500' : 'bg-slate-500'
+                          <span className={`w-2 h-2 rounded-full ${ deal.tenant === 'full_home_renovation' ? 'bg-black dark:bg-white text-white dark:text-black' : deal.tenant === 'kitchen_renovation' ? 'bg-amber-500' : deal.tenant === 'bathroom_renovation' ? 'bg-cyan-500' : deal.tenant === 'granny_flat' ? 'bg-violet-500' : deal.tenant === 'extension' ? 'bg-emerald-500' : deal.tenant === 'multi_unit' ? 'bg-black dark:bg-white text-white dark:text-black' : 'bg-slate-500'
                           }`} />
                           <span className="font-bold text-xs" style={{ color: 'var(--text-primary)' }}>£{deal.value?.toLocaleString()}</span>
                         </div>
@@ -612,13 +612,13 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
                         <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>{deal.company}</p>
 
                         <div className="pt-2 border-t flex justify-between items-center" style={{ borderColor: 'var(--border-color)' }}>
-                          <span className="text-[9px] text-slate-500 dark:text-slate-400 font-mono">{deal.date}</span>
+                          <span className="text-[9px] text-neutral-600 dark:text-neutral-400 transition-colors font-mono">{deal.date}</span>
                           <div className="flex gap-1">
-                            <button onClick={() => demoteDeal(deal.id)} title="Demote" className="bg-slate-100 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded p-1 text-[8px] font-bold"
+                            <button onClick={() => demoteDeal(deal.id)} title="Demote" className="bg-slate-100 dark:bg-slate-800 hover:bg-neutral-100 dark:hover:bg-neutral-900 text-neutral-600 dark:text-neutral-400 transition-colors rounded p-1 text-[8px] font-bold"
                             >
                               ◀
                             </button>
-                            <button onClick={() => promoteDeal(deal.id)} title="Promote" className="bg-indigo-50 dark:bg-indigo-900/30 hover:bg-indigo-100 dark:hover:bg-indigo-800/50 text-indigo-600 dark:text-indigo-400 rounded p-1 text-[8px] font-bold"
+                            <button onClick={() => promoteDeal(deal.id)} title="Promote" className="bg-neutral-100 dark:bg-neutral-900 dark:bg-indigo-900/30 hover:bg-neutral-100 dark:bg-neutral-9000 dark:hover:bg-indigo-800/50 text-black dark:text-white dark:text-neutral-500 dark:text-neutral-400 rounded p-1 text-[8px] font-bold"
                             >
                               ▶
                             </button>
@@ -652,8 +652,8 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
             </h3>
 
             <div>
-              <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">Select Client Target</label>
-              <select className="w-full border rounded-lg p-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500" style={{ backgroundColor: 'var(--input-bg)', borderColor: 'var(--input-border)', color: 'var(--text-primary)' }} value={selectedPropContact?.id || ""} onChange={(e) => { const matched = contacts.find(c => c.id === e.target.value); if (matched) setSelectedPropContact(matched);
+              <label className="text-[10px] font-bold text-neutral-600 dark:text-neutral-400 transition-colors uppercase tracking-wider block mb-1">Select Client Target</label>
+              <select className="w-full border rounded-lg p-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-black dark:ring-white" style={{ backgroundColor: 'var(--input-bg)', borderColor: 'var(--input-border)', color: 'var(--text-primary)' }} value={selectedPropContact?.id || ""} onChange={(e) => { const matched = contacts.find(c => c.id === e.target.value); if (matched) setSelectedPropContact(matched);
                 }}
               >
                 {contacts.map(c => (
@@ -665,20 +665,20 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
             </div>
 
             <div>
-              <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">Spec Proposal Scope Notes</label>
-              <textarea className="w-full border rounded-lg p-2.5 text-xs h-24 focus:outline-none focus:ring-1 focus:ring-indigo-500" style={{ backgroundColor: 'var(--input-bg)', borderColor: 'var(--input-border)', color: 'var(--text-primary)' }} value={proposalNotes} onChange={(e) => setProposalNotes(e.target.value)}
+              <label className="text-[10px] font-bold text-neutral-600 dark:text-neutral-400 transition-colors uppercase tracking-wider block mb-1">Spec Proposal Scope Notes</label>
+              <textarea className="w-full border rounded-lg p-2.5 text-xs h-24 focus:outline-none focus:ring-1 focus:ring-black dark:ring-white" style={{ backgroundColor: 'var(--input-bg)', borderColor: 'var(--input-border)', color: 'var(--text-primary)' }} value={proposalNotes} onChange={(e) => setProposalNotes(e.target.value)}
               />
             </div>
 
             <div>
-              <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">Contract Discount (%)</label>
-              <input type="number" className="w-full border rounded-lg p-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500" style={{ backgroundColor: 'var(--input-bg)', borderColor: 'var(--input-border)', color: 'var(--text-primary)' }} value={proposalDiscount} onChange={(e) => setProposalDiscount(e.target.value)} min="0" max="100"
+              <label className="text-[10px] font-bold text-neutral-600 dark:text-neutral-400 transition-colors uppercase tracking-wider block mb-1">Contract Discount (%)</label>
+              <input type="number" className="w-full border rounded-lg p-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-black dark:ring-white" style={{ backgroundColor: 'var(--input-bg)', borderColor: 'var(--input-border)', color: 'var(--text-primary)' }} value={proposalDiscount} onChange={(e) => setProposalDiscount(e.target.value)} min="0" max="100"
               />
             </div>
 
             <button onClick={() => { setPropCreated(true); window.dispatchEvent(new CustomEvent('crm_show_toast', { detail: { message: "Digital quote generated and synced to sheet! 📜", type: 'success' } 
                 })); setTimeout(() => setPropCreated(false), 3000);
-              }} className="w-full py-2.5 bg-gradient-to-r from-teal-600 to-emerald-600 text-white font-bold text-xs rounded-lg hover:from-teal-700 hover:to-emerald-700 transition flex items-center justify-center gap-2"
+              }} className="w-full py-2.5 from-teal-600 to-emerald-600 text-white font-bold text-xs rounded-lg hover:from-teal-700 hover:to-emerald-700 transition flex items-center justify-center gap-2"
             >
               <Check className="w-4 h-4" />
               <span>Generate Digital Quotation</span>
@@ -701,17 +701,17 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
             <div className="space-y-6">
               <div className="border-b border-slate-200 dark:border-slate-700 pb-4 text-center">
                 <div className="text-amber-400 text-sm font-bold">📜 CRM MASTER CONTRACT INVOICE</div>
-                <div className="text-[9px] text-slate-600 dark:text-slate-300 mt-1">UUID: PROP-2026-OX948B</div>
+                <div className="text-[9px] text-neutral-600 dark:text-neutral-400 transition-colors mt-1">UUID: PROP-2026-OX948B</div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 text-[10px] border-b border-slate-200 dark:border-slate-700 pb-4 text-slate-600 dark:text-slate-300 ">
+              <div className="grid grid-cols-2 gap-4 text-[10px] border-b border-slate-200 dark:border-slate-700 pb-4 text-neutral-600 dark:text-neutral-400 transition-colors">
                 <div>
-                  <div className="text-slate-600 dark:text-slate-300 uppercase tracking-widest font-bold font-sans">ISSUED BY:</div>
+                  <div className="text-neutral-600 dark:text-neutral-400 transition-colors uppercase tracking-widest font-bold font-sans">ISSUED BY:</div>
                   <div className="text-slate-900 dark:text-white mt-1">Abdelghanem Enterprise Automation Ltd</div>
                   <div>Tenant Division: {selectedPropContact?.tenant?.toUpperCase() || "N/A"}</div>
                 </div>
                 <div>
-                  <div className="text-slate-600 dark:text-slate-300 uppercase tracking-widest font-bold font-sans">PROPOSAL TO CLIENT:</div>
+                  <div className="text-neutral-600 dark:text-neutral-400 transition-colors uppercase tracking-widest font-bold font-sans">PROPOSAL TO CLIENT:</div>
                   <div className="text-slate-900 dark:text-white mt-1">{selectedPropContact?.name || "Client Name"}</div>
                   <div>{selectedPropContact?.company || "Company"}</div>
                   <div>{selectedPropContact?.email || "Email"}</div>
@@ -719,7 +719,7 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
               </div>
 
               <div>
-                <div className="text-[10px] text-slate-600 dark:text-slate-300 uppercase tracking-widest font-bold mb-2 font-sans">ESTIMATED SCOPE OF WORK:</div>
+                <div className="text-[10px] text-neutral-600 dark:text-neutral-400 transition-colors uppercase tracking-widest font-bold mb-2 font-sans">ESTIMATED SCOPE OF WORK:</div>
                 <div className="text-[11px] text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-800 p-3 rounded border border-slate-200 dark:border-slate-700 leading-relaxed whitespace-pre-wrap">
                   {proposalNotes}
                 </div>
@@ -728,7 +728,7 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
               <div className="text-[11px] space-y-2">
                 <div className="flex justify-between border-b border-slate-200 dark:border-slate-700 pb-1">
                   <span>Gross Job Estimate:</span>
-                  <span className="text-slate-900 dark:text-white ">£{(selectedPropContact?.revenue || 0).toLocaleString()}</span>
+                  <span className="text-slate-900 dark:text-white">£{(selectedPropContact?.revenue || 0).toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between border-b border-slate-200 dark:border-slate-700 pb-1 text-teal-400">
                   <span>Contract Discount Rate:</span>
@@ -742,7 +742,7 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-slate-200 dark:border-slate-700 text-[9px] text-center text-slate-600 dark:text-slate-300 "> System generated quote. To deliver to client, trigger PDF download link:
+              <div className="pt-4 border-t border-slate-200 dark:border-slate-700 text-[9px] text-center text-neutral-600 dark:text-neutral-400 transition-colors"> System generated quote. To deliver to client, trigger PDF download link:
                 <button onClick={() => { const gross = selectedPropContact?.revenue || 0; const disc = parseFloat(proposalDiscount) || 0; const net = gross * (1 - disc / 100); const content = `
                       <html><head><meta charset="utf-8"><title>Proposal</title>
                       <style> body { font-family: Arial, sans-serif; padding: 40px; color: #333; } h1 { text-align: center; color: #1e293b; font-size: 22px; }

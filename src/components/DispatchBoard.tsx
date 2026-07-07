@@ -100,10 +100,10 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
               <AlertTriangle className="w-6 h-6" />
               <h3 className="font-bold text-lg">Confirm Deletion</h3>
             </div>
-            <p className="text-sm text-slate-600 dark:text-slate-300 "> Are you sure you want to delete the task for <strong className="text-slate-900 dark:text-white ">{deleteConfirm.name}</strong>? This action cannot be undone and will permanently remove this dispatch record.
+            <p className="text-sm text-neutral-600 dark:text-neutral-400 transition-colors"> Are you sure you want to delete the task for <strong className="text-slate-900 dark:text-white">{deleteConfirm.name}</strong>? This action cannot be undone and will permanently remove this dispatch record.
             </p>
             <div className="flex gap-2 justify-end pt-2">
-              <button onClick={() => setDeleteConfirm(null)} className="px-4 py-2 rounded-lg border text-sm font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-700 transition"
+              <button onClick={() => setDeleteConfirm(null)} className="px-4 py-2 rounded-lg border text-sm font-semibold hover:bg-neutral-100 dark:hover:bg-neutral-900 transition"
               > Cancel
               </button>
               <button onClick={handleDeleteConfirm} className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-sm font-bold transition flex items-center gap-1.5"
@@ -124,35 +124,35 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
 
         {/* Dispatch Filter Controls */}
         <div className="flex flex-wrap p-1 rounded-xl text-xs gap-1 border" style={{ backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--border-color)' }}>
-          <button onClick={() => setActiveUnit('all')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'all' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white '
+          <button onClick={() => setActiveUnit('all')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'all' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white '
             }`}
           > All Workforces
           </button>
-          <button onClick={() => setActiveUnit('full_home_renovation')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'full_home_renovation' ? 'bg-indigo-500 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white '
+          <button onClick={() => setActiveUnit('full_home_renovation')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'full_home_renovation' ? 'bg-black dark:bg-white text-white dark:text-black text-white shadow-sm' : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white '
             }`}
           > Full Home
           </button>
-          <button onClick={() => setActiveUnit('kitchen_renovation')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'kitchen_renovation' ? 'bg-amber-500 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white '
+          <button onClick={() => setActiveUnit('kitchen_renovation')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'kitchen_renovation' ? 'bg-amber-500 text-white shadow-sm' : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white '
             }`}
           > Kitchen
           </button>
-          <button onClick={() => setActiveUnit('bathroom_renovation')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'bathroom_renovation' ? 'bg-cyan-500 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white '
+          <button onClick={() => setActiveUnit('bathroom_renovation')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'bathroom_renovation' ? 'bg-cyan-500 text-white shadow-sm' : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white '
             }`}
           > Bathroom
           </button>
-          <button onClick={() => setActiveUnit('granny_flat')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'granny_flat' ? 'bg-violet-500 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white '
+          <button onClick={() => setActiveUnit('granny_flat')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'granny_flat' ? 'bg-violet-500 text-white shadow-sm' : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white '
             }`}
           > Granny Flat
           </button>
-          <button onClick={() => setActiveUnit('extension')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'extension' ? 'bg-emerald-500 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white '
+          <button onClick={() => setActiveUnit('extension')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'extension' ? 'bg-emerald-500 text-white shadow-sm' : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white '
             }`}
           > Extension
           </button>
-          <button onClick={() => setActiveUnit('multi_unit')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'multi_unit' ? 'bg-blue-500 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white '
+          <button onClick={() => setActiveUnit('multi_unit')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'multi_unit' ? 'bg-black dark:bg-white text-white dark:text-black text-white shadow-sm' : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white '
             }`}
           > Multi Unit
           </button>
-          <button onClick={() => setActiveUnit('new_luxe_homes')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'new_luxe_homes' ? 'bg-slate-500 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white '
+          <button onClick={() => setActiveUnit('new_luxe_homes')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'new_luxe_homes' ? 'bg-slate-500 text-white shadow-sm' : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white '
             }`}
           > Luxe Homes
           </button>
@@ -161,19 +161,19 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
 
       {/* DISPATCH MODULE POP-UP IF DOCK ACTIVE */}
       {showDispatchForm && (
-        <form onSubmit={handleDispatchSubmit} className="bg-gradient-to-tr from-amber-50 to-orange-100/30 dark:from-amber-950/30 dark:to-orange-950/30 p-5 rounded-xl border border-amber-200 dark:border-amber-800 space-y-4 animate-fade-in">
+        <form onSubmit={handleDispatchSubmit} className="from-amber-50 to-orange-100/30 dark:from-amber-950/30 dark:to-orange-950/30 p-5 rounded-xl border border-amber-200 dark:border-amber-800 space-y-4 animate-fade-in">
           <div className="flex justify-between items-center">
             <span className="text-xs font-bold uppercase tracking-widest flex items-center gap-1.5" style={{ color: 'var(--text-primary)' }}>
               <span>Dispatch Workforce Operator Tool</span>
             </span>
-            <button type="button" onClick={() => setShowDispatchForm(false)} className="text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 font-bold"
+            <button type="button" onClick={() => setShowDispatchForm(false)} className="text-xs text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white font-bold"
             > Cancel
             </button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Select Active Specialist</label>
+              <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Select Active Specialist</label>
               <select className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2 text-xs focus:outline-none focus:ring-1 focus:ring-amber-500" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={technician} onChange={(e) => setTechnician(e.target.value)}
               >
                 <option value="">Select technician...</option>
@@ -184,7 +184,7 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
               </select>
             </div>
             <div>
-              <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Workforce Tenant</label>
+              <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Workforce Tenant</label>
               <select className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2 text-xs focus:outline-none" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={taskTenant} onChange={(e) => setTaskTenant(e.target.value as any)}
               >
                 <option value="full_home_renovation">Full Home Renovation</option>
@@ -197,7 +197,7 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
               </select>
             </div>
             <div>
-              <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Scheduled Hours Slot</label>
+              <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Scheduled Hours Slot</label>
               <select className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2 text-xs focus:outline-none" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={time} onChange={(e) => setTime(e.target.value)}
               >
                 <option value="08:00 - 10:30">08:00 - 10:30</option>
@@ -211,17 +211,17 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Client Name / Location Address</label>
+              <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Client Name / Location Address</label>
               <input type="text" required placeholder="e.g. 44 High St / Mr Vance" className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2 text-xs focus:outline-none" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={client} onChange={(e) => setClient(e.target.value)}
               />
             </div>
             <div>
-              <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Telephone Connection</label>
+              <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Telephone Connection</label>
               <input type="text" required placeholder="e.g. 07700 90001" className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2 text-xs focus:outline-none" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={phone} onChange={(e) => setPhone(e.target.value)}
               />
             </div>
             <div>
-              <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Task Subcategory Scope</label>
+              <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Task Subcategory Scope</label>
               <select className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2 text-xs focus:outline-none" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={type} onChange={(e) => setType(e.target.value)}
               >
                 <option value="Installation">⚙️ Premium Installation</option>
@@ -232,7 +232,7 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
             </div>
           </div>
 
-          <button type="submit" className="w-full bg-indigo-600 text-white font-bold text-xs py-2.5 rounded-lg hover:bg-indigo-700 transition shadow"
+          <button type="submit" className="w-full bg-black dark:bg-white text-white dark:text-black text-white font-bold text-xs py-2.5 rounded-lg hover:bg-black dark:bg-white text-white dark:text-black transition shadow"
           > Confirm Dispatch and Update Schedule Grid
           </button>
         </form>
@@ -240,12 +240,12 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
 
       {/* Edit Task Modal */}
       {editingTask && (
-        <form onSubmit={handleSaveEditTask} className="bg-gradient-to-tr from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 p-5 rounded-xl border border-blue-200 dark:border-blue-800 space-y-4 animate-fade-in">
+        <form onSubmit={handleSaveEditTask} className="bg-black dark:bg-white text-white dark:text-black dark:bg-black dark:bg-white text-white dark:text-black/30 dark:/30 p-5 rounded-xl border border-blue-200 dark:border-blue-800 space-y-4 animate-fade-in">
           <div className="flex justify-between items-center">
             <span className="text-xs font-extrabold uppercase tracking-widest flex items-center gap-1.5" style={{ color: 'var(--text-primary)' }}>
-              <Pencil className="w-3.5 h-3.5 text-blue-500" /> Edit Task: {editingTask.client}
+              <Pencil className="w-3.5 h-3.5 text-black dark:text-white" /> Edit Task: {editingTask.client}
             </span>
-            <button type="button" onClick={() => setEditingTask(null)} className="text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 font-bold flex items-center gap-1"
+            <button type="button" onClick={() => setEditingTask(null)} className="text-xs text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white font-bold flex items-center gap-1"
             >
               <X className="w-3.5 h-3.5" /> Cancel
             </button>
@@ -253,17 +253,17 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Technician</label>
+              <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Technician</label>
               <input type="text" required className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={editTechnician} onChange={(e) => setEditTechnician(e.target.value)}
               />
             </div>
             <div>
-              <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Client</label>
+              <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Client</label>
               <input type="text" required className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={editClient} onChange={(e) => setEditClient(e.target.value)}
               />
             </div>
             <div>
-              <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Phone</label>
+              <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Phone</label>
               <input type="text" className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={editPhone} onChange={(e) => setEditPhone(e.target.value)}
               />
             </div>
@@ -271,7 +271,7 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-              <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Type</label>
+              <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Type</label>
               <select className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={editType} onChange={(e) => setEditType(e.target.value)}
               >
                 <option value="Installation">Installation</option>
@@ -281,7 +281,7 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
               </select>
             </div>
             <div>
-              <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Status</label>
+              <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Status</label>
               <select className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={editStatus} onChange={(e) => setEditStatus(e.target.value)}
               >
                 <option value="Scheduled">Scheduled</option>
@@ -291,7 +291,7 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
               </select>
             </div>
             <div>
-              <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Time Slot</label>
+              <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Time Slot</label>
               <select className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={editTime} onChange={(e) => setEditTime(e.target.value)}
               >
                 <option value="08:00 - 10:30">08:00 - 10:30</option>
@@ -302,7 +302,7 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
               </select>
             </div>
             <div>
-              <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Tenant</label>
+              <label className="text-[10px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Tenant</label>
               <select className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500" style={{ backgroundColor: 'var(--input-bg)', color: 'var(--text-primary)' }} value={editTenant} onChange={(e) => setEditTenant(e.target.value as any)}
               >
                 <option value="full_home_renovation">Full Home Renovation</option>
@@ -317,11 +317,11 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
           </div>
 
           <div className="flex gap-2">
-            <button type="submit" className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-95 text-white font-bold text-xs py-2.5 rounded-lg shadow transition"
+            <button type="submit" className="flex-1 bg-black dark:bg-white text-white dark:text-black hover:opacity-95 text-white font-bold text-xs py-2.5 rounded-lg shadow transition"
             >
               <Pencil className="w-3.5 h-3.5 inline mr-1" /> Save Task Changes
             </button>
-            <button type="button" onClick={() => setEditingTask(null)} className="px-4 py-2.5 border rounded-lg text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-700 transition"
+            <button type="button" onClick={() => setEditingTask(null)} className="px-4 py-2.5 border rounded-lg text-xs font-semibold hover:bg-neutral-100 dark:hover:bg-neutral-900 transition"
             > Discard
             </button>
           </div>
@@ -336,7 +336,7 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
         >
           <div className="flex justify-between items-center">
             <span className="text-xs font-bold uppercase tracking-widest block" style={{ color: 'var(--text-primary)' }}>Active Operations Dispatch Board</span>
-            <button onClick={() => setShowDispatchForm(true)} className="px-3 py-1.5 rounded-lg bg-indigo-600 font-bold hover:bg-indigo-700 text-white text-[11px] flex items-center gap-1 transition shadow-sm"
+            <button onClick={() => setShowDispatchForm(true)} className="px-3 py-1.5 rounded-lg bg-black dark:bg-white text-white dark:text-black font-bold hover:bg-black dark:bg-white text-white dark:text-black text-white text-[11px] flex items-center gap-1 transition shadow-sm"
             >
               <UserPlus className="w-3.5 h-3.5" />
               <span>Dispatch Callout</span>
@@ -350,9 +350,9 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
               <div className="min-w-[650px] divide-y" style={{ borderColor: 'var(--border-color)' }}>
                 
                 {/* Grid Header hour blocks */}
-                <div className="grid grid-cols-6 py-2.5 text-center text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase rounded-t-lg" style={{ backgroundColor: 'var(--bg-tertiary)' }}
+                <div className="grid grid-cols-6 py-2.5 text-center text-[10px] text-neutral-600 dark:text-neutral-400 transition-colors font-bold uppercase rounded-t-lg" style={{ backgroundColor: 'var(--bg-tertiary)' }}
                 >
-                  <div className="col-span-1 text-left pl-3 text-slate-600 dark:text-slate-300">Technician</div>
+                  <div className="col-span-1 text-left pl-3 text-neutral-600 dark:text-neutral-400 transition-colors">Technician</div>
                   {timeHours.map(hour => (
                     <div key={hour} className="border-l" style={{ borderColor: 'var(--border-color)' }}>{hour}</div>
                   ))}
@@ -367,12 +367,12 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
 
                       <div className="col-span-5 grid grid-cols-5 h-16 relative">
                         {techTasks.map(task => { let gridColStart = 'col-start-1'; let gridColSpan = 'col-span-2'; if (task.time.includes('10:0')) gridColStart = 'col-start-2'; else if (task.time.includes('11:0')) gridColStart = 'col-start-3'; else if (task.time.includes('14:0')) { gridColStart = 'col-start-4'; gridColSpan = 'col-span-1'; } else if (task.time.includes('15:0')) { gridColStart = 'col-start-4 col-span-2'; gridColSpan = 'col-span-2'; }
-  let activeStyles = 'border-indigo-200 bg-indigo-50/90 text-indigo-950 font-medium'; if (task.tenant === 'kitchen_renovation') activeStyles = 'border-amber-200 bg-amber-50/90 text-amber-950 font-medium'; if (task.tenant === 'bathroom_renovation') activeStyles = 'border-cyan-200 bg-cyan-50/90 text-cyan-950 font-medium'; return (
-                            <div key={task.id} onClick={() => setSelectedTask(task)} className={`absolute inset-y-1 mx-1.5 p-2 rounded-xl border text-left flex flex-col justify-between cursor-pointer transition shadow-xs z-10 select-none ${gridColStart} ${gridColSpan} ${ activeStyles } ${ selectedTask?.id === task.id ? 'ring-2 ring-indigo-600 scale-102 font-bold shadow-md' : 'hover:scale-101'
+  let activeStyles = 'border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900/90 text-indigo-950 font-medium'; if (task.tenant === 'kitchen_renovation') activeStyles = 'border-amber-200 bg-amber-50/90 text-amber-950 font-medium'; if (task.tenant === 'bathroom_renovation') activeStyles = 'border-cyan-200 bg-cyan-50/90 text-cyan-950 font-medium'; return (
+                            <div key={task.id} onClick={() => setSelectedTask(task)} className={`absolute inset-y-1 mx-1.5 p-2 rounded-xl border text-left flex flex-col justify-between cursor-pointer transition shadow-xs z-10 select-none ${gridColStart} ${gridColSpan} ${ activeStyles } ${ selectedTask?.id === task.id ? 'ring-2 ring-black dark:ring-white scale-102 font-bold shadow-md' : 'hover:scale-101'
                               }`}
                             >
                               <span className="text-[10px] block truncate font-bold">{task.client}</span>
-                              <div className="flex items-center justify-between mt-1 text-[9px] text-slate-600 dark:text-slate-300 font-mono">
+                              <div className="flex items-center justify-between mt-1 text-[9px] text-neutral-600 dark:text-neutral-400 transition-colors font-mono">
                                 <span>{task.time}</span>
                                 <span className={`px-1 rounded-sm text-[8px] font-bold tracking-wider ${ task.status === 'Completed' ? 'bg-emerald-500/10 text-emerald-700' : 'bg-amber-500/10 text-amber-700'
                                 }`}>
@@ -401,7 +401,7 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
             <div className="space-y-5">
               <div className="flex justify-between items-start border-b border-slate-200 dark:border-slate-700 pb-3">
                 <div>
-                  <span className="text-[9px] uppercase tracking-wider text-slate-600 dark:text-slate-300 block">Dispatch ID</span>
+                  <span className="text-[9px] uppercase tracking-wider text-neutral-600 dark:text-neutral-400 transition-colors block">Dispatch ID</span>
                   <span className="text-xs font-mono font-bold text-amber-500">{selectedTask.id}</span>
                 </div>
                 <span className={`px-2 py-0.5 rounded text-[8px] uppercase tracking-wider font-extrabold bg-slate-800 text-slate-200`}>
@@ -411,33 +411,33 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
 
               <div className="space-y-4 text-xs">
                 <div>
-                  <span className="text-[9px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Lead Dispatcher Assigned:</span>
+                  <span className="text-[9px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Lead Dispatcher Assigned:</span>
                   <div className="text-slate-900 dark:text-white font-medium">{selectedTask.technician}</div>
                 </div>
                 <div>
-                  <span className="text-[9px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Target Site Client Location:</span>
+                  <span className="text-[9px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Target Site Client Location:</span>
                   <div className="text-slate-900 dark:text-white font-medium">{selectedTask.client}</div>
                 </div>
                 <div>
-                  <span className="text-[9px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Telephone Integration:</span>
+                  <span className="text-[9px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Telephone Integration:</span>
                   <div className="text-slate-900 dark:text-white font-serif flex items-center gap-1.5 mt-0.5">
-                    <Phone className="w-3.5 h-3.5 text-slate-600 dark:text-slate-300 " />
+                    <Phone className="w-3.5 h-3.5 text-neutral-600 dark:text-neutral-400 transition-colors" />
                     <span>{selectedTask.phone}</span>
                   </div>
                 </div>
                 <div>
-                  <span className="text-[9px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Dispatch Scope Parameter:</span>
+                  <span className="text-[9px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Dispatch Scope Parameter:</span>
                   <div className="text-slate-900 dark:text-white font-bold">{selectedTask.type}</div>
                 </div>
                 <div>
-                  <span className="text-[9px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Allocated Hours Slot:</span>
+                  <span className="text-[9px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Allocated Hours Slot:</span>
                   <div className="text-slate-900 dark:text-white flex items-center gap-1.5 mt-0.5 font-mono">
-                    <Clock className="w-3.5 h-3.5 text-slate-600 dark:text-slate-300 " />
+                    <Clock className="w-3.5 h-3.5 text-neutral-600 dark:text-neutral-400 transition-colors" />
                     <span>{selectedTask.time}</span>
                   </div>
                 </div>
                 <div>
-                  <span className="text-[9px] uppercase font-bold text-slate-600 dark:text-slate-300 block mb-1">Operational State:</span>
+                  <span className="text-[9px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-1">Operational State:</span>
                   <div className={`mt-1 inline-block px-2.5 py-0.5 rounded-full font-bold text-[9px] uppercase ${ selectedTask.status === 'Completed' ? 'bg-emerald-950 text-emerald-400' : 'bg-amber-950 text-amber-400'
                   }`}>
                     {selectedTask.status}
@@ -447,9 +447,9 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
 
               {/* Status Update Quick Triggers + Edit/Delete */}
               <div className="pt-4 border-t border-slate-200 dark:border-slate-700 space-y-2">
-                <span className="text-[9px] uppercase font-bold text-slate-600 dark:text-slate-300 block">Override Operational State:</span>
+                <span className="text-[9px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block">Override Operational State:</span>
                 <div className="grid grid-cols-2 gap-2 text-[10px]">
-                  <button onClick={() => updateTaskStatus(selectedTask.id, 'In Progress')} className="py-1.5 px-2 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold rounded"
+                  <button onClick={() => updateTaskStatus(selectedTask.id, 'In Progress')} className="py-1.5 px-2 bg-slate-50 dark:bg-slate-900/50 hover:bg-neutral-100 dark:hover:bg-neutral-900 text-neutral-600 dark:text-neutral-400 transition-colors font-bold rounded"
                   > In Progress
                   </button>
                   <button onClick={() => updateTaskStatus(selectedTask.id, 'Completed')} className="py-1.5 px-2 bg-emerald-950 hover:bg-emerald-900 border border-emerald-800 text-emerald-400 font-bold rounded"
@@ -472,13 +472,13 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
               </div>
             </div>
           ) : (
-            <div className="flex-1 flex flex-col justify-center items-center text-center text-slate-600 dark:text-slate-300 ">
+            <div className="flex-1 flex flex-col justify-center items-center text-center text-neutral-600 dark:text-neutral-400 transition-colors">
               <Calendar className="w-8 h-8 opacity-40 mb-3" />
               <span>Select an active schedule card box to override details</span>
             </div>
           )}
 
-          <div className="text-[9px] text-center text-slate-600 dark:text-slate-300 pt-4 border-t border-slate-200 dark:border-slate-700 /60 font-mono"> Abdelghanem Dispatch v4.12 • GPS Active
+          <div className="text-[9px] text-center text-neutral-600 dark:text-neutral-400 transition-colors pt-4 border-t border-slate-200 dark:border-slate-700 /60 font-mono"> Abdelghanem Dispatch v4.12 • GPS Active
           </div>
         </div>
       </div>

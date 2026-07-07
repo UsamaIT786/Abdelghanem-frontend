@@ -91,9 +91,14 @@ import { getSavedToken, getSavedTenant, getSavedUser, clearSession, saveSession,
     return () => clearInterval(poller);
   }, [isLoggedIn]);
 
-  // Enforce Dark Mode
+  // Hydrate Dark Mode
   useEffect(() => { 
-    document.documentElement.classList.add('dark');
+    const savedDark = getSavedDarkMode();
+    if (savedDark !== false) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
   }, []); 
 
   // Handle Auth expiry cleanly without hard page reloads
@@ -149,20 +154,18 @@ import { getSavedToken, getSavedTenant, getSavedUser, clearSession, saveSession,
           {/* Brand header */}
           <div className="flex items-center gap-2 mb-6 px-1 justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-[#4F46E5] to-[#06B6D4] flex items-center justify-center text-slate-900 dark:text-white shadow-sm">
-                <Crown className="w-4.5 h-4.5 text-slate-900 dark:text-white " />
+              <div className="w-8 h-8 rounded-lg bg-black dark:bg-white flex items-center justify-center shadow-sm">
+                <Crown className="w-4.5 h-4.5 text-white dark:text-black" />
               </div>
               {sidebarOpen && <span className="text-md font-bold tracking-tight font-sans" style={{ color: 'var(--text-primary)' }}>Abdelghanem</span>}
             </div>
             <div className="flex items-center gap-1.5">
-              {sidebarOpen && (
-                <span className="text-[9px] bg-[#4F46E5]/10 text-[#4F46E5] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider"> v1.4
+                <span className="text-[9px] bg-neutral-200 dark:bg-neutral-800 text-black dark:text-white px-1.5 py-0.5 rounded font-bold uppercase tracking-wider"> v1.4
                 </span>
-              )}
               {/* Close Button for Responsive Mobile layout */}
-              <button onClick={() => setSidebarOpen(false)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-700 dark:hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-700 rounded-lg text-slate-600 dark:text-slate-300 md:hidden" title="Close Sidebar"
+              <button onClick={() => setSidebarOpen(false)} className="p-1.5 hover:bg-neutral-100 dark:hover:bg-neutral-900 dark:hover:bg-neutral-100 dark:hover:bg-neutral-900 rounded-lg text-neutral-600 dark:text-neutral-400 transition-colors md:hidden" title="Close Sidebar"
               >
-                <X className="w-4 h-4 text-slate-500 dark:text-slate-400" />
+                <X className="w-4 h-4 text-neutral-600 dark:text-neutral-400 transition-colors" />
               </button>
             </div>
           </div>
@@ -172,13 +175,13 @@ import { getSavedToken, getSavedTenant, getSavedUser, clearSession, saveSession,
             
             {/* 1. MAIN MENU block */}
             <div className="space-y-1.5">
-              {sidebarOpen && <span className="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest block px-1.5">Main Menu</span>}
+              {sidebarOpen && <span className="text-[9px] font-bold text-neutral-600 dark:text-neutral-400 transition-colors uppercase tracking-widest block px-1.5">Main Menu</span>}
               
               <div className="space-y-1">
                 {/* Dashboard - clickable toggle */}
                 <button onClick={() => toggleMenu('dashboard')} className={`w-full flex items-center justify-between p-2.5 rounded-xl font-medium text-sm transition-all duration-200 ${ activeTab.includes('Dashboard') || activeTab === 'Dashboard'
-                      ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20' 
-                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white dark:hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-700   '
+                      ? 'bg-black dark:bg-white text-white dark:text-black text-white shadow-md shadow-black/5 dark:shadow-white/5' 
+                      : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:text-black dark:hover:text-white dark:hover:bg-neutral-100 dark:hover:bg-neutral-900   '
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
@@ -193,12 +196,12 @@ import { getSavedToken, getSavedTenant, getSavedUser, clearSession, saveSession,
                   <div className="pl-6 space-y-1">
                     {['Growth Dashboard'].map(subtab => (
                       <button key={subtab} onClick={() => handleTabClick(subtab)} className={`w-full text-left py-1.5 px-2.5 rounded-lg text-xs flex items-center justify-between transition ${ activeTab === subtab 
-                            ? 'text-[#4F46E5] font-extrabold bg-[#4F46E5]/10' 
-                            : 'text-slate-500 dark:text-slate-400 hover:text-neutral-850  '
+                            ? 'text-black dark:text-white font-extrabold bg-neutral-200 dark:bg-neutral-800' 
+                            : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:text-neutral-850  '
                         }`}
                       >
                         <span>• {subtab}</span>
-                        {activeTab === subtab && <span className="w-1.5 h-1.5 rounded-full bg-[#4F46E5] animate-ping" />}
+                        {activeTab === subtab && <span className="w-1.5 h-1.5 rounded-full bg-black dark:bg-white animate-ping" />}
                       </button>
                     ))}
                   </div>
@@ -206,8 +209,8 @@ import { getSavedToken, getSavedTenant, getSavedUser, clearSession, saveSession,
 
                 {/* Smart Application */}
                 <button onClick={() => handleTabClick('Smart Application')} className={`w-full flex items-center justify-between p-2.5 rounded-xl font-medium text-sm transition-all duration-200 ${ activeTab === 'Smart Application' || activeTab === 'Application' || activeTab === 'Estimations'
-                      ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20' 
-                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white dark:hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-700   '
+                      ? 'bg-black dark:bg-white text-white dark:text-black text-white shadow-md shadow-black/5 dark:shadow-white/5' 
+                      : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:text-black dark:hover:text-white dark:hover:bg-neutral-100 dark:hover:bg-neutral-900   '
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
@@ -219,8 +222,8 @@ import { getSavedToken, getSavedTenant, getSavedUser, clearSession, saveSession,
                 {/* Super Admin Overlay */}
                 {userRole === 'Admin' && (
                   <button onClick={() => handleTabClick('Super Admin Overlay')} className={`w-full flex items-center justify-between p-2.5 rounded-xl font-semibold transition ${ activeTab === 'Super Admin Overlay' || activeTab === 'Super Admin'
-                        ? 'bg-indigo-600 text-white font-bold' 
-                        : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white   '
+                        ? 'bg-black dark:bg-white text-white dark:text-black text-white font-bold' 
+                        : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:text-black dark:hover:text-white   '
                     }`}
                   >
                     <div className="flex items-center gap-2.5">
@@ -236,8 +239,8 @@ import { getSavedToken, getSavedTenant, getSavedUser, clearSession, saveSession,
             <div className="space-y-1.5" style={{ borderTop: '1px solid var(--border-color)', paddingTop: '14px' }}>
               {sidebarOpen && (
                 <div className="flex items-center justify-between px-1.5 mb-1">
-                  <span className="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">CRM</span>
-                  <button onClick={() => toggleMenu('crm')} className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200">
+                  <span className="text-[9px] font-bold text-neutral-600 dark:text-neutral-400 transition-colors uppercase tracking-widest">CRM</span>
+                  <button onClick={() => toggleMenu('crm')} className="text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white">
                     {expandedMenus.crm ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
                   </button>
                 </div>
@@ -259,8 +262,8 @@ import { getSavedToken, getSavedTenant, getSavedUser, clearSession, saveSession,
             <div className="space-y-1.5" style={{ borderTop: '1px solid var(--border-color)', paddingTop: '14px' }}>
               {sidebarOpen && (
                 <div className="flex items-center justify-between px-1.5 mb-1">
-                  <span className="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">PRJ WORKFORCE</span>
-                  <button onClick={() => toggleMenu('prj')} className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200">
+                  <span className="text-[9px] font-bold text-neutral-600 dark:text-neutral-400 transition-colors uppercase tracking-widest">PRJ WORKFORCE</span>
+                  <button onClick={() => toggleMenu('prj')} className="text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white">
                     {expandedMenus.prj ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
                   </button>
                 </div>
@@ -270,7 +273,7 @@ import { getSavedToken, getSavedTenant, getSavedUser, clearSession, saveSession,
                   {['Projects', 'Tasks', 'Milestones', 'Timesheets'].map(tab => (
                     <button key={tab} onClick={() => handleTabClick(tab)} className={sidebarLinkClass(tab)}
                     >
-                      <CalendarRange className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+                      <CalendarRange className="w-3.5 h-3.5 text-neutral-600 dark:text-neutral-400 transition-colors" />
                       {sidebarOpen && <span>{tab}</span>}
                     </button>
                   ))}
@@ -282,8 +285,8 @@ import { getSavedToken, getSavedTenant, getSavedUser, clearSession, saveSession,
             <div className="space-y-1.5" style={{ borderTop: '1px solid var(--border-color)', paddingTop: '14px' }}>
               {sidebarOpen && (
                 <div className="flex items-center justify-between px-1.5 mb-1">
-                  <span className="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Marketing</span>
-                  <button onClick={() => toggleMenu('marketing')} className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200">
+                  <span className="text-[9px] font-bold text-neutral-600 dark:text-neutral-400 transition-colors uppercase tracking-widest">Marketing</span>
+                  <button onClick={() => toggleMenu('marketing')} className="text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white">
                     {expandedMenus.marketing ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
                   </button>
                 </div>
@@ -294,9 +297,9 @@ import { getSavedToken, getSavedTenant, getSavedUser, clearSession, saveSession,
                     <button key={tab} onClick={() => handleTabClick(tab)} className={sidebarLinkClass(tab)}
                     >
                       {tab === 'Automation Center' ? (
-                        <Compass className="w-3.5 h-3.5 text-indigo-400" />
+                        <Compass className="w-3.5 h-3.5 text-neutral-500 dark:text-neutral-400" />
                       ) : (
-                        <Sparkles className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+                        <Sparkles className="w-3.5 h-3.5 text-neutral-600 dark:text-neutral-400 transition-colors" />
                       )}
                       {sidebarOpen && <span>{tab}</span>}
                     </button>
@@ -310,8 +313,8 @@ import { getSavedToken, getSavedTenant, getSavedUser, clearSession, saveSession,
               <div className="space-y-1.5 pb-4" style={{ borderTop: '1px solid var(--border-color)', paddingTop: '14px' }}>
                 {sidebarOpen && (
                   <div className="flex items-center justify-between px-1.5 mb-1">
-                    <span className="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">User Management</span>
-                    <button onClick={() => toggleMenu('users')} className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200">
+                    <span className="text-[9px] font-bold text-neutral-600 dark:text-neutral-400 transition-colors uppercase tracking-widest">User Management</span>
+                    <button onClick={() => toggleMenu('users')} className="text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white">
                       {expandedMenus.users ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
                     </button>
                   </div>
@@ -321,7 +324,7 @@ import { getSavedToken, getSavedTenant, getSavedUser, clearSession, saveSession,
                     {['Manage Users', 'Roles & Permissions', 'Departments'].map(tab => (
                       <button key={tab} onClick={() => handleTabClick(tab)} className={sidebarLinkClass(tab)}
                       >
-                        <Users className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+                        <Users className="w-3.5 h-3.5 text-neutral-600 dark:text-neutral-400 transition-colors" />
                         {sidebarOpen && <span>{tab}</span>}
                       </button>
                     ))}
@@ -336,10 +339,10 @@ import { getSavedToken, getSavedTenant, getSavedUser, clearSession, saveSession,
         {/* Global tenant indicator profile drawer at sidebar footer */}
         <div style={{ borderTop: '1px solid var(--border-color)', backgroundColor: 'var(--bg-tertiary)' }} className="p-3">
           <div className="flex items-center gap-2.5 overflow-hidden">
-            <Building className="w-4 h-4 text-slate-600 dark:text-slate-300 flex-shrink-0" />
+            <Building className="w-4 h-4 text-neutral-600 dark:text-neutral-400 transition-colors flex-shrink-0" />
             {sidebarOpen && (
               <div className="text-[10px] truncate leading-tight">
-                <span className="text-slate-500 dark:text-slate-400 block font-mono uppercase">Operational Tenant</span>
+                <span className="text-neutral-600 dark:text-neutral-400 transition-colors block font-mono uppercase">Operational Tenant</span>
                 <span className="font-bold capitalize" style={{ color: 'var(--text-primary)' }}>
                   {currentTenant === 'all' ? '🏢 Central Office' : `${currentTenant} Works`}
                 </span>
@@ -357,15 +360,15 @@ import { getSavedToken, getSavedTenant, getSavedUser, clearSession, saveSession,
         <header style={{ backgroundColor: 'var(--header-bg)', borderBottom: '1px solid var(--header-border)' }} className="h-14 shrink-0 px-6 flex items-center justify-between sticky top-0 z-20">
           <div className="flex items-center gap-4">
             {/* Sidebar Toggle */}
-            <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-700 rounded text-slate-600 dark:text-slate-300 transition" title="Toggle Sidebar Menu"
+            <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-1 hover:bg-neutral-100 dark:hover:bg-neutral-900 rounded text-neutral-600 dark:text-neutral-400 transition-colors transition" title="Toggle Sidebar Menu"
             >
               <Menu className="w-5 h-5" />
             </button>
 
             {/* Top Bar Search */}
             <div className="relative w-48 sm:w-64">
-              <Search className="absolute left-2.5 top-1/2 transform -translate-y-1/2 w-4.5 h-4.5 text-slate-500 dark:text-slate-400 pointer-events-none" />
-              <input type="text" placeholder="Search anything..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} style={{ backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--input-border)', color: 'var(--text-primary)' }} className="w-full pl-8 pr-4 py-1.5 rounded-lg text-xs placeholder:text-neutral-400 focus:outline-none focus:ring-1 focus:ring-[#4F46E5] transition"
+              <Search className="absolute left-2.5 top-1/2 transform -translate-y-1/2 w-4.5 h-4.5 text-neutral-600 dark:text-neutral-400 transition-colors pointer-events-none" />
+              <input type="text" placeholder="Search anything..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} style={{ backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--input-border)', color: 'var(--text-primary)' }} className="w-full pl-8 pr-4 py-1.5 rounded-lg text-xs placeholder:text-neutral-400 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white transition"
               />
             </div>
           </div>
@@ -374,20 +377,33 @@ import { getSavedToken, getSavedTenant, getSavedUser, clearSession, saveSession,
           <div className="flex items-center gap-3">
             
             {/* Real-time UTC Clock ticker */}
-            <div className="hidden lg:flex items-center gap-1.5 font-mono text-[10px] text-slate-600 dark:text-slate-300 px-3 py-1 rounded-lg" style={{ backgroundColor: 'var(--bg-tertiary)' }}
+            <div className="hidden lg:flex items-center gap-1.5 font-mono text-[10px] text-neutral-600 dark:text-neutral-400 transition-colors px-3 py-1 rounded-lg" style={{ backgroundColor: 'var(--bg-tertiary)' }}
             >
-              <Clock className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+              <Clock className="w-3.5 h-3.5 text-neutral-600 dark:text-neutral-400 transition-colors" />
               <span>UTC Time Check: {utcClock}</span>
             </div>
+
+            {/* Theme Toggle Button */}
+            <button
+              onClick={() => {
+                const isDark = document.documentElement.classList.toggle("dark");
+                saveDarkMode(isDark);
+              }}
+              className="p-1.5 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg text-black dark:text-white transition"
+              title="Toggle Theme"
+            >
+              <Sun className="w-4 h-4 hidden dark:block" />
+              <Moon className="w-4 h-4 block dark:hidden" />
+            </button>
 
 
             {/* Notification button */}
             <div className="relative">
-              <button onClick={() => setShowNotifications(!showNotifications)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-700 rounded-lg text-slate-600 dark:text-slate-300 transition relative" title="System Signals Notifications"
+              <button onClick={() => setShowNotifications(!showNotifications)} className="p-1.5 hover:bg-neutral-100 dark:hover:bg-neutral-900 rounded-lg text-neutral-600 dark:text-neutral-400 transition-colors transition relative" title="System Signals Notifications"
               >
                 <Bell className="w-4 h-4" />
                 {notifications.some(n => !n.read) && (
-                  <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-[#4F46E5] animate-ping" />
+                  <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-black dark:bg-white animate-ping" />
                 )}
               </button>
 
@@ -396,7 +412,7 @@ import { getSavedToken, getSavedTenant, getSavedUser, clearSession, saveSession,
                 <div style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)' }} className="absolute right-0 mt-2.5 w-80 border rounded-xl shadow-xl z-50 p-4 animate-fade-in text-xs space-y-3">
                   <div className="flex justify-between items-center pb-2 border-b" style={{ borderColor: 'var(--border-color)' }}>
                     <span className="font-bold" style={{ color: 'var(--text-primary)' }}>Operational System Notifications</span>
-                    <button onClick={markAllNotificationsRead} className="text-[10px] text-[#4F46E5] hover:text-[#4338CA] font-semibold"
+                    <button onClick={markAllNotificationsRead} className="text-[10px] text-black dark:text-white font-semibold"
                     > Read All
                     </button>
                   </div>
@@ -405,14 +421,14 @@ import { getSavedToken, getSavedTenant, getSavedUser, clearSession, saveSession,
                       <div className="text-center py-4" style={{ color: 'var(--text-muted)' }}>No notifications</div>
                     )}
                     {notifications.map(n => (
-                      <div key={n.id} className={`p-2 rounded-lg text-[11px] leading-relaxed transition ${n.read ? '' : 'bg-[#4F46E5]/10 font-medium border-l-2 border-[#4F46E5]'}`} style={{ color: n.read ? 'var(--text-muted)' : 'var(--text-primary)' }}
+                      <div key={n.id} className={`p-2 rounded-lg text-[11px] leading-relaxed transition ${n.read ? '' : 'bg-neutral-100 dark:bg-neutral-800 font-medium border-l-2 border-black dark:border-white'}`} style={{ color: n.read ? 'var(--text-muted)' : 'var(--text-primary)' }}
                       >
                         <div>{n.text}</div>
-                        <span className="text-[9px] text-slate-500 dark:text-slate-400 block mt-1 font-mono">{n.time}</span>
+                        <span className="text-[9px] text-neutral-600 dark:text-neutral-400 transition-colors block mt-1 font-mono">{n.time}</span>
                       </div>
                     ))}
                   </div>
-                  <button onClick={() => setShowNotifications(false)} className="w-full text-center py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-700 rounded text-[10px] font-semibold" style={{ color: 'var(--text-secondary)' }}
+                  <button onClick={() => setShowNotifications(false)} className="w-full text-center py-1 bg-slate-100 dark:bg-slate-800 hover:bg-neutral-100 dark:hover:bg-neutral-900 rounded text-[10px] font-semibold" style={{ color: 'var(--text-secondary)' }}
                   > Close Popover
                   </button>
                 </div>
@@ -421,7 +437,7 @@ import { getSavedToken, getSavedTenant, getSavedUser, clearSession, saveSession,
 
             {/* Profile Dropdown menu */}
             <div className="relative">
-              <button onClick={() => setShowProfileMenu(!showProfileMenu)} className="flex items-center gap-1.5 p-1 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-700 rounded-lg transition" title="Current Admin Log Session"
+              <button onClick={() => setShowProfileMenu(!showProfileMenu)} className="flex items-center gap-1.5 p-1 hover:bg-neutral-100 dark:hover:bg-neutral-900 rounded-lg transition" title="Current Admin Log Session"
               >
                 <img src={userAvatar} alt={userName} className="w-7 h-7 rounded-lg object-cover border border-slate-200 dark:border-slate-700"
                      onError={(e) => { 
@@ -430,7 +446,7 @@ import { getSavedToken, getSavedTenant, getSavedUser, clearSession, saveSession,
                        target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='background-color:%234F46E5;'%3E%3Cpath d='M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E";
                      }}
                 />
-                <ChevronDown className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+                <ChevronDown className="w-3.5 h-3.5 text-neutral-600 dark:text-neutral-400 transition-colors" />
               </button>
 
               {/* Profile dropdown popup */}
@@ -438,21 +454,21 @@ import { getSavedToken, getSavedTenant, getSavedUser, clearSession, saveSession,
                 <div style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)' }} className="absolute right-0 mt-2 w-56 border rounded-xl shadow-xl z-50 p-3 text-xs space-y-2 animate-fade-in">
                   <div className="pb-2 border-b" style={{ borderColor: 'var(--border-color)' }}>
                     <div className="font-bold" style={{ color: 'var(--text-primary)' }}>{userName}</div>
-                    <div className="text-[10px] text-slate-500 dark:text-slate-400 font-mono truncate">{userEmail}</div>
-                    <span className="inline-block mt-1 bg-[#4F46E5]/10 text-[#4F46E5] font-bold text-[8px] px-1.5 rounded-sm uppercase tracking-wider">
+                    <div className="text-[10px] text-neutral-600 dark:text-neutral-400 transition-colors font-mono truncate">{userEmail}</div>
+                    <span className="inline-block mt-1 bg-black text-white dark:bg-white dark:text-black font-bold text-[8px] px-1.5 rounded-sm uppercase tracking-wider">
                       {userRole} Role
                     </span>
                   </div>
 
                   <div className="space-y-1">
                     {userRole === 'Admin' && (
-                      <button onClick={() => { setActiveTab('Super Admin Overlay'); setShowProfileMenu(false); }} className="w-full text-left py-1.5 px-2 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:bg-slate-700 rounded flex items-center gap-2" style={{ color: 'var(--text-secondary)' }}
+                      <button onClick={() => { setActiveTab('Super Admin Overlay'); setShowProfileMenu(false); }} className="w-full text-left py-1.5 px-2 hover:bg-neutral-100 dark:hover:bg-neutral-900 rounded flex items-center gap-2" style={{ color: 'var(--text-secondary)' }}
                       >
-                        <Settings className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+                        <Settings className="w-3.5 h-3.5 text-neutral-600 dark:text-neutral-400 transition-colors" />
                         <span>Workspace Admin Settings</span>
                       </button>
                     )}
-                    <button onClick={handleLogout} className="w-full text-left py-1.5 px-2 hover:bg-[#4F46E5]/10 rounded text-[#4F46E5] font-bold flex items-center gap-2 transition"
+                    <button onClick={handleLogout} className="w-full text-left py-1.5 px-2 hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded text-black dark:text-white font-bold flex items-center gap-2 transition"
                     >
                       <LogOut className="w-3.5 h-3.5" />
                       <span>Sign Out of SaaS Session</span>
@@ -468,16 +484,16 @@ import { getSavedToken, getSavedTenant, getSavedUser, clearSession, saveSession,
         <main className="flex-1 p-6 md:p-8 max-w-7xl w-full mx-auto relative space-y-6">
           
           {/* Active Tenant Workspace Alerts pill */}
-          <div className="flex flex-wrap items-center justify-between text-xs p-3 bg-gradient-to-r from-indigo-950 to-white dark:to-slate-900 text-white rounded-xl border shadow-inner">
+          <div className="flex flex-wrap items-center justify-between text-xs p-3 bg-black dark:bg-white text-white dark:text-black to-white dark:to-slate-900 text-white rounded-xl border shadow-inner">
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-ping" />
-              <span className="font-mono text-[10px] text-indigo-300">SYSTEM CHANNEL LEDGER STATE:</span>
+              <span className="font-mono text-[10px] text-neutral-500 dark:text-neutral-400">SYSTEM CHANNEL LEDGER STATE:</span>
               <span className="font-bold text-slate-900 dark:text-white capitalize">
                 {currentTenant === 'all' ? 'All Active Tenant Overrides' : `${currentTenant} Works Division Only`}
               </span>
             </div>
             
-            <a href="https://ai.studio.build" target="_blank" rel="noopener noreferrer" className="text-[10px] text-indigo-300 hover:text-slate-900 dark:hover:text-white flex items-center gap-1 font-semibold transition"
+            <a href="https://ai.studio.build" target="_blank" rel="noopener noreferrer" className="text-[10px] text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white flex items-center gap-1 font-semibold transition"
             >
               <span>Deployed to Cloud Run</span>
               <ExternalLink className="w-3 h-3" />
@@ -490,13 +506,13 @@ import { getSavedToken, getSavedTenant, getSavedUser, clearSession, saveSession,
         </main>
 
         {/* FOOTER */}
-        <footer className="shrink-0 py-4 px-6 text-[11px] text-slate-500 dark:text-slate-400 flex flex-col sm:flex-row justify-between items-center gap-2 max-w-7xl mx-auto w-full" style={{ backgroundColor: 'var(--header-bg)', borderTop: '1px solid var(--header-border)' }}
+        <footer className="shrink-0 py-4 px-6 text-[11px] text-neutral-600 dark:text-neutral-400 transition-colors flex flex-col sm:flex-row justify-between items-center gap-2 max-w-7xl mx-auto w-full" style={{ backgroundColor: 'var(--header-bg)', borderTop: '1px solid var(--header-border)' }}
         >
           <span>Copyright © 2026 Abdelghanem Enterprise Automation • All rights reserved.</span>
           <div className="flex gap-4">
-            <a href="#about" className="hover:text-slate-900 dark:hover:text-slate-200 ">About SaaS API</a>
-            <a href="#terms" className="hover:text-slate-900 dark:hover:text-slate-200 ">Terms of Service</a>
-            <a href="#contact" className="hover:text-slate-900 dark:hover:text-slate-200 ">Contact Operator Support</a>
+            <a href="#about" className="hover:text-black dark:hover:text-white">About SaaS API</a>
+            <a href="#terms" className="hover:text-black dark:hover:text-white">Terms of Service</a>
+            <a href="#contact" className="hover:text-black dark:hover:text-white">Contact Operator Support</a>
           </div>
         </footer>
 
@@ -515,7 +531,7 @@ import { getSavedToken, getSavedTenant, getSavedUser, clearSession, saveSession,
               </span>
               <span>{toast.message}</span>
             </div>
-            <button onClick={() => setToasts(prev => prev.filter(t => t.id !== toast.id))} className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors p-1"
+            <button onClick={() => setToasts(prev => prev.filter(t => t.id !== toast.id))} className="text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white transition-colors p-1"
             >
               <X className="w-3.5 h-3.5" />
             </button>
