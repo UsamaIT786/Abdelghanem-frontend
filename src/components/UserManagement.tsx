@@ -56,7 +56,7 @@ import React, { useState, useEffect } from 'react'; import { User, UserRole } fr
       console.warn("Optimistic delete network failure:", err);
     }
   };
-  const roleColors: Record<string, string> = { Admin: 'bg-black dark:bg-white text-white dark:text-black/10 text-purple-400 border-black dark:border-white/20', Operator: 'bg-black dark:bg-white text-white dark:text-black/10 text-blue-400 border-black dark:border-white/20', Marketer: 'bg-amber-500/10 text-amber-400 border-amber-500/20', Technician: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+  const roleColors: Record<string, string> = { Admin: 'bg-indigo-600 dark:bg-indigo-500 text-white/10 text-purple-400 border-black dark:border-white/20', Operator: 'bg-indigo-600 dark:bg-indigo-500 text-white/10 text-blue-400 border-black dark:border-white/20', Marketer: 'bg-amber-500/10 text-amber-400 border-amber-500/20', Technician: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
   };
   const filtered = users.filter(u => u.name.toLowerCase().includes(search.toLowerCase()) || u.email.toLowerCase().includes(search.toLowerCase()) || u.role.toLowerCase().includes(search.toLowerCase())
   ); return (
@@ -81,11 +81,11 @@ import React, { useState, useEffect } from 'react'; import { User, UserRole } fr
 
       {/* Header */}
       <div className="relative overflow-hidden rounded-2xl from-white dark:from-slate-900 via-slate-50 dark:via-slate-800 to-white dark:to-slate-900 p-6 md:p-8 shadow-2xl border border-slate-200 dark:border-slate-700 /50">
-        <div className="absolute -top-20 -right-20 w-72 h-72 bg-black dark:bg-white text-white dark:text-black/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-20 -left-20 w-72 h-72 bg-black dark:bg-white text-white dark:text-black/10 rounded-full blur-3xl" />
+        <div className="absolute -top-20 -right-20 w-72 h-72 bg-indigo-600 dark:bg-indigo-500 text-white/10 rounded-full blur-3xl" />
+        <div className="absolute -bottom-20 -left-20 w-72 h-72 bg-indigo-600 dark:bg-indigo-500 text-white/10 rounded-full blur-3xl" />
         <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-5">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-black dark:bg-white text-white dark:text-black flex items-center justify-center text-white shadow-xl shadow-purple-500/30 ring-2 ring-white/10">
+            <div className="w-14 h-14 rounded-2xl bg-indigo-600 dark:bg-indigo-500 text-white flex items-center justify-center text-white shadow-xl shadow-purple-500/30 ring-2 ring-white/10">
               <Users className="w-7 h-7" />
             </div>
             <div>
@@ -93,7 +93,7 @@ import React, { useState, useEffect } from 'react'; import { User, UserRole } fr
               <p className="text-sm text-neutral-600 dark:text-neutral-400 transition-colors mt-0.5">Manage system users, roles & permissions</p>
             </div>
           </div>
-          <button onClick={() => { resetForm(); setShowCreateForm(true); setEditingUser(null); }} className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-black dark:bg-white text-white dark:text-black text-white text-xs font-bold transition-all shadow-lg shadow-black/5 dark:shadow-white/5 hover:bg-black dark:bg-white text-white dark:text-black hover:">
+          <button onClick={() => { resetForm(); setShowCreateForm(true); setEditingUser(null); }} className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 dark:bg-indigo-500 text-white text-white text-xs font-bold transition-all shadow-lg shadow-black/5 dark:shadow-white/5 hover:bg-indigo-600 dark:bg-indigo-500 text-white hover:">
             <Plus className="w-4 h-4" /> Add User
           </button>
         </div>
@@ -144,7 +144,7 @@ import React, { useState, useEffect } from 'react'; import { User, UserRole } fr
               </div>
             </div>
             <div className="flex gap-2 pt-2">
-              <button type="submit" className="flex-1 px-5 py-2.5 rounded-xl bg-black dark:bg-white text-white dark:text-black hover:bg-black dark:bg-white text-white dark:text-black hover: text-white text-sm font-bold shadow-lg shadow-black/5 dark:shadow-white/5 flex items-center justify-center gap-2">
+              <button type="submit" className="flex-1 px-5 py-2.5 rounded-xl bg-indigo-600 dark:bg-indigo-500 text-white hover:bg-indigo-600 dark:bg-indigo-500 text-white hover: text-white text-sm font-bold shadow-lg shadow-black/5 dark:shadow-white/5 flex items-center justify-center gap-2">
                 <Check className="w-4 h-4" /> {editingUser ? 'Save Changes' : 'Create User'}
               </button>
               <button type="button" onClick={() => { setShowCreateForm(false); setEditingUser(null); resetForm(); }} className="px-5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/50 hover:bg-neutral-100 dark:hover:bg-neutral-900 text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white text-sm font-semibold border border-slate-200 dark:border-slate-700 /50">Cancel</button>
@@ -172,7 +172,7 @@ import React, { useState, useEffect } from 'react'; import { User, UserRole } fr
             {filtered.map(user => (
               <div key={user.id} className="group flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 /30 hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors /50 hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-all duration-200">
                 <div className="flex items-center gap-4 min-w-0 flex-1">
-                  <div className="w-10 h-10 rounded-xl bg-black dark:bg-white text-white dark:text-black/20 /20 flex items-center justify-center shrink-0 border border-black dark:border-white/10">
+                  <div className="w-10 h-10 rounded-xl bg-indigo-600 dark:bg-indigo-500 text-white/20 /20 flex items-center justify-center shrink-0 border border-black dark:border-white/10">
                     {user.avatar ? (
                       <img src={user.avatar} alt="" className="w-full h-full rounded-xl object-cover" />
                     ) : (
@@ -223,7 +223,7 @@ import React, { useState, useEffect } from 'react'; import { User, UserRole } fr
               { role: 'Technician', desc: 'Field operations', perms: 'View tasks, update job status' },
             ].map(r => (
               <div key={r.role} className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 /30">
-                <div className="w-8 h-8 rounded-lg bg-black dark:bg-white text-white dark:text-black/10 flex items-center justify-center shrink-0"><Shield className="w-4 h-4 text-neutral-500 dark:text-neutral-400" /></div>
+                <div className="w-8 h-8 rounded-lg bg-indigo-600 dark:bg-indigo-500 text-white/10 flex items-center justify-center shrink-0"><Shield className="w-4 h-4 text-neutral-500 dark:text-neutral-400" /></div>
                 <div><span className="text-xs font-semibold text-slate-900 dark:text-white">{r.role}</span><p className="text-[9px] text-neutral-600 dark:text-neutral-400 transition-colors mt-0.5">{r.desc} — {r.perms}</p></div>
               </div>
             ))}

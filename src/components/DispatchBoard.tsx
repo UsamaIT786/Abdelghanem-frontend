@@ -128,7 +128,7 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
             }`}
           > All Workforces
           </button>
-          <button onClick={() => setActiveUnit('full_home_renovation')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'full_home_renovation' ? 'bg-black dark:bg-white text-white dark:text-black text-white shadow-sm' : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white '
+          <button onClick={() => setActiveUnit('full_home_renovation')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'full_home_renovation' ? 'bg-indigo-600 dark:bg-indigo-500 text-white text-white shadow-sm' : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white '
             }`}
           > Full Home
           </button>
@@ -148,7 +148,7 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
             }`}
           > Extension
           </button>
-          <button onClick={() => setActiveUnit('multi_unit')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'multi_unit' ? 'bg-black dark:bg-white text-white dark:text-black text-white shadow-sm' : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white '
+          <button onClick={() => setActiveUnit('multi_unit')} className={`px-3 py-1.5 rounded-lg font-semibold transition ${ activeUnit === 'multi_unit' ? 'bg-indigo-600 dark:bg-indigo-500 text-white text-white shadow-sm' : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white '
             }`}
           > Multi Unit
           </button>
@@ -232,7 +232,7 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
             </div>
           </div>
 
-          <button type="submit" className="w-full bg-black dark:bg-white text-white dark:text-black text-white font-bold text-xs py-2.5 rounded-lg hover:bg-black dark:bg-white text-white dark:text-black transition shadow"
+          <button type="submit" className="w-full bg-indigo-600 dark:bg-indigo-500 text-white text-white font-bold text-xs py-2.5 rounded-lg hover:bg-indigo-600 dark:bg-indigo-500 text-white transition shadow"
           > Confirm Dispatch and Update Schedule Grid
           </button>
         </form>
@@ -240,7 +240,7 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
 
       {/* Edit Task Modal */}
       {editingTask && (
-        <form onSubmit={handleSaveEditTask} className="bg-black dark:bg-white text-white dark:text-black dark:bg-black dark:bg-white text-white dark:text-black/30 dark:/30 p-5 rounded-xl border border-blue-200 dark:border-blue-800 space-y-4 animate-fade-in">
+        <form onSubmit={handleSaveEditTask} className="bg-indigo-600 dark:bg-indigo-500 text-white dark:bg-indigo-600 dark:bg-indigo-500 text-white/30 dark:/30 p-5 rounded-xl border border-blue-200 dark:border-blue-800 space-y-4 animate-fade-in">
           <div className="flex justify-between items-center">
             <span className="text-xs font-extrabold uppercase tracking-widest flex items-center gap-1.5" style={{ color: 'var(--text-primary)' }}>
               <Pencil className="w-3.5 h-3.5 text-black dark:text-white" /> Edit Task: {editingTask.client}
@@ -317,7 +317,7 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
           </div>
 
           <div className="flex gap-2">
-            <button type="submit" className="flex-1 bg-black dark:bg-white text-white dark:text-black hover:opacity-95 text-white font-bold text-xs py-2.5 rounded-lg shadow transition"
+            <button type="submit" className="flex-1 bg-indigo-600 dark:bg-indigo-500 text-white hover:opacity-95 text-white font-bold text-xs py-2.5 rounded-lg shadow transition"
             >
               <Pencil className="w-3.5 h-3.5 inline mr-1" /> Save Task Changes
             </button>
@@ -336,7 +336,7 @@ import { fetchLiveTasks, createLiveTask, updateLiveTask, deleteLiveTask, getSave
         >
           <div className="flex justify-between items-center">
             <span className="text-xs font-bold uppercase tracking-widest block" style={{ color: 'var(--text-primary)' }}>Active Operations Dispatch Board</span>
-            <button onClick={() => setShowDispatchForm(true)} className="px-3 py-1.5 rounded-lg bg-black dark:bg-white text-white dark:text-black font-bold hover:bg-black dark:bg-white text-white dark:text-black text-white text-[11px] flex items-center gap-1 transition shadow-sm"
+            <button onClick={() => setShowDispatchForm(true)} className="px-3 py-1.5 rounded-lg bg-indigo-600 dark:bg-indigo-500 text-white font-bold hover:bg-indigo-600 dark:bg-indigo-500 text-white text-white text-[11px] flex items-center gap-1 transition shadow-sm"
             >
               <UserPlus className="w-3.5 h-3.5" />
               <span>Dispatch Callout</span>

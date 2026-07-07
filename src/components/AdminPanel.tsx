@@ -12,18 +12,18 @@ import { fetchLiveLogs, initLiveWebSocket } from '../lib/api'; interface AdminPa
     }); return () => ws.close();
   }, []); const triggerLogsRefresh = () => { setIsRefreshing(true); loadData().finally(() => setTimeout(() => setIsRefreshing(false), 500));
   };
-  const successCount = logs.filter(l => l.status === 'success').length; const warningCount = logs.filter(l => l.status === 'warning').length; const errorCount = logs.filter(l => l.status === 'error').length; const activeStyles: Record<string, string> = { all: ' bg-black dark:bg-white text-white dark:text-black  text-white shadow-lg shadow-black/5 dark:shadow-white/5', full_home_renovation: ' from-rose-500 to-pink-600 text-white shadow-lg shadow-rose-500/30', kitchen_renovation: ' from-teal-500 to-emerald-600 text-white shadow-lg shadow-teal-500/30', bathroom_renovation: ' from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/30', granny_flat: ' bg-black dark:bg-white text-white dark:text-black  text-white shadow-lg shadow-blue-500/30', extension: ' from-cyan-500  text-white shadow-lg shadow-cyan-500/30', multi_unit: ' bg-black dark:bg-white text-white dark:text-black to-fuchsia-600 text-white shadow-lg shadow-purple-500/30', new_luxe_homes: ' from-slate-700 to-slate-900 text-white shadow-lg shadow-slate-700/30' };
+  const successCount = logs.filter(l => l.status === 'success').length; const warningCount = logs.filter(l => l.status === 'warning').length; const errorCount = logs.filter(l => l.status === 'error').length; const activeStyles: Record<string, string> = { all: ' bg-indigo-600 dark:bg-indigo-500 text-white  text-white shadow-lg shadow-black/5 dark:shadow-white/5', full_home_renovation: ' from-rose-500 to-pink-600 text-white shadow-lg shadow-rose-500/30', kitchen_renovation: ' from-teal-500 to-emerald-600 text-white shadow-lg shadow-teal-500/30', bathroom_renovation: ' from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/30', granny_flat: ' bg-indigo-600 dark:bg-indigo-500 text-white  text-white shadow-lg shadow-blue-500/30', extension: ' from-cyan-500  text-white shadow-lg shadow-cyan-500/30', multi_unit: ' bg-indigo-600 dark:bg-indigo-500 text-white to-fuchsia-600 text-white shadow-lg shadow-purple-500/30', new_luxe_homes: ' from-slate-700 to-slate-900 text-white shadow-lg shadow-slate-700/30' };
   const activeStyle = activeStyles[currentTenant as keyof typeof activeStyles] || activeStyles.all; return (
     <div className="space-y-6 max-w-7xl mx-auto">
       
       {/* Header - Premium Dark Gradient */}
       <div className="relative overflow-hidden rounded-2xl from-white dark:from-slate-900 via-slate-50 dark:via-slate-800 to-white dark:to-slate-900 p-6 md:p-8 shadow-2xl border border-slate-200 dark:border-slate-700 /50">
-        <div className="absolute -top-20 -right-20 w-72 h-72 bg-black dark:bg-white text-white dark:text-black/10 rounded-full blur-3xl" />
+        <div className="absolute -top-20 -right-20 w-72 h-72 bg-indigo-600 dark:bg-indigo-500 text-white/10 rounded-full blur-3xl" />
         <div className="absolute -bottom-20 -left-20 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl" />
         
         <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-5">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-black dark:bg-white text-white dark:text-black flex items-center justify-center text-white shadow-xl shadow-black/5 dark:shadow-white/5 ring-2 ring-white/10">
+            <div className="w-14 h-14 rounded-2xl bg-indigo-600 dark:bg-indigo-500 text-white flex items-center justify-center text-white shadow-xl shadow-black/5 dark:shadow-white/5 ring-2 ring-white/10">
               <Shield className="w-7 h-7" />
             </div>
             <div>
@@ -68,9 +68,9 @@ import { fetchLiveLogs, initLiveWebSocket } from '../lib/api'; interface AdminPa
         </div>
 
         <div className="group relative overflow-hidden rounded-2xl from-white dark:from-slate-900 to-slate-50 dark:to-slate-800 border border-slate-200 dark:border-slate-700 /50 p-5 hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors /50 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl">
-          <div className="absolute top-0 right-0 w-40 h-40 bg-black dark:bg-white text-white dark:text-black/10 to-transparent rounded-full -mr-16 -mt-16" />
+          <div className="absolute top-0 right-0 w-40 h-40 bg-indigo-600 dark:bg-indigo-500 text-white/10 to-transparent rounded-full -mr-16 -mt-16" />
           <div className="flex items-start justify-between mb-3">
-            <div className="w-10 h-10 rounded-xl bg-black dark:bg-white text-white dark:text-black flex items-center justify-center shadow-lg shadow-black/5 dark:shadow-white/5">
+            <div className="w-10 h-10 rounded-xl bg-indigo-600 dark:bg-indigo-500 text-white flex items-center justify-center shadow-lg shadow-black/5 dark:shadow-white/5">
               <Database className="w-5 h-5 text-slate-900 dark:text-white" />
             </div>
           </div>
@@ -113,7 +113,7 @@ import { fetchLiveLogs, initLiveWebSocket } from '../lib/api'; interface AdminPa
           { id: 'system', label: 'System Health', icon: Activity },
         ].map(tab => (
           <button key={tab.id} onClick={() => setActiveTab(tab.id as any)} className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 ${ activeTab === tab.id
-                ? ' bg-black dark:bg-white text-white dark:text-black  text-white shadow-lg shadow-black/5 dark:shadow-white/5'
+                ? ' bg-indigo-600 dark:bg-indigo-500 text-white  text-white shadow-lg shadow-black/5 dark:shadow-white/5'
                 : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-900 '
             }`}>
             <tab.icon className="w-3.5 h-3.5" />
@@ -222,7 +222,7 @@ import { fetchLiveLogs, initLiveWebSocket } from '../lib/api'; interface AdminPa
     </div>
   );
 }
-  function ActionButton({ icon: Icon, label, desc, action, color }: { icon: any; label: string; desc: string; action: string; color: string }) { const colorMap: Record<string, { bg: string; text: string; badge: string }> = { indigo: { bg: 'bg-black dark:bg-white text-white dark:text-black/10', text: 'text-neutral-500 dark:text-neutral-400', badge: 'bg-black dark:bg-white text-white dark:text-black/10 text-neutral-500 dark:text-neutral-400' }, emerald: { bg: 'bg-emerald-500/10', text: 'text-emerald-400', badge: 'bg-emerald-500/10 text-emerald-400' }, amber: { bg: 'bg-amber-500/10', text: 'text-amber-400', badge: 'bg-amber-500/10 text-amber-400' }, purple: { bg: 'bg-black dark:bg-white text-white dark:text-black/10', text: 'text-purple-400', badge: 'bg-black dark:bg-white text-white dark:text-black/10 text-purple-400' },
+  function ActionButton({ icon: Icon, label, desc, action, color }: { icon: any; label: string; desc: string; action: string; color: string }) { const colorMap: Record<string, { bg: string; text: string; badge: string }> = { indigo: { bg: 'bg-indigo-600 dark:bg-indigo-500 text-white/10', text: 'text-neutral-500 dark:text-neutral-400', badge: 'bg-indigo-600 dark:bg-indigo-500 text-white/10 text-neutral-500 dark:text-neutral-400' }, emerald: { bg: 'bg-emerald-500/10', text: 'text-emerald-400', badge: 'bg-emerald-500/10 text-emerald-400' }, amber: { bg: 'bg-amber-500/10', text: 'text-amber-400', badge: 'bg-amber-500/10 text-amber-400' }, purple: { bg: 'bg-indigo-600 dark:bg-indigo-500 text-white/10', text: 'text-purple-400', badge: 'bg-indigo-600 dark:bg-indigo-500 text-white/10 text-purple-400' },
   };
   const c = colorMap[color] || colorMap.indigo; return (
     <button className="group w-full flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 /30 hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors /50 hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-all duration-200 text-left">

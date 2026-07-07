@@ -65,7 +65,7 @@ export interface SmartPDFAttachment {
 export interface AdCampaign {
   id: string;
   title: string;
-  platform: 'Facebook' | 'Instagram' | 'Meta' | 'Google' | 'Email' | 'SEO Blog' | 'WordPress';
+  platform: 'Facebook' | 'Instagram' | 'Meta' | 'Google' | 'Email' | 'SEO Blog' | 'WordPress' | 'seo_google_ads_wordpress' | 'Scenario B+C';
   generatedCopy: string;
   hashtags: string[];
   status: 'Draft' | 'Pending Approval' | 'Approved' | 'Published' | 'Live';

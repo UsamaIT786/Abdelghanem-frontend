@@ -83,11 +83,11 @@ import { fetchLiveDocuments, uploadLiveDocument, updateLiveDocument, deleteLiveD
 
       {/* Header - Premium Dark Gradient (matches AdminPanel) */}
       <div className="relative overflow-hidden rounded-2xl from-white dark:from-slate-900 via-slate-50 dark:via-slate-800 to-white dark:to-slate-900 p-6 md:p-8 shadow-2xl border border-slate-200 dark:border-slate-700 /50">
-        <div className="absolute -top-20 -right-20 w-72 h-72 bg-black dark:bg-white text-white dark:text-black/10 rounded-full blur-3xl" />
+        <div className="absolute -top-20 -right-20 w-72 h-72 bg-indigo-600 dark:bg-indigo-500 text-white/10 rounded-full blur-3xl" />
         <div className="absolute -bottom-20 -left-20 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl" />
         <div className="relative z-10">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-black dark:bg-white text-white dark:text-black to-cyan-500 flex items-center justify-center text-white shadow-xl shadow-black/5 dark:shadow-white/5 ring-2 ring-white/10">
+            <div className="w-14 h-14 rounded-2xl bg-indigo-600 dark:bg-indigo-500 text-white to-cyan-500 flex items-center justify-center text-white shadow-xl shadow-black/5 dark:shadow-white/5 ring-2 ring-white/10">
               <BrainCircuit className="w-7 h-7" />
             </div>
             <div>
@@ -135,7 +135,7 @@ import { fetchLiveDocuments, uploadLiveDocument, updateLiveDocument, deleteLiveD
               <input type="number" min="0" max="100" className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 /50 text-slate-900 dark:text-white text-sm focus:border-black dark:border-white/50 focus:ring-1 focus:ring-black dark:ring-white/20 outline-none transition-all" value={editConfidence} onChange={e => setEditConfidence(e.target.value)} />
             </div>
             <div className="flex gap-2 pt-2">
-              <button type="submit" className="flex-1 px-5 py-2.5 rounded-xl bg-black dark:bg-white text-white dark:text-black hover:bg-black dark:bg-white text-white dark:text-black hover: text-white text-sm font-bold transition-all shadow-lg shadow-black/5 dark:shadow-white/5 flex items-center justify-center gap-2">
+              <button type="submit" className="flex-1 px-5 py-2.5 rounded-xl bg-indigo-600 dark:bg-indigo-500 text-white hover:bg-indigo-600 dark:bg-indigo-500 text-white hover: text-white text-sm font-bold transition-all shadow-lg shadow-black/5 dark:shadow-white/5 flex items-center justify-center gap-2">
                 <CheckCircle className="w-4 h-4" /> Save Changes
               </button>
               <button type="button" onClick={() => setEditingDoc(null)} className="px-5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/50 hover:bg-neutral-100 dark:hover:bg-neutral-900 text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white text-sm font-semibold transition-all border border-slate-200 dark:border-slate-700 /50">Discard</button>
@@ -153,7 +153,7 @@ import { fetchLiveDocuments, uploadLiveDocument, updateLiveDocument, deleteLiveD
           {/* Upload Zone - Premium Dark */}
           <div className="relative overflow-hidden rounded-2xl from-white dark:from-slate-900 to-slate-50 dark:to-slate-800 border border-slate-200 dark:border-slate-700 /50 p-8 cursor-pointer group text-center hover:border-black dark:border-white/30 transition-all duration-300">
             <input type="file" accept=".pdf" onChange={simulateNewPdfUpload} className="absolute inset-0 opacity-0 cursor-pointer z-10" disabled={isUploading} />
-            <div className="w-16 h-16 rounded-2xl bg-black dark:bg-white text-white dark:text-black/20 to-cyan-500/20 border border-black dark:border-white/10 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+            <div className="w-16 h-16 rounded-2xl bg-indigo-600 dark:bg-indigo-500 text-white/20 to-cyan-500/20 border border-black dark:border-white/10 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
               <Upload className="w-7 h-7 text-neutral-500 dark:text-neutral-400" />
             </div>
             <span className="text-base font-bold text-slate-900 dark:text-white block">Drop PDF or click to upload</span>
@@ -164,7 +164,7 @@ import { fetchLiveDocuments, uploadLiveDocument, updateLiveDocument, deleteLiveD
                 <Loader2 className="w-10 h-10 text-neutral-500 dark:text-neutral-400 animate-spin mb-4" />
                 <span className="text-sm font-bold text-slate-900 dark:text-white mb-3">AI Processing Document...</span>
                 <div className="w-full max-w-xs bg-slate-50 dark:bg-slate-900/50 h-2.5 rounded-full overflow-hidden">
-                  <div className="h-full rounded-full bg-black dark:bg-white text-white dark:text-black to-cyan-500 transition-all duration-300" style={{ width: `${uploadProgress}%` }} />
+                  <div className="h-full rounded-full bg-indigo-600 dark:bg-indigo-500 text-white to-cyan-500 transition-all duration-300" style={{ width: `${uploadProgress}%` }} />
                 </div>
               </div>
             )}
@@ -183,7 +183,7 @@ import { fetchLiveDocuments, uploadLiveDocument, updateLiveDocument, deleteLiveD
             <div className="space-y-1">
               {attachments.map(att => (
                 <div key={att.id} onClick={() => setSelectedPdf(att)} className={`flex items-center justify-between p-3.5 rounded-xl cursor-pointer transition-all duration-200 ${ selectedPdf?.id === att.id 
-                      ? 'bg-black dark:bg-white text-white dark:text-black/10 border border-black dark:border-white/20' 
+                      ? 'bg-indigo-600 dark:bg-indigo-500 text-white/10 border border-black dark:border-white/20' 
                       : 'hover:bg-neutral-100 dark:hover:bg-neutral-900 border border-transparent'
                   }`}>
                   <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -238,7 +238,7 @@ import { fetchLiveDocuments, uploadLiveDocument, updateLiveDocument, deleteLiveD
                 <div className="space-y-3 flex-1 overflow-y-auto">
                   {/* Client */}
                   <div className="flex items-start gap-3.5 p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 /30">
-                    <div className="w-9 h-9 rounded-lg bg-black dark:bg-white text-white dark:text-black/10 flex items-center justify-center shrink-0"><Building className="w-4 h-4 text-neutral-500 dark:text-neutral-400" /></div>
+                    <div className="w-9 h-9 rounded-lg bg-indigo-600 dark:bg-indigo-500 text-white/10 flex items-center justify-center shrink-0"><Building className="w-4 h-4 text-neutral-500 dark:text-neutral-400" /></div>
                     <div><span className="text-[9px] uppercase font-bold text-neutral-600 dark:text-neutral-400 transition-colors block mb-0.5">Client</span><span className="text-sm font-semibold text-slate-900 dark:text-white">{selectedPdf.extractedData?.clientName || 'N/A'}</span></div>
                   </div>
                   {/* Site */}
@@ -271,7 +271,7 @@ import { fetchLiveDocuments, uploadLiveDocument, updateLiveDocument, deleteLiveD
                     <ul className="space-y-2">
                       {selectedPdf.extractedData?.items?.map((item, id) => (
                         <li key={id} className="text-[11px] text-neutral-600 dark:text-neutral-400 transition-colors flex items-start gap-2.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-black dark:bg-white text-white dark:text-black mt-1.5 shrink-0" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-indigo-600 dark:bg-indigo-500 text-white mt-1.5 shrink-0" />
                           {item}
                         </li>
                       ))}
@@ -283,7 +283,7 @@ import { fetchLiveDocuments, uploadLiveDocument, updateLiveDocument, deleteLiveD
                 <button onClick={async () => { try { const { createLiveContact, createLiveDeal } = await import('../lib/api'); if (selectedPdf?.extractedData?.clientName) { await createLiveContact({ name: selectedPdf.extractedData.clientName, company: selectedPdf.extractedData.clientName, email: `${selectedPdf.extractedData.clientName.toLowerCase().replace(/\\s/g,'')}@email.com`, phone: '07700 900550', status: 'Lead', revenue: parseInt(selectedPdf.extractedData.totalAmount?.replace(/[^0-9]/g,'') || '0') || 1000, tenant: selectedPdf.extractedData.boilerModel ? 'full_home_renovation' : selectedPdf.extractedData.screedThickness ? 'extension' : 'kitchen_renovation' }); await createLiveDeal({ title: `Work Bundle - ${selectedPdf.extractedData.clientName}`, company: selectedPdf.extractedData.clientName, value: parseInt(selectedPdf.extractedData.totalAmount?.replace(/[^0-9]/g,'') || '0') || 1000, stage: 'Lead', tenant: selectedPdf.extractedData.boilerModel ? 'full_home_renovation' : selectedPdf.extractedData.screedThickness ? 'extension' : 'kitchen_renovation' }); alert('✅ Pushed to CRM!');
                     }
                   } catch (err) { alert('Error: ' + err); }
-                }} className="w-full mt-4 px-5 py-3 rounded-xl bg-black dark:bg-white text-white dark:text-black hover:bg-black dark:bg-white text-white dark:text-black hover: text-white text-sm font-bold transition-all shadow-lg shadow-black/5 dark:shadow-white/5 flex items-center justify-center gap-2">
+                }} className="w-full mt-4 px-5 py-3 rounded-xl bg-indigo-600 dark:bg-indigo-500 text-white hover:bg-indigo-600 dark:bg-indigo-500 text-white hover: text-white text-sm font-bold transition-all shadow-lg shadow-black/5 dark:shadow-white/5 flex items-center justify-center gap-2">
                   <CheckCircle className="w-4 h-4" /> Push to CRM Pipeline
                 </button>
 

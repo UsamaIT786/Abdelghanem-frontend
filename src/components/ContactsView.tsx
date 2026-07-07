@@ -262,7 +262,7 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
           </select>
 
           {activeSubTab === 'contacts' && (
-            <button onClick={() => setShowAddContact(true)} className="px-3 py-1.5 rounded-lg bg-black dark:bg-white text-white dark:text-black text-white font-semibold text-xs flex items-center gap-1 hover:bg-black dark:bg-white text-white dark:text-black transition shadow-sm"
+            <button onClick={() => setShowAddContact(true)} className="px-3 py-1.5 rounded-lg bg-indigo-600 dark:bg-indigo-500 text-white text-white font-semibold text-xs flex items-center gap-1 hover:bg-indigo-600 dark:bg-indigo-500 text-white transition shadow-sm"
             >
               <UserPlus className="w-3.5 h-3.5" />
               <span>Add Client</span>
@@ -350,7 +350,7 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
 
           {/* Edit Contact Modal */}
           {editingContact && (
-            <form onSubmit={handleSaveEditContact} className="bg-black dark:bg-white text-white dark:text-black dark:bg-black dark:bg-white text-white dark:text-black/30 dark:/30 p-5 rounded-xl border border-blue-200 dark:border-blue-800 space-y-4 animate-scale-in">
+            <form onSubmit={handleSaveEditContact} className="bg-indigo-600 dark:bg-indigo-500 text-white dark:bg-indigo-600 dark:bg-indigo-500 text-white/30 dark:/30 p-5 rounded-xl border border-blue-200 dark:border-blue-800 space-y-4 animate-scale-in">
               <div className="flex justify-between items-center">
                 <span className="text-xs font-extrabold uppercase tracking-widest flex items-center gap-1.5" style={{ color: 'var(--text-primary)' }}>
                   <Pencil className="w-3.5 h-3.5 text-black dark:text-white" /> Edit Contact: {editingContact.name}
@@ -417,7 +417,7 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
               </div>
 
               <div className="flex gap-2">
-                <button type="submit" className="flex-1 bg-black dark:bg-white text-white dark:text-black hover:opacity-95 text-white font-bold text-xs py-2.5 rounded-lg shadow transition"
+                <button type="submit" className="flex-1 bg-indigo-600 dark:bg-indigo-500 text-white hover:opacity-95 text-white font-bold text-xs py-2.5 rounded-lg shadow transition"
                 >
                   <Check className="w-3.5 h-3.5 inline mr-1" /> Save Changes
                 </button>
@@ -493,7 +493,7 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
                       </div>
                       <span className={`status-chip ${ c.status === 'Won' ? 'status-chip-won' : c.status === 'Contract' ? 'status-chip-contract' : c.status === 'Proposal' ? 'status-chip-proposal' : c.status === 'Contacted' ? 'status-chip-contacted' : 'status-chip-leads'
                       }`}>
-                        <span className={`status-dot ${ c.status === 'Won' ? 'bg-emerald-500' : c.status === 'Contract' ? 'bg-black dark:bg-white text-white dark:text-black' : c.status === 'Proposal' ? 'bg-amber-500' : c.status === 'Contacted' ? 'bg-black dark:bg-white text-white dark:text-black' : 'bg-slate-400'
+                        <span className={`status-dot ${ c.status === 'Won' ? 'bg-emerald-500' : c.status === 'Contract' ? 'bg-indigo-600 dark:bg-indigo-500 text-white' : c.status === 'Proposal' ? 'bg-amber-500' : c.status === 'Contacted' ? 'bg-indigo-600 dark:bg-indigo-500 text-white' : 'bg-slate-400'
                         }`} />
                         {c.status}
                       </span>
@@ -518,7 +518,7 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
         <div className="space-y-6">
           {/* Edit Deal Modal */}
           {editingDeal && (
-            <form onSubmit={handleSaveEditDeal} className="bg-black dark:bg-white text-white dark:text-black dark:bg-black dark:bg-white text-white dark:text-black/30 dark:/30 p-5 rounded-xl border border-purple-200 dark:border-purple-800 space-y-4 animate-scale-in">
+            <form onSubmit={handleSaveEditDeal} className="bg-indigo-600 dark:bg-indigo-500 text-white dark:bg-indigo-600 dark:bg-indigo-500 text-white/30 dark:/30 p-5 rounded-xl border border-purple-200 dark:border-purple-800 space-y-4 animate-scale-in">
               <div className="flex justify-between items-center">
                 <span className="text-xs font-extrabold uppercase tracking-widest flex items-center gap-1.5" style={{ color: 'var(--text-primary)' }}>
                   <Pencil className="w-3.5 h-3.5 text-black dark:text-white" /> Edit Deal: {editingDeal.title}
@@ -562,7 +562,7 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
               </div>
 
               <div className="flex gap-2">
-                <button type="submit" className="flex-1 bg-black dark:bg-white text-white dark:text-black hover:opacity-95 text-white font-bold text-xs py-2.5 rounded-lg shadow transition"
+                <button type="submit" className="flex-1 bg-indigo-600 dark:bg-indigo-500 text-white hover:opacity-95 text-white font-bold text-xs py-2.5 rounded-lg shadow transition"
                 >
                   <Check className="w-3.5 h-3.5 inline mr-1" /> Save Deal Changes
                 </button>
@@ -603,7 +603,7 @@ import { fetchLiveContacts, fetchLiveDeals, createLiveContact, createLiveDeal, u
                         </div>
 
                         <div className="flex justify-between items-start">
-                          <span className={`w-2 h-2 rounded-full ${ deal.tenant === 'full_home_renovation' ? 'bg-black dark:bg-white text-white dark:text-black' : deal.tenant === 'kitchen_renovation' ? 'bg-amber-500' : deal.tenant === 'bathroom_renovation' ? 'bg-cyan-500' : deal.tenant === 'granny_flat' ? 'bg-violet-500' : deal.tenant === 'extension' ? 'bg-emerald-500' : deal.tenant === 'multi_unit' ? 'bg-black dark:bg-white text-white dark:text-black' : 'bg-slate-500'
+                          <span className={`w-2 h-2 rounded-full ${ deal.tenant === 'full_home_renovation' ? 'bg-indigo-600 dark:bg-indigo-500 text-white' : deal.tenant === 'kitchen_renovation' ? 'bg-amber-500' : deal.tenant === 'bathroom_renovation' ? 'bg-cyan-500' : deal.tenant === 'granny_flat' ? 'bg-violet-500' : deal.tenant === 'extension' ? 'bg-emerald-500' : deal.tenant === 'multi_unit' ? 'bg-indigo-600 dark:bg-indigo-500 text-white' : 'bg-slate-500'
                           }`} />
                           <span className="font-bold text-xs" style={{ color: 'var(--text-primary)' }}>£{deal.value?.toLocaleString()}</span>
                         </div>

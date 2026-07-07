@@ -928,10 +928,8 @@ app.post('/api/campaigns/:id/approve', async (req, res) => {
     let platformTarget = "meta_social";
     if (campaign.platform === "Meta" || campaign.platform === "Facebook" || campaign.platform === "Instagram") {
       platformTarget = "meta_social";
-    } else if (campaign.platform === "WordPress" || campaign.platform === "SEO Blog") {
-      platformTarget = "wordpress_seo";
-    } else if (campaign.platform === "Google") {
-      platformTarget = "google_ads";
+    } else if (campaign.platform === "WordPress" || campaign.platform === "SEO Blog" || campaign.platform === "Google" || campaign.platform === "seo_google_ads_wordpress" || campaign.platform === "Scenario B+C") {
+      platformTarget = "seo_google_ads_wordpress";
     }
 
     const generateAutoTags = (text: string) => {
@@ -955,35 +953,40 @@ app.post('/api/campaigns/:id/approve', async (req, res) => {
         media_url: campaign.mediaUrl || "",
         link: campaign.destinationLink || "https://luxehr.com.au"
       };
-    } else if (platformTarget === "wordpress_seo") {
+    } else if (platformTarget === "seo_google_ads_wordpress") {
       const generatedTags = generateAutoTags(campaign.generatedCopy || "");
       const cleanTags = generatedTags.map(t => t.replace('#', ''));
-      contentObj = {
-        title: campaign.title || "Professional Services Landing Page",
-        excerpt: campaign.generatedCopy ? campaign.generatedCopy.slice(0, 160) + "..." : "Expert services delivered.",
-        body_markdown: `## ${campaign.title}\n\n${campaign.generatedCopy || ""}`,
-        tags: campaign.blogTags && campaign.blogTags.length > 0 ? campaign.blogTags : cleanTags
-      };
-    } else if (platformTarget === "google_ads") {
       let headline = campaign.title || "Professional Services";
       if (headline.length > 30) headline = headline.substring(0, 27) + "...";
       let description = campaign.generatedCopy || "";
       if (description.length > 90) description = description.substring(0, 87) + "...";
       contentObj = {
+        title: campaign.title || "Professional Services Landing Page",
+        excerpt: campaign.generatedCopy ? campaign.generatedCopy.slice(0, 160) + "..." : "Expert services delivered.",
+        body_markdown: `## ${campaign.title}\n\n${campaign.generatedCopy || ""}`,
+        tags: campaign.blogTags && campaign.blogTags.length > 0 ? campaign.blogTags : cleanTags,
         budget: Number(campaign.budget) || 50.00,
         target_country: campaign.targetCountry || "AU",
         ad_headline: headline,
-        ad_description: description
+        ad_description: description,
+        keywords: campaign.keywords || ["home renovations sydney", "luxury renovations sydney", "renovation company sydney"],
+        image_style: "premium modern Sydney home renovation, architectural editorial photography"
       };
     }
 
-    const n8nPayload = {
+    const n8nPayload: any = {
       campaign_id: campaign.id || `camp_${platformTarget.slice(0, 2)}_${Date.now()}`,
-      workspace_id: platformTarget === 'meta_social' ? 'work_luxe_01' : (campaign.tenant || "heating"),
+      workspace_id: (platformTarget === 'meta_social' || platformTarget === 'seo_google_ads_wordpress') ? 'work_luxe_01' : (campaign.tenant || "heating"),
       platform_target: platformTarget,
       campaign_name: campaign.title,
       content: contentObj
     };
+    if (platformTarget === 'seo_google_ads_wordpress') {
+      n8nPayload.business_name = "Luxe Homes and Renovations";
+      n8nPayload.business_url = "https://luxehr.com.au/";
+      n8nPayload.location_name = "Sydney,New South Wales,Australia";
+      n8nPayload.language_code = "en";
+    }
 
     const webhookUrl = process.env.N8N_WEBHOOK_URL || process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL || "https://akigh90.app.n8n.cloud/webhook/crm-campaign-trigger";
 
@@ -1035,7 +1038,7 @@ app.post("/api/v1/automation/sync", async (req, res) => {
   if (!workspace_id) {
     return res.status(400).json({ error: "Missing authorization / workspace ID mapping" });
   }
-  if (!platform_target || !["meta_social", "wordpress_seo", "google_ads", "facebook", "seo_blog"].includes(platform_target)) {
+  if (!platform_target || !["meta_social", "wordpress_seo", "google_ads", "facebook", "seo_blog", "seo_google_ads_wordpress"].includes(platform_target)) {
     return res.status(400).json({ error: "Invalid or missing platform_target routing key" });
   }
   if (!campaign_name) {
@@ -1062,6 +1065,7 @@ app.post("/api/v1/automation/sync", async (req, res) => {
 
   const platformFriendly: Record<string, string> = {
     meta_social: "Meta",
+    seo_google_ads_wordpress: "Scenario B+C",
     google_ads: "Google",
     wordpress_seo: "SEO Blog",
     facebook: "Meta",

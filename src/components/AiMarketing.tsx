@@ -3,17 +3,16 @@ import { AdCampaign } from '../types';
 import { Sparkles, Trash2, ShieldCheck, Globe, AlertTriangle, Pencil, X, Rocket, Loader2, Check, Search, FileText, Tag, DollarSign, ChevronRight, Send, Zap, Activity, Image as ImageIcon, Instagram, LayoutTemplate, Upload
 } from 'lucide-react';
 import { fetchLiveCampaigns, generateLiveCampaign, updateLiveCampaign, approveLiveCampaign, deleteLiveCampaign, initLiveWebSocket, analyzeImageTags
-} from '../lib/api'; type ScenarioId = 'A' | 'B' | 'C';
+} from '../lib/api'; type ScenarioId = 'A' | 'BC';
 
 // Facebook icon (not in lucide, so inline SVG)
 const FacebookIcon = () => (
   <svg className="w-4 h-4 text-slate-900 dark:text-white" viewBox="0 0 24 24" fill="currentColor">
     <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
   </svg>
-); const SCENARIO_MAP = { A: { id: 'A' as ScenarioId, label: 'Meta Social Post', sub: 'Facebook + Instagram simultaneously', bgClass: 'bg-black dark:bg-white text-white dark:text-black ', badgeBg: 'bg-neutral-100 dark:bg-neutral-9000 text-black dark:text-white', borderActive: 'border-black dark:border-white bg-neutral-100 dark:bg-neutral-900', n8nTarget: 'meta_social', platform: 'Meta', description: 'Creates a post on BOTH Facebook and Instagram at the same time. AI writes a dual-platform caption with media image and destination link.', placeholder: 'Promote 10-year boiler warranties and 0% interest finance for new boiler installs. Drive inquiries for heating works.',
-  }, B: { id: 'B' as ScenarioId, label: 'DataForSEO + WordPress', sub: 'Landing page creation', bgClass: 'from-violet-600 ', badgeBg: 'bg-violet-100 text-violet-700', borderActive: 'border-violet-500 bg-violet-50', n8nTarget: 'wordpress_seo', platform: 'WordPress', description: 'Uses DataForSEO keyword analysis to create a fully optimised WordPress landing page with SEO metadata, body copy, and a CTA.', placeholder: 'Create a landing page for liquid screed flooring services targeting builders and contractors in London.',
-  }, C: { id: 'C' as ScenarioId, label: 'Google Ads Campaign', sub: 'Search & Display', bgClass: 'from-rose-600 to-orange-600', badgeBg: 'bg-rose-100 text-rose-700', borderActive: 'border-rose-500 bg-rose-50', n8nTarget: 'google_ads', platform: 'Google', description: 'Triggers a Google Ads Search campaign. Headline is auto-constrained to <=30 chars, description to <=90 chars per Google Ads policy.', placeholder: 'Drive leads for certified EV charger installation. Target homeowners and commercial properties.',
-  },
+); const SCENARIO_MAP = { A: { id: 'A' as ScenarioId, label: 'Meta Social Post', sub: 'Facebook + Instagram simultaneously', bgClass: 'bg-indigo-600 dark:bg-indigo-500 text-white ', badgeBg: 'bg-neutral-100 dark:bg-neutral-900 text-black dark:text-white', borderActive: 'border-black dark:border-white bg-neutral-100 dark:bg-neutral-900', n8nTarget: 'meta_social', platform: 'Meta', description: 'Creates a post on BOTH Facebook and Instagram at the same time. AI writes a dual-platform caption with media image and destination link.', placeholder: 'Promote 10-year boiler warranties and 0% interest finance for new boiler installs. Drive inquiries for heating works.',
+  }, BC: { id: 'BC' as ScenarioId, label: 'Scenario B+C: Full Funnel', sub: 'DataForSEO + WordPress + Google Ads', bgClass: 'from-violet-600 to-rose-600', badgeBg: 'bg-indigo-100 text-indigo-700', borderActive: 'border-indigo-500 bg-indigo-50', n8nTarget: 'seo_google_ads_wordpress', platform: 'seo_google_ads_wordpress', description: 'Unified full funnel strategy handling SEO landing pages and Google Ads together.', placeholder: 'Create a full funnel campaign for Sydney home renovations...',
+  }
 } as const; const TENANTS = [
   { value: 'full_home_renovation', label: 'Full Home Renovation' },
   { value: 'kitchen_renovation', label: 'Kitchen Renovation' },
@@ -31,12 +30,11 @@ const FacebookIcon = () => (
     </span>
   );
 }
-  function ScenarioPill({ platform }: { platform: string }) { if (platform === 'Meta' || platform === 'Facebook' || platform === 'Instagram') return <span className="text-[8px] bg-neutral-100 dark:bg-neutral-9000 text-black dark:text-white px-1.5 py-0.5 rounded font-bold uppercase">A · Meta</span>; if (platform === 'WordPress' || platform === 'SEO Blog') return <span className="text-[8px] bg-violet-100 text-violet-700 px-1.5 py-0.5 rounded font-bold uppercase">B · WP</span>; if (platform === 'Google') return <span className="text-[8px] bg-rose-100 text-rose-700 px-1.5 py-0.5 rounded font-bold uppercase">C · Ads</span>; return <span className="text-[8px] bg-slate-100 dark:bg-slate-800 text-neutral-600 dark:text-neutral-400 transition-colors px-1.5 py-0.5 rounded font-bold uppercase">{platform}</span>;
+  function ScenarioPill({ platform }: { platform: string }) { if (platform === 'Meta' || platform === 'Facebook' || platform === 'Instagram') return <span className="text-[8px] bg-neutral-100 dark:bg-neutral-900 text-black dark:text-white px-1.5 py-0.5 rounded font-bold uppercase">A · Meta</span>; if (platform === 'seo_google_ads_wordpress' || platform === 'Scenario B+C') return <span className="text-[8px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-bold uppercase">BC · Full Funnel</span>; return <span className="text-[8px] bg-slate-100 dark:bg-slate-800 text-neutral-600 dark:text-neutral-400 transition-colors px-1.5 py-0.5 rounded font-bold uppercase">{platform}</span>;
 }
   function PayloadPreview({ campaign }: { campaign: AdCampaign }) { 
     const isMeta = campaign.platform === 'Meta' || campaign.platform === 'Facebook' || campaign.platform === 'Instagram'; 
-    const isWP = campaign.platform === 'WordPress' || campaign.platform === 'SEO Blog'; 
-    const isGoogle = campaign.platform === 'Google'; 
+    const isFullFunnel = campaign.platform === 'seo_google_ads_wordpress' || campaign.platform === 'Scenario B+C'; 
     let payload: any = {};
 
     const generateAutoTags = (text: string) => {
@@ -65,36 +63,33 @@ const FacebookIcon = () => (
           link: campaign.destinationLink || 'https://luxehr.com.au'
         }
       };
-    } else if (isWP) { 
-      const tags = generateAutoTags(campaign.generatedCopy || '');
-      const cleanTags = tags.map(t => t.replace('#', ''));
-      payload = { 
-        campaign_id: campaign.id, 
-        workspace_id: campaign.tenant || 'full_home_renovation', 
-        platform_target: 'wordpress_seo', 
-        campaign_name: campaign.title, 
-        content: { 
-          title: campaign.title, 
-          excerpt: (campaign.generatedCopy || '').slice(0, 60) + '...', 
-          body_markdown: '## Introduction...', 
-          tags: campaign.blogTags && campaign.blogTags.length > 0 ? campaign.blogTags : cleanTags
-        }
-      };
-    } else if (isGoogle) { 
+    } else if (isFullFunnel) { 
       let h = campaign.title || ''; 
       if (h.length > 30) h = h.substring(0, 27) + '...'; 
       let d = campaign.generatedCopy || ''; 
       if (d.length > 90) d = d.substring(0, 87) + '...'; 
+      const tags = generateAutoTags(campaign.generatedCopy || '');
+      const cleanTags = tags.map(t => t.replace('#', ''));
       payload = { 
         campaign_id: campaign.id, 
-        workspace_id: campaign.tenant || 'full_home_renovation', 
-        platform_target: 'google_ads', 
+        workspace_id: 'work_luxe_01', 
+        platform_target: 'seo_google_ads_wordpress', 
         campaign_name: campaign.title, 
+        business_name: "Luxe Homes and Renovations",
+        business_url: "https://luxehr.com.au/",
+        location_name: "Sydney,New South Wales,Australia",
+        language_code: "en",
         content: { 
+          title: campaign.title, 
+          excerpt: (campaign.generatedCopy || '').slice(0, 60) + '...', 
+          body_markdown: '## Introduction...', 
+          tags: campaign.blogTags && campaign.blogTags.length > 0 ? campaign.blogTags : cleanTags,
           budget: campaign.budget || 50, 
           target_country: campaign.targetCountry || 'AU', 
           ad_headline: h, 
-          ad_description: d
+          ad_description: d,
+          keywords: ["home renovations sydney", "luxury renovations sydney", "renovation company sydney"],
+          image_style: "premium modern Sydney home renovation, architectural editorial photography"
         }
       };
     }
@@ -104,7 +99,7 @@ const FacebookIcon = () => (
       <pre className="whitespace-pre-wrap break-all">{JSON.stringify(payload, null, 2)}</pre>
     </div>
   );
-} export default function AiMarketing() { const [campaigns, setCampaigns] = useState<AdCampaign[]>([]); const [selectedCampaign, setSelectedCampaign] = useState<AdCampaign | null>(null); const [loading, setLoading] = useState(true); const [activeScenario, setActiveScenario] = useState<ScenarioId>('A'); const sc = SCENARIO_MAP[activeScenario]; const ScIcon = activeScenario === 'A' ? FacebookIcon : activeScenario === 'B' ? LayoutTemplate : Search; const [genTenant, setGenTenant] = useState<'full_home_renovation' | 'kitchen_renovation' | 'bathroom_renovation' | 'granny_flat' | 'extension' | 'multi_unit' | 'new_luxe_homes'>('full_home_renovation'); const [customGoal, setCustomGoal] = useState(SCENARIO_MAP.A.placeholder); const [campaignTitle, setCampaignTitle] = useState('');
+} export default function AiMarketing() { const [campaigns, setCampaigns] = useState<AdCampaign[]>([]); const [selectedCampaign, setSelectedCampaign] = useState<AdCampaign | null>(null); const [loading, setLoading] = useState(true); const [activeScenario, setActiveScenario] = useState<ScenarioId>('A'); const sc = SCENARIO_MAP[activeScenario]; const ScIcon = activeScenario === 'A' ? FacebookIcon : Rocket; const [genTenant, setGenTenant] = useState<'full_home_renovation' | 'kitchen_renovation' | 'bathroom_renovation' | 'granny_flat' | 'extension' | 'multi_unit' | 'new_luxe_homes'>('full_home_renovation'); const [customGoal, setCustomGoal] = useState(SCENARIO_MAP.A.placeholder); const [campaignTitle, setCampaignTitle] = useState('');
   // Scenario A
   const [mediaUrl, setMediaUrl] = useState(''); const [destinationLink, setDestinationLink] = useState('');
   // Scenario B
@@ -140,8 +135,11 @@ const FacebookIcon = () => (
 
   const handleGenerate = async (e: React.FormEvent) => { e.preventDefault(); setIsGenerating(true); try { const extras: any = {};
   if (campaignTitle) extras.campaignTitle = campaignTitle; if (activeScenario === 'A') { if (mediaUrl) extras.mediaUrl = mediaUrl; if (destinationLink) extras.destinationLink = destinationLink;
-      } else if (activeScenario === 'B') { extras.blogTags = blogTagsRaw.split(',').map((t: string) => t.trim()).filter(Boolean); if (wpDomain) extras.destinationLink = wpDomain;
-      } else if (activeScenario === 'C') { extras.budget = Number(budget) || 50; extras.targetCountry = targetCountry || 'AU';
+      } else if (activeScenario === 'BC') { 
+        extras.blogTags = blogTagsRaw.split(',').map((t: string) => t.trim()).filter(Boolean); 
+        if (wpDomain) extras.destinationLink = wpDomain;
+        extras.budget = Number(budget) || 50; 
+        extras.targetCountry = targetCountry || 'AU';
       }
   const created = await generateLiveCampaign(sc.platform, genTenant, customGoal, extras); 
       setCampaigns(prev => [created, ...prev]);
@@ -217,7 +215,7 @@ const FacebookIcon = () => (
             <div><label className={lbl}>Campaign Title</label><input className={inp} required value={editTitle} onChange={e => setEditTitle(e.target.value)} /></div>
             <div><label className={lbl}>Ad / Content Copy</label><textarea className={`${inp} h-28`} value={editCopy} onChange={e => setEditCopy(e.target.value)} /></div>
             <div className="flex gap-2">
-              <button type="submit" className="flex-1 bg-black dark:bg-white text-white dark:text-black to-pink-600 text-white font-bold text-xs py-2.5 rounded-lg shadow hover:opacity-95 transition"><Check className="w-3.5 h-3.5 inline mr-1" />Save Changes</button>
+              <button type="submit" className="flex-1 bg-indigo-600 dark:bg-indigo-500 text-white to-pink-600 text-white font-bold text-xs py-2.5 rounded-lg shadow hover:opacity-95 transition"><Check className="w-3.5 h-3.5 inline mr-1" />Save Changes</button>
               <button type="button" onClick={() => setEditingCampaign(null)} className="px-4 py-2.5 border rounded-lg text-xs font-semibold hover:bg-neutral-100 dark:hover:bg-neutral-900 transition">Discard</button>
             </div>
           </form>
@@ -238,7 +236,7 @@ const FacebookIcon = () => (
 
       {/* 3 Fixed Scenario Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        {(Object.values(SCENARIO_MAP) as (typeof SCENARIO_MAP[ScenarioId])[]).map(s => { const isActive = activeScenario === s.id; const Icon = s.id === 'A' ? FacebookIcon : s.id === 'B' ? LayoutTemplate : Search; return (
+        {(Object.values(SCENARIO_MAP) as (typeof SCENARIO_MAP[ScenarioId])[]).map(s => { const isActive = activeScenario === s.id; const Icon = s.id === 'A' ? FacebookIcon : Rocket; return (
             <button key={s.id} onClick={() => setActiveScenario(s.id)} className={`text-left p-4 rounded-xl border-2 transition-all duration-200 shadow-sm ${isActive ? s.borderActive + ' shadow-md' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-neutral-300 hover:shadow'}`}>
               <div className="flex items-start gap-3">
                 <div className={`w-10 h-10 rounded-xl  ${s.bgClass} flex items-center justify-center flex-shrink-0 shadow`}>
@@ -269,9 +267,9 @@ const FacebookIcon = () => (
                   <span className="text-[9px] text-blue-400 font-bold">simultaneously</span>
                 </div>
               )}
-              {s.id === 'B' && (
+              {s.id === 'BC' && (
                 <div className="mt-2 flex items-center gap-1.5">
-                  <span className="text-[9px] text-violet-500 font-bold">DataForSEO analysis → WordPress publish</span>
+                  <span className="text-[9px] text-indigo-500 font-bold">DataForSEO + WP + Ads</span>
                 </div>
               )}
             </button>
@@ -318,7 +316,7 @@ const FacebookIcon = () => (
                   </div>
                   <p className="text-[10px] font-bold text-black dark:text-white uppercase tracking-wider">Posts to Facebook & Instagram</p>
                 </div>
-                <div className="bg-neutral-100 dark:bg-neutral-9000/60 rounded-lg px-3 py-2 text-[10px] text-black dark:text-white leading-relaxed"> One approval triggers posts on <strong>both platforms simultaneously</strong>. The AI caption is optimised for both feeds.
+                <div className="bg-neutral-100 dark:bg-neutral-900/60 rounded-lg px-3 py-2 text-[10px] text-black dark:text-white leading-relaxed"> One approval triggers posts on <strong>both platforms simultaneously</strong>. The AI caption is optimised for both feeds.
                 </div>
                 <div>
                   <label className={lbl}>Media Image Upload <span className="font-normal normal-case text-neutral-600 dark:text-neutral-400 transition-colors">(auto-filled if blank)</span></label>
@@ -362,34 +360,19 @@ const FacebookIcon = () => (
               </div>
             )}
 
-            {/* Scenario B: DataForSEO + WordPress fields */}
-            {activeScenario === 'B' && (
-              <div className="space-y-3 p-3.5 rounded-xl bg-violet-50 border border-violet-100">
+            {/* Scenario BC: Unified Full Funnel fields */}
+            {activeScenario === 'BC' && (
+              <div className="space-y-3 p-3.5 rounded-xl bg-indigo-50 border border-indigo-100">
                 <div className="flex items-center gap-2 mb-1">
-                  <LayoutTemplate className="w-3.5 h-3.5 text-violet-600" />
-                  <p className="text-[10px] font-bold text-violet-700 uppercase tracking-wider">DataForSEO + WordPress</p>
+                  <Rocket className="w-3.5 h-3.5 text-indigo-600" />
+                  <p className="text-[10px] font-bold text-indigo-700 uppercase tracking-wider">Scenario B+C: Full Funnel</p>
                 </div>
-                <div className="bg-violet-100/60 rounded-lg px-3 py-2 text-[10px] text-violet-700 leading-relaxed"> n8n runs DataForSEO keyword analysis on your terms, then publishes an SEO-optimised landing page to WordPress automatically.
+                <div className="bg-indigo-100/60 rounded-lg px-3 py-2 text-[10px] text-indigo-700 leading-relaxed">
+                  Unified strategy mapping to seo_google_ads_wordpress pipeline.
                 </div>
                 <div>
                   <label className={lbl}>SEO Keyword Targets <span className="font-normal normal-case text-neutral-600 dark:text-neutral-400 transition-colors">(comma-separated)</span></label>
                   <input className={inp} placeholder="liquid screed, flooring contractor, london" value={blogTagsRaw} onChange={e => setBlogTagsRaw(e.target.value)} />
-                </div>
-                <div>
-                  <label className={lbl}>WordPress Domain <span className="font-normal normal-case text-neutral-600 dark:text-neutral-400 transition-colors">(optional override)</span></label>
-                  <input className={inp} placeholder="yourbusiness.co.uk" value={wpDomain} onChange={e => setWpDomain(e.target.value)} />
-                </div>
-              </div>
-            )}
-
-            {/* Scenario C: Google Ads fields */}
-            {activeScenario === 'C' && (
-              <div className="space-y-3 p-3.5 rounded-xl bg-rose-50 border border-rose-100">
-                <div className="flex items-center gap-2 mb-1">
-                  <Search className="w-3.5 h-3.5 text-rose-600" />
-                  <p className="text-[10px] font-bold text-rose-700 uppercase tracking-wider">Google Ads Campaign</p>
-                </div>
-                <div className="bg-rose-100/60 rounded-lg px-3 py-2 text-[10px] text-rose-700 leading-relaxed"> AI generates a Google-compliant headline (<strong>≤30 chars</strong>) and description (<strong>≤90 chars</strong>) automatically.
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div><label className={lbl}>Daily Budget ($)</label><input className={inp} type="number" min="1" placeholder="50" value={budget} onChange={e => setBudget(e.target.value)} /></div>
@@ -399,8 +382,6 @@ const FacebookIcon = () => (
                       <option value="AU">Australia (AU)</option>
                       <option value="GB">United Kingdom (GB)</option>
                       <option value="US">United States (US)</option>
-                      <option value="AE">UAE (AE)</option>
-                      <option value="CA">Canada (CA)</option>
                     </select>
                   </div>
                 </div>

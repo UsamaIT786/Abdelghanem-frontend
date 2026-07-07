@@ -18,7 +18,7 @@ const GoogleIcon = () => (
 );
 
 // Types for components
-type PlatformBranch = 'facebook' | 'google_ads' | 'seo_blog'; export default function AutomationControlCenter() { const [activeTab, setActiveTab] = useState<PlatformBranch>('facebook'); const [workspaceId, setWorkspaceId] = useState('work_luxe_01'); const [campaignName, setCampaignName] = useState(''); const [tenant, setTenant] = useState<'full_home_renovation' | 'kitchen_renovation' | 'bathroom_renovation' | 'granny_flat' | 'extension' | 'multi_unit' | 'new_luxe_homes'>('full_home_renovation');
+type PlatformBranch = 'facebook' | 'seo_google_ads_wordpress'; export default function AutomationControlCenter() { const [activeTab, setActiveTab] = useState<PlatformBranch>('facebook'); const [workspaceId, setWorkspaceId] = useState('work_luxe_01'); const [campaignName, setCampaignName] = useState(''); const [tenant, setTenant] = useState<'full_home_renovation' | 'kitchen_renovation' | 'bathroom_renovation' | 'granny_flat' | 'extension' | 'multi_unit' | 'new_luxe_homes'>('full_home_renovation');
 
   // Execution states
   const [isExecuting, setIsExecuting] = useState(false); const [executionLog, setExecutionLog] = useState<Array<{ time: string; msg: string; type: 'info' | 'success' | 'error' | 'warning' }>>([]); const [liveStatus, setLiveStatus] = useState<'Idle' | 'n8n Processing Deep Chains...' | 'Successfully Synchronized & Live ✅' | 'Pipeline Error ❌'>('Idle');
@@ -201,6 +201,29 @@ type PlatformBranch = 'facebook' | 'google_ads' | 'seo_blog'; export default fun
         tags: seoMetaTags && seoMetaTags.length > 0 ? seoMetaTags : cleanTags
       };
       targetPlatform = 'wordpress_seo';
+           } else if (activeTab === 'seo_google_ads_wordpress') { 
+      if (!googleHeadline.trim() || !googleDescription.trim() || !seoTitle.trim() || !seoBodyText.trim()) { 
+        addLogEntry('Validation Error: Required fields missing for full funnel.', 'error'); 
+        alert('Please fill in Headline, Description, SEO Title, and Body text.'); 
+        return;
+      }
+      
+      const generatedTags = seoBodyText ? seoBodyText.split(' ').slice(0, 5) : [];
+      const cleanTags = generatedTags.map(t => t.replace('#', ''));
+      
+      payloadContent = { 
+        title: seoTitle, 
+        excerpt: seoExcerpt || seoBodyText.substring(0, 150) + '...', 
+        body_markdown: seoBodyText, 
+        tags: seoMetaTags && seoMetaTags.length > 0 ? seoMetaTags : cleanTags,
+        budget: Number(googleBudget), 
+        target_country: googleCountry, 
+        ad_headline: googleHeadline, 
+        ad_description: googleDescription,
+        keywords: googleKeywords,
+        image_style: "premium modern Sydney home renovation, architectural editorial photography"
+      };
+      targetPlatform = 'seo_google_ads_wordpress';
     } 
 
     setIsExecuting(true); 
@@ -209,13 +232,19 @@ type PlatformBranch = 'facebook' | 'google_ads' | 'seo_blog'; export default fun
     window.dispatchEvent(new CustomEvent('crm_show_toast', { detail: { message: `n8n campaign workflow sync dispatched! 📡`, type: 'info' } })); 
     
     // Automated Target Correlation
-    const finalPayload = { 
+    const finalPayload: any = { 
       campaign_id: `camp_${targetPlatform.slice(0, 2)}_${Date.now().toString().slice(-4)}`, 
-      workspace_id: targetPlatform === 'meta_social' ? "work_luxe_01" : workspaceId, 
+      workspace_id: (targetPlatform === 'meta_social' || targetPlatform === 'seo_google_ads_wordpress') ? "work_luxe_01" : workspaceId, 
       platform_target: targetPlatform, 
       campaign_name: campaignName, 
       content: payloadContent
     }; 
+    if (targetPlatform === 'seo_google_ads_wordpress') {
+      finalPayload.business_name = "Luxe Homes and Renovations";
+      finalPayload.business_url = "https://luxehr.com.au/";
+      finalPayload.location_name = "Sydney,New South Wales,Australia";
+      finalPayload.language_code = "en";
+    }
     
     addLogEntry(`Payload structural validation complete. Dispatching to Next/Express gateway sync router.`, 'info'); 
     addLogEntry(`Routing key (platform_target): "${targetPlatform}"`, 'info'); 
@@ -290,11 +319,11 @@ type PlatformBranch = 'facebook' | 'google_ads' | 'seo_blog'; export default fun
 
       {/* Top Header Card */}
       <div className="relative overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700/80 shadow-sm bg-white dark:bg-slate-900 p-6 backdrop-blur-md shadow-indigo-950/10">
-        <div className="absolute top-0 right-0 h-40 w-40 bg-black dark:bg-white text-white dark:text-black/10 to-transparent blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-0 h-40 w-40 bg-indigo-600 dark:bg-indigo-500 text-white/10 to-transparent blur-3xl pointer-events-none" />
         <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="p-1.5 rounded-lg bg-black dark:bg-white text-white dark:text-black/10 border border-black dark:border-white/20 text-neutral-500 dark:text-neutral-400">
+              <span className="p-1.5 rounded-lg bg-indigo-600 dark:bg-indigo-500 text-white/10 border border-black dark:border-white/20 text-neutral-500 dark:text-neutral-400">
                 <Compass className="w-5 h-5" />
               </span>
               <h1 className="text-xl font-bold from-white via-slate-200 to-slate-400"> n8n Automation Control Center
@@ -356,28 +385,20 @@ type PlatformBranch = 'facebook' | 'google_ads' | 'seo_blog'; export default fun
           {/* Branch Picker Header Tabs */}
           <div className="flex p-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 shadow-sm rounded-xl gap-2 backdrop-blur-md">
             <button onClick={() => setActiveTab('facebook')} className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-semibold tracking-wide transition-all ${ activeTab === 'facebook'
-                  ? 'bg-black dark:bg-white text-white dark:text-black text-white shadow-md shadow-black/5 dark:shadow-white/5'
+                  ? 'bg-indigo-600 dark:bg-indigo-500 text-white shadow-md shadow-black/5 dark:shadow-white/5'
                   : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-900 /40'
               }`}
             >
               <FacebookIcon />
               <span>Meta Social Hub</span>
             </button>
-            <button onClick={() => setActiveTab('google_ads')} className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-semibold tracking-wide transition-all ${ activeTab === 'google_ads'
-                  ? 'bg-black dark:bg-white text-white dark:text-black text-white shadow-md shadow-black/5 dark:shadow-white/5'
-                  : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-900 /40'
-              }`}
-            >
-              <GoogleIcon />
-              <span>Google Ads Core</span>
-            </button>
-            <button onClick={() => setActiveTab('seo_blog')} className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-semibold tracking-wide transition-all ${ activeTab === 'seo_blog'
-                  ? 'bg-black dark:bg-white text-white dark:text-black text-white shadow-md shadow-black/5 dark:shadow-white/5'
-                  : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-900 /40'
+            <button onClick={() => setActiveTab('seo_google_ads_wordpress')} className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-semibold tracking-wide transition-all ${ activeTab === 'seo_google_ads_wordpress'
+                  ? 'bg-indigo-600 dark:bg-indigo-500 text-white shadow-md shadow-black/5 dark:shadow-white/5'
+                  : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-900/40'
               }`}
             >
               <Sparkles className="w-5 h-5 text-neutral-500 dark:text-neutral-400" />
-              <span>AI SEO Engine Matrix</span>
+              <span>Scenario B+C: Full Funnel</span>
             </button>
           </div>
 
@@ -387,7 +408,7 @@ type PlatformBranch = 'facebook' | 'google_ads' | 'seo_blog'; export default fun
               <div className="absolute inset-0 bg-slate-100 dark:bg-slate-800/80 rounded-2xl flex flex-col items-center justify-center z-10 backdrop-blur-sm transition-all duration-300">
                 {/* Glowing Scanner Animation */}
                 <div className="relative w-48 h-2.5 bg-slate-50 dark:bg-slate-900/50 rounded-full overflow-hidden mb-4 border border-slate-200 dark:border-slate-700">
-                  <div className="absolute top-0 bottom-0 left-0 w-2/3 bg-black dark:bg-white text-white dark:text-black to-cyan-500 rounded-full animate-pulse" />
+                  <div className="absolute top-0 bottom-0 left-0 w-2/3 bg-indigo-600 dark:bg-indigo-500 text-white to-cyan-500 rounded-full animate-pulse" />
                   <div className="absolute top-0 bottom-0 w-1/3 bg-white dark:bg-slate-900/40 animate-ping" />
                 </div>
                 <Loader2 className="w-8 h-8 text-black dark:text-white animate-spin mb-3" />
@@ -412,10 +433,10 @@ type PlatformBranch = 'facebook' | 'google_ads' | 'seo_blog'; export default fun
                     <label className="block text-xs font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400 transition-colors"> Ad Copy Editor & Message
                     </label>
                     <div className="flex gap-1.5 text-[9px] font-mono">
-                      <button type="button" onClick={() => applyCopyFormat('uppercase')} className={`px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700  ${metaCopyFormatter === 'uppercase' ? 'bg-black dark:bg-white text-white dark:text-black/30 text-neutral-500 dark:text-neutral-400' : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white '}`}
+                      <button type="button" onClick={() => applyCopyFormat('uppercase')} className={`px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700  ${metaCopyFormatter === 'uppercase' ? 'bg-indigo-600 dark:bg-indigo-500 text-white/30 text-neutral-500 dark:text-neutral-400' : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white '}`}
                       > UPPER
                       </button>
-                      <button type="button" onClick={() => applyCopyFormat('hashtags')} className={`px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700  ${metaCopyFormatter === 'hashtags' ? 'bg-black dark:bg-white text-white dark:text-black/30 text-neutral-500 dark:text-neutral-400' : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white '}`}
+                      <button type="button" onClick={() => applyCopyFormat('hashtags')} className={`px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700  ${metaCopyFormatter === 'hashtags' ? 'bg-indigo-600 dark:bg-indigo-500 text-white/30 text-neutral-500 dark:text-neutral-400' : 'text-neutral-600 dark:text-neutral-400 transition-colors hover:text-black dark:hover:text-white '}`}
                       > ADD #TAGS
                       </button>
                     </div>
@@ -473,7 +494,7 @@ type PlatformBranch = 'facebook' | 'google_ads' | 'seo_blog'; export default fun
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" checked={metaDirectSchedule} onChange={(e) => setMetaDirectSchedule(e.target.checked)} className="sr-only peer"
                     />
-                    <div className="w-11 h-6 bg-slate-50 dark:bg-slate-900/50 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-300 after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-black dark:bg-white text-white dark:text-black peer-checked:after:bg-white" />
+                    <div className="w-11 h-6 bg-slate-50 dark:bg-slate-900/50 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-300 after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600 dark:bg-indigo-500 text-white peer-checked:after:bg-white" />
                   </label>
                 </div>
               </div>
@@ -541,7 +562,7 @@ type PlatformBranch = 'facebook' | 'google_ads' | 'seo_blog'; export default fun
                   <div className="flex gap-2">
                     <input type="text" value={googleKeywordInput} onChange={(e) => setGoogleKeywordInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addKeyword())} placeholder="Type a search keyword (e.g. combi boiler)..." className="flex-1 bg-slate-100 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:bg-white dark:focus:bg-slate-800 dark:placeholder-slate-500 text-xs rounded-xl px-3.5 py-2 focus:outline-none focus:ring-1 focus:ring-black dark:ring-white"
                     />
-                    <button type="button" onClick={addKeyword} className="bg-black dark:bg-white text-white dark:text-black/30 text-neutral-500 dark:text-neutral-400 border border-indigo-800/80 px-4 py-2 rounded-xl text-xs font-semibold hover:bg-black dark:bg-white text-white dark:text-black/40 transition flex items-center gap-1"
+                    <button type="button" onClick={addKeyword} className="bg-indigo-600 dark:bg-indigo-500 text-white/30 text-neutral-500 dark:text-neutral-400 border border-indigo-800/80 px-4 py-2 rounded-xl text-xs font-semibold hover:bg-indigo-600 dark:bg-indigo-500 text-white/40 transition flex items-center gap-1"
                     >
                       <Plus className="w-4 h-4" />
                       <span>Add</span>
@@ -610,7 +631,7 @@ type PlatformBranch = 'facebook' | 'google_ads' | 'seo_blog'; export default fun
                 ) : (
                   <div className="border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 p-5 rounded-xl space-y-3 max-h-96 overflow-y-auto">
                     <div className="border-b border-slate-200 dark:border-slate-700 pb-3">
-                      <span className="text-[10px] bg-black dark:bg-white text-white dark:text-black/10 text-neutral-500 dark:text-neutral-400 px-2 py-0.5 rounded font-mono uppercase font-semibold">Rendered Page Preview</span>
+                      <span className="text-[10px] bg-indigo-600 dark:bg-indigo-500 text-white/10 text-neutral-500 dark:text-neutral-400 px-2 py-0.5 rounded font-mono uppercase font-semibold">Rendered Page Preview</span>
                       <h2 className="text-xl font-bold mt-2 text-slate-900 dark:text-white">{seoTitle || 'Untitled Article'}</h2>
                       <p className="text-xs text-neutral-600 dark:text-neutral-400 transition-colors italic mt-0.5">{seoSubtitle || 'No subtitle provided'}</p>
                     </div>
@@ -638,7 +659,7 @@ type PlatformBranch = 'facebook' | 'google_ads' | 'seo_blog'; export default fun
                   <div className="flex flex-wrap gap-1.5 p-2.5 bg-slate-950/40 border border-slate-200 dark:border-slate-700 rounded-xl">
                     {availableMetaTags.map((tag) => { const isSelected = seoMetaTags.includes(tag); return (
                         <button type="button" key={tag} onClick={() => toggleMetaTag(tag)} className={`text-[10px] px-2.5 py-1 rounded-md transition border ${ isSelected 
-                              ? 'bg-black dark:bg-white text-white dark:text-black/20 text-neutral-500 dark:text-neutral-400 border-black dark:border-white/50' 
+                              ? 'bg-indigo-600 dark:bg-indigo-500 text-white/20 text-neutral-500 dark:text-neutral-400 border-black dark:border-white/50' 
                               : 'bg-white dark:bg-slate-900 text-neutral-600 dark:text-neutral-400 transition-colors border-slate-200 dark:border-slate-700 hover:text-black dark:hover:text-white '
                           }`}
                         >
@@ -666,7 +687,7 @@ type PlatformBranch = 'facebook' | 'google_ads' | 'seo_blog'; export default fun
 
             {/* Execute Button */}
             <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-700 /80 flex justify-end">
-              <button type="submit" disabled={isExecuting} className="bg-black dark:bg-white text-white dark:text-black hover:bg-black dark:bg-white text-white dark:text-black active:bg-black dark:bg-white text-white dark:text-black text-white font-semibold text-xs py-3 px-5 rounded-xl flex items-center gap-2 shadow-md shadow-black/5 dark:shadow-white/5 transition disabled:opacity-50"
+              <button type="submit" disabled={isExecuting} className="bg-indigo-600 dark:bg-indigo-500 text-white hover:bg-indigo-600 dark:bg-indigo-500 text-white active:bg-indigo-600 dark:bg-indigo-500 text-white text-white font-semibold text-xs py-3 px-5 rounded-xl flex items-center gap-2 shadow-md shadow-black/5 dark:shadow-white/5 transition disabled:opacity-50"
               >
                 <Play className="w-4 h-4 fill-current" />
                 <span>Execute Campaign Pipeline</span>
@@ -712,7 +733,7 @@ type PlatformBranch = 'facebook' | 'google_ads' | 'seo_blog'; export default fun
           <div className="rounded-2xl border border-slate-200 dark:border-slate-700/80 shadow-sm dark:backdrop-blur-md bg-white dark:bg-slate-900 p-5 flex flex-col">
             <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 /80 pb-3 mb-3">
               <div className="flex items-center gap-2">
-                <span className="p-1 rounded-md bg-black dark:bg-white text-white dark:text-black/10 border border-black dark:border-white/20 text-neutral-500 dark:text-neutral-400">
+                <span className="p-1 rounded-md bg-indigo-600 dark:bg-indigo-500 text-white/10 border border-black dark:border-white/20 text-neutral-500 dark:text-neutral-400">
                   <Database className="w-4 h-4" />
                 </span>
                 <span className="text-xs font-bold text-neutral-600 dark:text-neutral-400 transition-colors">Sync Execution Logs</span>

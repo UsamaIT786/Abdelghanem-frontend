@@ -413,7 +413,7 @@ import { PremiumAreaChart, PremiumBarChart, PremiumDonutChart, PremiumGaugeChart
                   <span className="font-bold text-emerald-500">+{Math.round(customerCount * 0.12)} this year</span>
                 </div>
                 <div className="h-2.5 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
-                  <div className="h-full rounded-full bg-black dark:bg-white text-white dark:text-black transition-all duration-1000" style={{ width: `${Math.min((customerCount / Math.max(customerCount, 50)) * 100, 100)}%` }} />
+                  <div className="h-full rounded-full bg-indigo-600 dark:bg-indigo-500 text-white transition-all duration-1000" style={{ width: `${Math.min((customerCount / Math.max(customerCount, 50)) * 100, 100)}%` }} />
                 </div>
               </div>
 

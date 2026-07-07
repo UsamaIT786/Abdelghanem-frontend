@@ -484,7 +484,7 @@ import { getSavedToken, getSavedTenant, getSavedUser, clearSession, saveSession,
         <main className="flex-1 p-6 md:p-8 max-w-7xl w-full mx-auto relative space-y-6">
           
           {/* Active Tenant Workspace Alerts pill */}
-          <div className="flex flex-wrap items-center justify-between text-xs p-3 bg-black dark:bg-white text-white dark:text-black to-white dark:to-slate-900 text-white rounded-xl border shadow-inner">
+          <div className="flex flex-wrap items-center justify-between text-xs p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 shadow-inner">
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-ping" />
               <span className="font-mono text-[10px] text-neutral-500 dark:text-neutral-400">SYSTEM CHANNEL LEDGER STATE:</span>
