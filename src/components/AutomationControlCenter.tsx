@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, Globe, Terminal, Database, CheckCircle2, AlertCircle, AlertTriangle, Loader2, Plus, Trash2, Play, Calendar, Clock, ArrowRight, FileText, Check, X, Tag, DollarSign, Layers, Eye, BookOpen, Facebook, Compass, Image as ImageIcon
+import { Sparkles, Globe, Terminal, Database, CheckCircle2, AlertCircle, AlertTriangle, Loader2, Plus, Trash2, Play, Calendar, Clock, ArrowRight, FileText, Check, X, Tag, DollarSign, Layers, Eye, BookOpen, Facebook, Compass, Image as ImageIcon, ChevronRight
 } from 'lucide-react';
 import { triggerAutomationSync, fetchLiveCampaigns, deleteLiveCampaign, analyzeImageTags, API_BASE } from '../lib/api';
 
@@ -45,13 +45,24 @@ type PlatformBranch = 'facebook' | 'seo_google_ads_wordpress'; export default fu
   };
 
   // 1. Meta/Facebook Branch States
-  const [metaAdCopy, setMetaAdCopy] = useState(''); const [metaMediaUrl, setMetaMediaUrl] = useState(''); const [metaTargetLink, setMetaTargetLink] = useState('https://heatingworks.co.uk'); const [metaDirectSchedule, setMetaDirectSchedule] = useState(false); const [metaCopyFormatter, setMetaCopyFormatter] = useState<'normal' | 'uppercase' | 'hashtags'>('normal');
+  const [metaAdCopy, setMetaAdCopy] = useState(''); const [metaMediaUrl, setMetaMediaUrl] = useState(''); const [metaTargetLink, setMetaTargetLink] = useState('https://luxehr.com.au/'); const [metaDirectSchedule, setMetaDirectSchedule] = useState(false); const [metaCopyFormatter, setMetaCopyFormatter] = useState<'normal' | 'uppercase' | 'hashtags'>('normal');
 
   // 2. Google Ads Branch States
   const [googleBudget, setGoogleBudget] = useState(75); const [googleCountry, setGoogleCountry] = useState('AU'); const [googleHeadline, setGoogleHeadline] = useState(''); const [googleDescription, setGoogleDescription] = useState(''); const [googleKeywordInput, setGoogleKeywordInput] = useState(''); const [googleKeywords, setGoogleKeywords] = useState<string[]>(['smart boiler', 'hvac installation', 'home heating repair']);
 
   // 3. AI SEO Engine States
   const [seoTitle, setSeoTitle] = useState(''); const [seoSubtitle, setSeoSubtitle] = useState(''); const [seoExcerpt, setSeoExcerpt] = useState(''); const [seoBodyText, setSeoBodyText] = useState(''); const [seoMetaTags, setSeoMetaTags] = useState<string[]>(['SEO', 'Organic', 'Boiler Upgrades']); const [seoCadence, setSeoCadence] = useState('Immediate Firing'); const [seoPreviewMode, setSeoPreviewMode] = useState<'edit' | 'preview'>('edit'); const availableMetaTags = ['HVAC', 'Underfloor Screed', 'Electrical Safety', 'EV Charging', 'Clean Energy', 'Home Renovation', 'Expert Services', 'Commercial Development'];
+
+  // Full Funnel States
+  const [businessName, setBusinessName] = useState('Luxe Homes and Renovations');
+  const [businessUrl, setBusinessUrl] = useState('https://luxehr.com.au/');
+  const [locationName, setLocationName] = useState('Sydney,New South Wales,Australia');
+  const [languageCode, setLanguageCode] = useState('en');
+  const [campaignBrief, setCampaignBrief] = useState('');
+  const [imageStyle, setImageStyle] = useState('premium modern Sydney home renovation, architectural editorial photography');
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [contentTagInput, setContentTagInput] = useState('');
+  const [payloadMode, setPayloadMode] = useState<'final' | 'ui'>('final');
 
   // Load initial ad campaigns
   const loadHistory = async () => { try { 
@@ -221,7 +232,12 @@ type PlatformBranch = 'facebook' | 'seo_google_ads_wordpress'; export default fu
         ad_headline: googleHeadline, 
         ad_description: googleDescription,
         keywords: googleKeywords,
-        image_style: "premium modern Sydney home renovation, architectural editorial photography"
+        image_style: imageStyle,
+        business_name: businessName,
+        business_url: businessUrl,
+        location_name: locationName,
+        language_code: languageCode,
+        campaign_brief: campaignBrief
       };
       targetPlatform = 'seo_google_ads_wordpress';
     } 
@@ -233,17 +249,17 @@ type PlatformBranch = 'facebook' | 'seo_google_ads_wordpress'; export default fu
     
     // Automated Target Correlation
     const finalPayload: any = { 
-      campaign_id: `camp_${targetPlatform.slice(0, 2)}_${Date.now().toString().slice(-4)}`, 
+      campaign_id: targetPlatform === 'seo_google_ads_wordpress' ? "camp_full_2026_001" : `camp_${targetPlatform.slice(0, 2)}_${Date.now().toString().slice(-4)}`, 
       workspace_id: (targetPlatform === 'meta_social' || targetPlatform === 'seo_google_ads_wordpress') ? "work_luxe_01" : workspaceId, 
       platform_target: targetPlatform, 
       campaign_name: campaignName, 
       content: payloadContent
     }; 
     if (targetPlatform === 'seo_google_ads_wordpress') {
-      finalPayload.business_name = "Luxe Homes and Renovations";
-      finalPayload.business_url = "https://luxehr.com.au/";
-      finalPayload.location_name = "Sydney,New South Wales,Australia";
-      finalPayload.language_code = "en";
+      finalPayload.business_name = businessName;
+      finalPayload.business_url = businessUrl;
+      finalPayload.location_name = locationName;
+      finalPayload.language_code = languageCode;
     }
     
     addLogEntry(`Payload structural validation complete. Dispatching to Next/Express gateway sync router.`, 'info'); 
@@ -681,6 +697,182 @@ type PlatformBranch = 'facebook' | 'seo_google_ads_wordpress'; export default fu
                     <option value="Daily at Midnight">Daily at Midnight UTC</option>
                     <option value="Weekly on Mondays">Weekly on Mondays</option>
                   </select>
+                </div>
+              </div>
+            )}
+
+            {/* BRANCH: SCENARIO B+C FULL FUNNEL */}
+            {activeTab === 'seo_google_ads_wordpress' && (
+              <div className="space-y-6 text-slate-900 dark:text-white">
+                {/* Basic Inputs */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider mb-1.5">Business Name</label>
+                    <input type="text" value={businessName} onChange={e => setBusinessName(e.target.value)} className="w-full bg-white dark:bg-black border-2 border-black dark:border-white text-black dark:text-white px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white rounded-none" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider mb-1.5">Business URL</label>
+                    <input type="text" value={businessUrl} onChange={e => setBusinessUrl(e.target.value)} className="w-full bg-white dark:bg-black border-2 border-black dark:border-white text-black dark:text-white px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white rounded-none" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider mb-1.5">Location Name</label>
+                    <input type="text" value={locationName} onChange={e => setLocationName(e.target.value)} className="w-full bg-white dark:bg-black border-2 border-black dark:border-white text-black dark:text-white px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white rounded-none" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider mb-1.5">Campaign Brief</label>
+                    <input type="text" value={campaignBrief} onChange={e => setCampaignBrief(e.target.value)} className="w-full bg-white dark:bg-black border-2 border-black dark:border-white text-black dark:text-white px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white rounded-none" />
+                  </div>
+                </div>
+
+                {/* Targeting Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 border-t-2 border-black dark:border-white pt-6">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider mb-1.5">Budget</label>
+                    <input type="number" value={googleBudget} onChange={e => setGoogleBudget(Number(e.target.value))} className="w-full bg-white dark:bg-black border-2 border-black dark:border-white text-black dark:text-white px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white rounded-none" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider mb-1.5">Target Country</label>
+                    <select value={googleCountry} onChange={e => setGoogleCountry(e.target.value)} className="w-full bg-white dark:bg-black border-2 border-black dark:border-white text-black dark:text-white px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white rounded-none">
+                      <option value="AU">Australia</option>
+                      <option value="US">United States</option>
+                      <option value="UK">United Kingdom</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider mb-1.5">Language Code</label>
+                    <select value={languageCode} onChange={e => setLanguageCode(e.target.value)} className="w-full bg-white dark:bg-black border-2 border-black dark:border-white text-black dark:text-white px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white rounded-none">
+                      <option value="en">English (en)</option>
+                      <option value="es">Spanish (es)</option>
+                      <option value="fr">French (fr)</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Dynamic Custom Array Input Slices */}
+                <div className="space-y-4 border-t-2 border-black dark:border-white pt-6">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider mb-1.5">Keywords</label>
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      {googleKeywords.map((kw, i) => (
+                        <span key={i} className="bg-black text-white dark:bg-white dark:text-black px-2 py-1 text-xs font-bold uppercase flex items-center gap-1">
+                          {kw}
+                          <button type="button" onClick={() => setGoogleKeywords(googleKeywords.filter(k => k !== kw))}><X className="w-3 h-3" /></button>
+                        </span>
+                      ))}
+                    </div>
+                    <input type="text" value={googleKeywordInput} onChange={e => setGoogleKeywordInput(e.target.value)} onKeyDown={e => {
+                      if (e.key === 'Enter' || e.key === ',') {
+                        e.preventDefault();
+                        const val = googleKeywordInput.trim().replace(',', '');
+                        if (val && !googleKeywords.includes(val)) setGoogleKeywords([...googleKeywords, val]);
+                        setGoogleKeywordInput('');
+                      } else if (e.key === 'Backspace' && !googleKeywordInput && googleKeywords.length > 0) {
+                        setGoogleKeywords(googleKeywords.slice(0, -1));
+                      }
+                    }} placeholder="Type and press Enter or Comma..." className="w-full bg-white dark:bg-black border-2 border-black dark:border-white text-black dark:text-white px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white rounded-none" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider mb-1.5">Content Tags</label>
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      {seoMetaTags.map((tag, i) => (
+                        <span key={i} className="bg-black text-white dark:bg-white dark:text-black px-2 py-1 text-xs font-bold uppercase flex items-center gap-1">
+                          {tag}
+                          <button type="button" onClick={() => setSeoMetaTags(seoMetaTags.filter(t => t !== tag))}><X className="w-3 h-3" /></button>
+                        </span>
+                      ))}
+                    </div>
+                    <input type="text" value={contentTagInput} onChange={e => setContentTagInput(e.target.value)} onKeyDown={e => {
+                      if (e.key === 'Enter' || e.key === ',') {
+                        e.preventDefault();
+                        const val = contentTagInput.trim().replace(',', '');
+                        if (val && !seoMetaTags.includes(val)) setSeoMetaTags([...seoMetaTags, val]);
+                        setContentTagInput('');
+                      } else if (e.key === 'Backspace' && !contentTagInput && seoMetaTags.length > 0) {
+                        setSeoMetaTags(seoMetaTags.slice(0, -1));
+                      }
+                    }} placeholder="Type and press Enter or Comma..." className="w-full bg-white dark:bg-black border-2 border-black dark:border-white text-black dark:text-white px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white rounded-none" />
+                  </div>
+                </div>
+
+                {/* ADVANCED CONTAINER ACCORDION */}
+                <div className="border-2 border-black dark:border-white mt-6">
+                  <button type="button" onClick={() => setShowAdvanced(!showAdvanced)} className="w-full bg-black text-white dark:bg-white dark:text-black px-4 py-3 font-bold uppercase tracking-wider flex justify-between items-center text-xs focus:outline-none">
+                    <span>Advanced Content Controls</span>
+                    <ChevronRight className={`w-4 h-4 transition-transform ${showAdvanced ? 'rotate-90' : ''}`} />
+                  </button>
+                  {showAdvanced && (
+                    <div className="p-4 space-y-4 bg-white dark:bg-black border-t-2 border-black dark:border-white">
+                      <div>
+                        <div className="flex justify-between items-center mb-1.5">
+                          <label className="block text-xs font-bold uppercase tracking-wider">Ad Headline</label>
+                          <span className={`text-[10px] font-mono ${googleHeadline.length > 30 ? 'text-rose-500' : ''}`}>{googleHeadline.length} / 30</span>
+                        </div>
+                        <input type="text" maxLength={30} value={googleHeadline} onChange={e => setGoogleHeadline(e.target.value)} className="w-full bg-white dark:bg-black border-2 border-black dark:border-white text-black dark:text-white px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white rounded-none" />
+                      </div>
+                      <div>
+                        <div className="flex justify-between items-center mb-1.5">
+                          <label className="block text-xs font-bold uppercase tracking-wider">Ad Description</label>
+                          <span className={`text-[10px] font-mono ${googleDescription.length > 90 ? 'text-rose-500' : ''}`}>{googleDescription.length} / 90</span>
+                        </div>
+                        <textarea maxLength={90} value={googleDescription} onChange={e => setGoogleDescription(e.target.value)} className="w-full bg-white dark:bg-black border-2 border-black dark:border-white text-black dark:text-white px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white rounded-none h-20" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold uppercase tracking-wider mb-1.5">Blog Title</label>
+                        <input type="text" value={seoTitle} onChange={e => setSeoTitle(e.target.value)} className="w-full bg-white dark:bg-black border-2 border-black dark:border-white text-black dark:text-white px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white rounded-none" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold uppercase tracking-wider mb-1.5">Excerpt</label>
+                        <textarea value={seoExcerpt} onChange={e => setSeoExcerpt(e.target.value)} className="w-full bg-white dark:bg-black border-2 border-black dark:border-white text-black dark:text-white px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white rounded-none h-20" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold uppercase tracking-wider mb-1.5">Body Markdown</label>
+                        <textarea value={seoBodyText} onChange={e => setSeoBodyText(e.target.value)} className="w-full bg-white dark:bg-black border-2 border-black dark:border-white text-black dark:text-white px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white rounded-none h-32 font-mono text-xs" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold uppercase tracking-wider mb-1.5">Image Style</label>
+                        <input type="text" value={imageStyle} onChange={e => setImageStyle(e.target.value)} className="w-full bg-white dark:bg-black border-2 border-black dark:border-white text-black dark:text-white px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white rounded-none" />
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* DUAL MODE PAYLOAD LIVE PREVIEW */}
+                <div className="border-2 border-black dark:border-white mt-6 bg-white dark:bg-black">
+                  <div className="flex justify-between items-center p-3 border-b-2 border-black dark:border-white bg-black dark:bg-white text-white dark:text-black">
+                    <label className="block text-xs font-bold uppercase tracking-wider">Payload Preview</label>
+                    <div className="flex">
+                      <button type="button" onClick={() => setPayloadMode('ui')} className={`px-3 py-1 text-[10px] font-bold uppercase border-2 ${payloadMode === 'ui' ? 'bg-white text-black border-black dark:bg-black dark:text-white dark:border-white' : 'bg-black text-white border-white dark:bg-white dark:text-black dark:border-black'}`}>UI Mode</button>
+                      <button type="button" onClick={() => setPayloadMode('final')} className={`px-3 py-1 text-[10px] font-bold uppercase border-2 border-l-0 ${payloadMode === 'final' ? 'bg-white text-black border-black dark:bg-black dark:text-white dark:border-white' : 'bg-black text-white border-white dark:bg-white dark:text-black dark:border-black'}`}>Final n8n</button>
+                    </div>
+                  </div>
+                  <pre className="text-[10px] font-mono text-black dark:text-white p-4 overflow-x-auto">
+                    {JSON.stringify(payloadMode === 'final' ? {
+                      platform_target: "seo_google_ads_wordpress",
+                      workspace_id: "work_luxe_01",
+                      campaign_id: "camp_full_2026_001",
+                      campaign_name: campaignName,
+                      content: {
+                        title: seoTitle,
+                        excerpt: seoExcerpt || seoBodyText.substring(0, 150) + '...',
+                        body_markdown: seoBodyText,
+                        tags: seoMetaTags && seoMetaTags.length > 0 ? seoMetaTags : [],
+                        budget: Number(googleBudget),
+                        target_country: googleCountry,
+                        ad_headline: googleHeadline,
+                        ad_description: googleDescription,
+                        keywords: googleKeywords,
+                        image_style: imageStyle,
+                        business_name: businessName,
+                        business_url: businessUrl,
+                        location_name: locationName,
+                        language_code: languageCode,
+                        campaign_brief: campaignBrief
+                      }
+                    } : {
+                      businessName, businessUrl, locationName, languageCode, campaignBrief,
+                      googleBudget, googleCountry, googleKeywords, seoMetaTags, seoTitle, seoExcerpt, seoBodyText, imageStyle, googleHeadline, googleDescription
+                    }, null, 2)}
+                  </pre>
                 </div>
               </div>
             )}

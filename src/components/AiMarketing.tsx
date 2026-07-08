@@ -11,7 +11,7 @@ const FacebookIcon = () => (
     <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
   </svg>
 ); const SCENARIO_MAP = { A: { id: 'A' as ScenarioId, label: 'Meta Social Post', sub: 'Facebook + Instagram simultaneously', bgClass: 'bg-indigo-600 dark:bg-indigo-500 text-white ', badgeBg: 'bg-neutral-100 dark:bg-neutral-900 text-black dark:text-white', borderActive: 'border-black dark:border-white bg-neutral-100 dark:bg-neutral-900', n8nTarget: 'meta_social', platform: 'Meta', description: 'Creates a post on BOTH Facebook and Instagram at the same time. AI writes a dual-platform caption with media image and destination link.', placeholder: 'Promote 10-year boiler warranties and 0% interest finance for new boiler installs. Drive inquiries for heating works.',
-  }, BC: { id: 'BC' as ScenarioId, label: 'Scenario B+C: Full Funnel', sub: 'DataForSEO + WordPress + Google Ads', bgClass: 'from-violet-600 to-rose-600', badgeBg: 'bg-indigo-100 text-indigo-700', borderActive: 'border-indigo-500 bg-indigo-50', n8nTarget: 'seo_google_ads_wordpress', platform: 'seo_google_ads_wordpress', description: 'Unified full funnel strategy handling SEO landing pages and Google Ads together.', placeholder: 'Create a full funnel campaign for Sydney home renovations...',
+  }, BC: { id: 'BC' as ScenarioId, label: 'Scenario B+C: Full Funnel', sub: 'DataForSEO + WordPress + Google Ads', bgClass: 'bg-gradient-to-r from-violet-600 to-rose-600', badgeBg: 'bg-indigo-100 text-indigo-700', borderActive: 'border-indigo-500 bg-indigo-50', n8nTarget: 'seo_google_ads_wordpress', platform: 'seo_google_ads_wordpress', description: 'Unified full funnel strategy handling SEO landing pages and Google Ads together.', placeholder: 'Create a full funnel campaign for Sydney home renovations...',
   }
 } as const; const TENANTS = [
   { value: 'full_home_renovation', label: 'Full Home Renovation' },
@@ -33,9 +33,11 @@ const FacebookIcon = () => (
   function ScenarioPill({ platform }: { platform: string }) { if (platform === 'Meta' || platform === 'Facebook' || platform === 'Instagram') return <span className="text-[8px] bg-neutral-100 dark:bg-neutral-900 text-black dark:text-white px-1.5 py-0.5 rounded font-bold uppercase">A · Meta</span>; if (platform === 'seo_google_ads_wordpress' || platform === 'Scenario B+C') return <span className="text-[8px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-bold uppercase">BC · Full Funnel</span>; return <span className="text-[8px] bg-slate-100 dark:bg-slate-800 text-neutral-600 dark:text-neutral-400 transition-colors px-1.5 py-0.5 rounded font-bold uppercase">{platform}</span>;
 }
   function PayloadPreview({ campaign }: { campaign: AdCampaign }) { 
+    const [payloadMode, setPayloadMode] = useState<'final' | 'ui'>('final');
     const isMeta = campaign.platform === 'Meta' || campaign.platform === 'Facebook' || campaign.platform === 'Instagram'; 
     const isFullFunnel = campaign.platform === 'seo_google_ads_wordpress' || campaign.platform === 'Scenario B+C'; 
     let payload: any = {};
+    let uiPayload: any = {};
 
     const generateAutoTags = (text: string) => {
       const lower = text.toLowerCase();
@@ -62,6 +64,11 @@ const FacebookIcon = () => (
           media_url: campaign.mediaUrl || "", 
           link: campaign.destinationLink || 'https://luxehr.com.au'
         }
+      };
+      uiPayload = {
+        message: finalMessage,
+        media_url: campaign.mediaUrl || "",
+        link: campaign.destinationLink || 'https://luxehr.com.au'
       };
     } else if (isFullFunnel) { 
       let h = campaign.title || ''; 
@@ -92,11 +99,35 @@ const FacebookIcon = () => (
           image_style: "premium modern Sydney home renovation, architectural editorial photography"
         }
       };
+      uiPayload = {
+        title: campaign.title,
+        excerpt: (campaign.generatedCopy || '').slice(0, 60) + '...',
+        body_markdown: '## Introduction...',
+        tags: campaign.blogTags && campaign.blogTags.length > 0 ? campaign.blogTags : cleanTags,
+        budget: campaign.budget || 50,
+        target_country: campaign.targetCountry || 'AU',
+        ad_headline: h,
+        ad_description: d,
+        keywords: ["home renovations sydney", "luxury renovations sydney", "renovation company sydney"],
+        image_style: "premium modern Sydney home renovation, architectural editorial photography",
+        business_name: "Luxe Homes and Renovations",
+        business_url: "https://luxehr.com.au/",
+        location_name: "Sydney,New South Wales,Australia",
+        language_code: "en"
+      };
     }
   return (
-    <div className="bg-slate-100 dark:bg-slate-800 rounded-lg p-3 font-mono text-[10px] text-slate-900 dark:text-white dark:text-emerald-400 overflow-auto max-h-36">
-      <div className="text-neutral-600 dark:text-neutral-400 transition-colors mb-1 font-sans text-[9px] uppercase tracking-wider">→ n8n webhook payload preview</div>
-      <pre className="whitespace-pre-wrap break-all">{JSON.stringify(payload, null, 2)}</pre>
+    <div className="bg-white dark:bg-black border-2 border-black dark:border-white rounded-none p-3 font-mono text-[10px] text-black dark:text-white overflow-hidden flex flex-col">
+      <div className="flex justify-between items-center mb-2 border-b-2 border-black dark:border-white pb-2">
+        <div className="font-sans text-[9px] uppercase tracking-wider font-bold">Payload Preview</div>
+        <div className="flex border-2 border-black dark:border-white">
+          <button type="button" onClick={() => setPayloadMode('ui')} className={`px-2 py-0.5 text-[9px] font-bold uppercase ${payloadMode === 'ui' ? 'bg-black text-white dark:bg-white dark:text-black' : 'bg-white text-black dark:bg-black dark:text-white'}`}>UI Mode</button>
+          <button type="button" onClick={() => setPayloadMode('final')} className={`px-2 py-0.5 text-[9px] font-bold uppercase border-l-2 border-black dark:border-white ${payloadMode === 'final' ? 'bg-black text-white dark:bg-white dark:text-black' : 'bg-white text-black dark:bg-black dark:text-white'}`}>Final n8n</button>
+        </div>
+      </div>
+      <div className="overflow-auto max-h-36">
+        <pre className="whitespace-pre-wrap break-all">{JSON.stringify(payloadMode === 'final' ? payload : uiPayload, null, 2)}</pre>
+      </div>
     </div>
   );
 } export default function AiMarketing() { const [campaigns, setCampaigns] = useState<AdCampaign[]>([]); const [selectedCampaign, setSelectedCampaign] = useState<AdCampaign | null>(null); const [loading, setLoading] = useState(true); const [activeScenario, setActiveScenario] = useState<ScenarioId>('A'); const sc = SCENARIO_MAP[activeScenario]; const ScIcon = activeScenario === 'A' ? FacebookIcon : Rocket; const [genTenant, setGenTenant] = useState<'full_home_renovation' | 'kitchen_renovation' | 'bathroom_renovation' | 'granny_flat' | 'extension' | 'multi_unit' | 'new_luxe_homes'>('full_home_renovation'); const [customGoal, setCustomGoal] = useState(SCENARIO_MAP.A.placeholder); const [campaignTitle, setCampaignTitle] = useState('');
@@ -476,13 +507,13 @@ const FacebookIcon = () => (
                     ) : selectedCampaign.status === 'Approved' ? (
                       <>
                         <div className="flex items-center justify-center gap-2 py-2 rounded-lg bg-amber-50 border border-amber-300 text-amber-700 text-xs font-bold">Locally Approved — n8n was unreachable</div>
-                        <button onClick={() => executeApprove(selectedCampaign.id)} disabled={isPushing} className="w-full py-2 from-emerald-600 to-teal-600 hover:opacity-90 disabled:opacity-60 text-white text-xs font-bold rounded-lg shadow transition flex items-center justify-center gap-1">
+                        <button onClick={() => executeApprove(selectedCampaign.id)} disabled={isPushing} className="w-full py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:opacity-90 disabled:opacity-60 text-white text-xs font-bold rounded-lg shadow transition flex items-center justify-center gap-1">
                           {isPushing ? <><Loader2 className="w-3.5 h-3.5 animate-spin" />Retrying...</> : <><Send className="w-3.5 h-3.5" />Retry Push to n8n</>}
                         </button>
                         <button onClick={handleApplyToLanding} className="w-full py-2 bg-white dark:bg-slate-900 hover:bg-black text-slate-900 dark:text-white text-xs font-bold rounded-lg transition flex items-center justify-center gap-1"><Globe className="w-3.5 h-3.5" />Apply to Landing Page</button>
                       </>
                     ) : (
-                      <button onClick={() => executeApprove(selectedCampaign.id)} disabled={isPushing} className="w-full py-3 from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 disabled:opacity-60 disabled:cursor-not-allowed text-white text-xs font-bold rounded-lg shadow-md transition flex items-center justify-center gap-2">
+                      <button onClick={() => executeApprove(selectedCampaign.id)} disabled={isPushing} className="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 disabled:opacity-60 disabled:cursor-not-allowed text-white text-xs font-bold rounded-lg shadow-md transition flex items-center justify-center gap-2">
                         {isPushing
                           ? <><Loader2 className="w-4 h-4 animate-spin" /><span>Triggering n8n Workflow...</span></>
                           : <><Rocket className="w-4 h-4" /><span>Approve & Trigger n8n Workflow</span></>
