@@ -128,18 +128,6 @@ type PlatformBranch = 'facebook' | 'seo_google_ads_wordpress'; export default fu
       return;
     }
 
-    // --- HELPER: DYNAMIC AUTO-TAGS GENERATOR ---
-    const generateAutoTags = (text: string) => {
-      const lower = text.toLowerCase();
-      if (lower.match(/\b(boiler|heating|hvac|gas|warmth)\b/)) {
-        return ["#HVAC", "#BoilerInstallation", "#HeatingWorks", "#HomeComfort"];
-      }
-      if (lower.match(/\b(renovation|luxury|home|interiors|design)\b/)) {
-        return ["#LuxuryHomes", "#SydneyRenovations", "#InteriorDesign", "#PremiumLiving"];
-      }
-      return ["#PremiumService", "#Excellence", "#QualityWork"];
-    };
-
     let payloadContent: any = {};
     let targetPlatform = '';
 
@@ -150,9 +138,7 @@ type PlatformBranch = 'facebook' | 'seo_google_ads_wordpress'; export default fu
         return;
       } 
       
-      // Auto-tagging injection for Meta
-      const generatedTags = generateAutoTags(metaAdCopy);
-      const finalMessage = `${metaAdCopy}\n\n${generatedTags.join(' ')}`;
+      const finalMessage = metaAdCopy;
 
       payloadContent = { 
         message: finalMessage, 
@@ -202,14 +188,11 @@ type PlatformBranch = 'facebook' | 'seo_google_ads_wordpress'; export default fu
         return;
       } 
       
-      const generatedTags = generateAutoTags(seoBodyText);
-      const cleanTags = generatedTags.map(t => t.replace('#', ''));
-      
       payloadContent = { 
         title: seoTitle, 
         excerpt: seoExcerpt || seoBodyText.substring(0, 150) + '...', 
         body_markdown: seoBodyText, 
-        tags: seoMetaTags && seoMetaTags.length > 0 ? seoMetaTags : cleanTags
+        tags: seoMetaTags
       };
       targetPlatform = 'wordpress_seo';
            } else if (activeTab === 'seo_google_ads_wordpress') { 
@@ -219,14 +202,11 @@ type PlatformBranch = 'facebook' | 'seo_google_ads_wordpress'; export default fu
         return;
       }
       
-      const generatedTags = seoBodyText ? seoBodyText.split(' ').slice(0, 5) : [];
-      const cleanTags = generatedTags.map(t => t.replace('#', ''));
-      
       payloadContent = { 
         title: seoTitle, 
         excerpt: seoExcerpt || seoBodyText.substring(0, 150) + '...', 
         body_markdown: seoBodyText, 
-        tags: seoMetaTags && seoMetaTags.length > 0 ? seoMetaTags : cleanTags,
+        tags: seoMetaTags,
         budget: Number(googleBudget), 
         target_country: googleCountry, 
         ad_headline: googleHeadline, 

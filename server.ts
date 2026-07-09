@@ -932,21 +932,9 @@ app.post('/api/campaigns/:id/approve', async (req, res) => {
       platformTarget = "seo_google_ads_wordpress";
     }
 
-    const generateAutoTags = (text: string) => {
-      const lower = text.toLowerCase();
-      if (lower.match(/\b(boiler|heating|hvac|gas|warmth)\b/)) {
-        return ["#HVAC", "#BoilerInstallation", "#HeatingWorks", "#HomeComfort"];
-      }
-      if (lower.match(/\b(renovation|luxury|home|interiors|design)\b/)) {
-        return ["#LuxuryHomes", "#SydneyRenovations", "#InteriorDesign", "#PremiumLiving"];
-      }
-      return ["#PremiumService", "#Excellence", "#QualityWork"];
-    };
-
     let contentObj: any = {};
     if (platformTarget === "meta_social") {
-      const generatedTags = generateAutoTags(campaign.generatedCopy || "");
-      const finalMessage = `${campaign.generatedCopy || ""}\n\n${generatedTags.join(' ')}`;
+      const finalMessage = campaign.generatedCopy || "";
       
       contentObj = {
         message: finalMessage,
@@ -954,8 +942,6 @@ app.post('/api/campaigns/:id/approve', async (req, res) => {
         link: campaign.destinationLink || "https://luxehr.com.au"
       };
     } else if (platformTarget === "seo_google_ads_wordpress") {
-      const generatedTags = generateAutoTags(campaign.generatedCopy || "");
-      const cleanTags = generatedTags.map(t => t.replace('#', ''));
       let headline = campaign.title || "Professional Services";
       if (headline.length > 30) headline = headline.substring(0, 27) + "...";
       let description = campaign.generatedCopy || "";
@@ -964,7 +950,7 @@ app.post('/api/campaigns/:id/approve', async (req, res) => {
         title: campaign.title || "Professional Services Landing Page",
         excerpt: campaign.generatedCopy ? campaign.generatedCopy.slice(0, 160) + "..." : "Expert services delivered.",
         body_markdown: `## ${campaign.title}\n\n${campaign.generatedCopy || ""}`,
-        tags: campaign.blogTags && campaign.blogTags.length > 0 ? campaign.blogTags : cleanTags,
+        tags: campaign.blogTags && campaign.blogTags.length > 0 ? campaign.blogTags : [],
         budget: Number(campaign.budget) || 50.00,
         target_country: campaign.targetCountry || "AU",
         ad_headline: headline,

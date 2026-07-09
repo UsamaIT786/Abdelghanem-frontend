@@ -39,20 +39,8 @@ const FacebookIcon = () => (
     let payload: any = {};
     let uiPayload: any = {};
 
-    const generateAutoTags = (text: string) => {
-      const lower = text.toLowerCase();
-      if (lower.match(/\b(boiler|heating|hvac|gas|warmth)\b/)) {
-        return ["#HVAC", "#BoilerInstallation", "#HeatingWorks", "#HomeComfort"];
-      }
-      if (lower.match(/\b(renovation|luxury|home|interiors|design)\b/)) {
-        return ["#LuxuryHomes", "#SydneyRenovations", "#InteriorDesign", "#PremiumLiving"];
-      }
-      return ["#PremiumService", "#Excellence", "#QualityWork"];
-    };
-
     if (isMeta) { 
-      const tags = generateAutoTags(campaign.generatedCopy || '');
-      const finalMessage = `${campaign.generatedCopy || ''}\n\n${tags.join(' ')}`;
+      const finalMessage = campaign.generatedCopy || '';
       
       payload = { 
         campaign_id: campaign.id, 
@@ -75,8 +63,6 @@ const FacebookIcon = () => (
       if (h.length > 30) h = h.substring(0, 27) + '...'; 
       let d = campaign.generatedCopy || ''; 
       if (d.length > 90) d = d.substring(0, 87) + '...'; 
-      const tags = generateAutoTags(campaign.generatedCopy || '');
-      const cleanTags = tags.map(t => t.replace('#', ''));
       payload = { 
         campaign_id: campaign.id, 
         workspace_id: 'work_luxe_01', 
@@ -90,7 +76,7 @@ const FacebookIcon = () => (
           title: campaign.title, 
           excerpt: (campaign.generatedCopy || '').slice(0, 60) + '...', 
           body_markdown: '## Introduction...', 
-          tags: campaign.blogTags && campaign.blogTags.length > 0 ? campaign.blogTags : cleanTags,
+          tags: campaign.blogTags && campaign.blogTags.length > 0 ? campaign.blogTags : [],
           budget: campaign.budget || 50, 
           target_country: campaign.targetCountry || 'AU', 
           ad_headline: h, 
@@ -103,7 +89,7 @@ const FacebookIcon = () => (
         title: campaign.title,
         excerpt: (campaign.generatedCopy || '').slice(0, 60) + '...',
         body_markdown: '## Introduction...',
-        tags: campaign.blogTags && campaign.blogTags.length > 0 ? campaign.blogTags : cleanTags,
+        tags: campaign.blogTags && campaign.blogTags.length > 0 ? campaign.blogTags : [],
         budget: campaign.budget || 50,
         target_country: campaign.targetCountry || 'AU',
         ad_headline: h,
