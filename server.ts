@@ -955,8 +955,8 @@ app.post('/api/campaigns/:id/approve', async (req, res) => {
         target_country: campaign.targetCountry || "AU",
         ad_headline: headline,
         ad_description: description,
-        keywords: campaign.keywords || ["home renovations sydney", "luxury renovations sydney", "renovation company sydney"],
-        image_style: "premium modern Sydney home renovation, architectural editorial photography"
+        keywords: campaign.keywords || [],
+        image_style: campaign.imageStyle || ""
       };
     }
 
@@ -968,10 +968,10 @@ app.post('/api/campaigns/:id/approve', async (req, res) => {
       content: contentObj
     };
     if (platformTarget === 'seo_google_ads_wordpress') {
-      n8nPayload.business_name = "Luxe Homes and Renovations";
-      n8nPayload.business_url = "https://luxehr.com.au/";
-      n8nPayload.location_name = "Sydney,New South Wales,Australia";
-      n8nPayload.language_code = "en";
+      n8nPayload.business_name = campaign.businessName || "";
+      n8nPayload.business_url = campaign.businessUrl || "";
+      n8nPayload.location_name = campaign.locationName || "";
+      n8nPayload.language_code = campaign.languageCode || "";
     }
 
     const webhookUrl = process.env.N8N_WEBHOOK_URL || process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL || "https://akigh90.app.n8n.cloud/webhook/crm-campaign-trigger";
@@ -1040,6 +1040,10 @@ app.post("/api/v1/automation/sync", async (req, res) => {
     workspace_id,
     platform_target,
     campaign_name,
+    business_name: req.body.business_name || "",
+    business_url: req.body.business_url || "",
+    location_name: req.body.location_name || "",
+    language_code: req.body.language_code || "",
     content: content || {}
   };
 
@@ -1072,7 +1076,13 @@ app.post("/api/v1/automation/sync", async (req, res) => {
     destinationLink: content.link || "",
     blogTags: content.tags || [],
     budget: content.budget || 50,
-    targetCountry: content.target_country || "AU"
+    targetCountry: content.target_country || "AU",
+    businessName: req.body.business_name || "",
+    businessUrl: req.body.business_url || "",
+    locationName: req.body.location_name || "",
+    languageCode: req.body.language_code || "",
+    keywords: content.keywords || [],
+    imageStyle: content.image_style || ""
   };
 
   if (existingIndex !== -1) {

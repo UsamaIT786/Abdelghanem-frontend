@@ -79,6 +79,14 @@ export interface AdCampaign {
   // Scenario C: Google Ads fields
   budget?: number;
   targetCountry?: string;
+  
+  // Extra fields for full funnel scenarios
+  businessName?: string;
+  businessUrl?: string;
+  locationName?: string;
+  languageCode?: string;
+  keywords?: string[];
+  imageStyle?: string;
 }
 
 export interface SystemLog {

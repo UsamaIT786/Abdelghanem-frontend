@@ -45,21 +45,21 @@ type PlatformBranch = 'facebook' | 'seo_google_ads_wordpress'; export default fu
   };
 
   // 1. Meta/Facebook Branch States
-  const [metaAdCopy, setMetaAdCopy] = useState(''); const [metaMediaUrl, setMetaMediaUrl] = useState(''); const [metaTargetLink, setMetaTargetLink] = useState('https://luxehr.com.au/'); const [metaDirectSchedule, setMetaDirectSchedule] = useState(false); const [metaCopyFormatter, setMetaCopyFormatter] = useState<'normal' | 'uppercase' | 'hashtags'>('normal');
+  const [metaAdCopy, setMetaAdCopy] = useState(''); const [metaMediaUrl, setMetaMediaUrl] = useState(''); const [metaTargetLink, setMetaTargetLink] = useState(''); const [metaDirectSchedule, setMetaDirectSchedule] = useState(false); const [metaCopyFormatter, setMetaCopyFormatter] = useState<'normal' | 'uppercase' | 'hashtags'>('normal');
 
   // 2. Google Ads Branch States
-  const [googleBudget, setGoogleBudget] = useState(75); const [googleCountry, setGoogleCountry] = useState('AU'); const [googleHeadline, setGoogleHeadline] = useState(''); const [googleDescription, setGoogleDescription] = useState(''); const [googleKeywordInput, setGoogleKeywordInput] = useState(''); const [googleKeywords, setGoogleKeywords] = useState<string[]>(['smart boiler', 'hvac installation', 'home heating repair']);
+  const [googleBudget, setGoogleBudget] = useState(75); const [googleCountry, setGoogleCountry] = useState('AU'); const [googleHeadline, setGoogleHeadline] = useState(''); const [googleDescription, setGoogleDescription] = useState(''); const [googleKeywordInput, setGoogleKeywordInput] = useState(''); const [googleKeywords, setGoogleKeywords] = useState<string[]>([]);
 
   // 3. AI SEO Engine States
-  const [seoTitle, setSeoTitle] = useState(''); const [seoSubtitle, setSeoSubtitle] = useState(''); const [seoExcerpt, setSeoExcerpt] = useState(''); const [seoBodyText, setSeoBodyText] = useState(''); const [seoMetaTags, setSeoMetaTags] = useState<string[]>(['SEO', 'Organic', 'Boiler Upgrades']); const [seoCadence, setSeoCadence] = useState('Immediate Firing'); const [seoPreviewMode, setSeoPreviewMode] = useState<'edit' | 'preview'>('edit'); const availableMetaTags = ['HVAC', 'Underfloor Screed', 'Electrical Safety', 'EV Charging', 'Clean Energy', 'Home Renovation', 'Expert Services', 'Commercial Development'];
+  const [seoTitle, setSeoTitle] = useState(''); const [seoSubtitle, setSeoSubtitle] = useState(''); const [seoExcerpt, setSeoExcerpt] = useState(''); const [seoBodyText, setSeoBodyText] = useState(''); const [seoMetaTags, setSeoMetaTags] = useState<string[]>([]); const [seoCadence, setSeoCadence] = useState('Immediate Firing'); const [seoPreviewMode, setSeoPreviewMode] = useState<'edit' | 'preview'>('edit'); const availableMetaTags = ['HVAC', 'Underfloor Screed', 'Electrical Safety', 'EV Charging', 'Clean Energy', 'Home Renovation', 'Expert Services', 'Commercial Development'];
 
   // Full Funnel States
-  const [businessName, setBusinessName] = useState('Luxe Homes and Renovations');
-  const [businessUrl, setBusinessUrl] = useState('https://luxehr.com.au/');
-  const [locationName, setLocationName] = useState('Sydney,New South Wales,Australia');
-  const [languageCode, setLanguageCode] = useState('en');
+  const [businessName, setBusinessName] = useState('');
+  const [businessUrl, setBusinessUrl] = useState('');
+  const [locationName, setLocationName] = useState('');
+  const [languageCode, setLanguageCode] = useState('');
   const [campaignBrief, setCampaignBrief] = useState('');
-  const [imageStyle, setImageStyle] = useState('premium modern Sydney home renovation, architectural editorial photography');
+  const [imageStyle, setImageStyle] = useState('');
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [contentTagInput, setContentTagInput] = useState('');
   const [payloadMode, setPayloadMode] = useState<'final' | 'ui'>('final');

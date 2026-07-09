@@ -68,10 +68,10 @@ const FacebookIcon = () => (
         workspace_id: 'work_luxe_01', 
         platform_target: 'seo_google_ads_wordpress', 
         campaign_name: campaign.title, 
-        business_name: "Luxe Homes and Renovations",
-        business_url: "https://luxehr.com.au/",
-        location_name: "Sydney,New South Wales,Australia",
-        language_code: "en",
+        business_name: campaign.businessName || "",
+        business_url: campaign.businessUrl || "",
+        location_name: campaign.locationName || "",
+        language_code: campaign.languageCode || "",
         content: { 
           title: campaign.title, 
           excerpt: (campaign.generatedCopy || '').slice(0, 60) + '...', 
@@ -81,8 +81,8 @@ const FacebookIcon = () => (
           target_country: campaign.targetCountry || 'AU', 
           ad_headline: h, 
           ad_description: d,
-          keywords: ["home renovations sydney", "luxury renovations sydney", "renovation company sydney"],
-          image_style: "premium modern Sydney home renovation, architectural editorial photography"
+          keywords: campaign.keywords && campaign.keywords.length > 0 ? campaign.keywords : [],
+          image_style: campaign.imageStyle || ""
         }
       };
       uiPayload = {
@@ -94,12 +94,12 @@ const FacebookIcon = () => (
         target_country: campaign.targetCountry || 'AU',
         ad_headline: h,
         ad_description: d,
-        keywords: ["home renovations sydney", "luxury renovations sydney", "renovation company sydney"],
-        image_style: "premium modern Sydney home renovation, architectural editorial photography",
-        business_name: "Luxe Homes and Renovations",
-        business_url: "https://luxehr.com.au/",
-        location_name: "Sydney,New South Wales,Australia",
-        language_code: "en"
+        keywords: campaign.keywords && campaign.keywords.length > 0 ? campaign.keywords : [],
+        image_style: campaign.imageStyle || "",
+        business_name: campaign.businessName || "",
+        business_url: campaign.businessUrl || "",
+        location_name: campaign.locationName || "",
+        language_code: campaign.languageCode || ""
       };
     }
   return (
@@ -120,9 +120,9 @@ const FacebookIcon = () => (
   // Scenario A
   const [mediaUrl, setMediaUrl] = useState(''); const [destinationLink, setDestinationLink] = useState('');
   // Scenario B
-  const [blogTagsRaw, setBlogTagsRaw] = useState('renovation, luxury, sydney'); const [wpDomain, setWpDomain] = useState('');
+  const [blogTagsRaw, setBlogTagsRaw] = useState(''); const [wpDomain, setWpDomain] = useState('');
   // Scenario C
-  const [budget, setBudget] = useState('50'); const [targetCountry, setTargetCountry] = useState('AU'); const [isGenerating, setIsGenerating] = useState(false); const [isPushing, setIsPushing] = useState(false); const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null); const [deleteConfirm, setDeleteConfirm] = useState<{ id: string; name: string } | null>(null); const [editingCampaign, setEditingCampaign] = useState<AdCampaign | null>(null); const [editTitle, setEditTitle] = useState(''); const [editCopy, setEditCopy] = useState(''); const [landingTitle, setLandingTitle] = useState('Expert Heating Services & Solutions'); const [landingSub, setLandingSub] = useState('Cut your fuel bills by 35% with state-of-the-art climate responsive home solutions.'); const [selectedTemplateColor, setSelectedTemplateColor] = useState('rose'); useEffect(() => { setCustomGoal(sc.placeholder); setCampaignTitle(''); setMediaUrl(''); setDestinationLink(''); setBlogTagsRaw('renovation, luxury, sydney'); setWpDomain(''); setBudget('50'); setTargetCountry('AU');
+  const [budget, setBudget] = useState('50'); const [targetCountry, setTargetCountry] = useState('AU'); const [isGenerating, setIsGenerating] = useState(false); const [isPushing, setIsPushing] = useState(false); const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null); const [deleteConfirm, setDeleteConfirm] = useState<{ id: string; name: string } | null>(null); const [editingCampaign, setEditingCampaign] = useState<AdCampaign | null>(null); const [editTitle, setEditTitle] = useState(''); const [editCopy, setEditCopy] = useState(''); const [landingTitle, setLandingTitle] = useState(''); const [landingSub, setLandingSub] = useState(''); const [selectedTemplateColor, setSelectedTemplateColor] = useState('rose'); useEffect(() => { setCustomGoal(sc.placeholder); setCampaignTitle(''); setMediaUrl(''); setDestinationLink(''); setBlogTagsRaw(''); setWpDomain(''); setBudget('50'); setTargetCountry('AU');
   }, [activeScenario]); useEffect(() => { if (toast) { const t = setTimeout(() => setToast(null), 5000); return () => clearTimeout(t); }
   }, [toast]); const loadData = async () => { try { 
       const cached = localStorage.getItem('crm_campaigns');
